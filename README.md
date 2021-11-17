@@ -7,4 +7,4 @@ Projeto de Inteligência Artificial
 - Ana Rebelo (@Filipagit)
 - Ana Murta (@AnaMurta10)
 - Ana Henriques (@AnaHenriques01)
-- Joana Oliveira (@JoanaVO) 
+- Joana Oliveira (@joanaaVO) 
