@@ -25,12 +25,12 @@ estafetaMaisEcologico([IdEstaf|T],Max,IdMax) :-
 	 Max = CountMax, IdMax = Id).
 	 
 %-----------------------------------------------------------------------------------------------------------
-% Extensao do predicado estafetasEncomendasCliente: Id,Lista,Resultado -> {V,F}
+% Extensao do predicado estafetasEncomendasCliente: Lista,Lista -> {V,F}
 % Identifica que estafetas entregaram determinada(s) encomenda(s) a um determinado cliente
 
-estafetasEncomendasCliente([IdEnc|Es]) :- 
+estafetasEncomendasCliente([],[]).
+estafetasEncomendasCliente([IdEnc],L) :- estafetasEncCliente(IdEnc,L).
+estafetasEncomendasCliente([IdEnc|Es],L) :- 
 	estafetasEncCliente(IdEnc,R),
-	estafetasEncomendasCliente(Es).
-
-estafetasEncCliente(IdEnc,L) :-
-	solucoes(IdEstafeta,estafeta(IdEstafeta,IdEnc,_,_),L).
+	estafetasEncomendasCliente(Es,L1),
+	append([R],[L1],L).

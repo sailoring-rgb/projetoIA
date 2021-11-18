@@ -23,6 +23,13 @@ encomendasBicicleta([IdEnc|T],Conta) :-
 	encomendasBicicleta(T,Conta0),
 	Conta is Conta0 + 1.
 
+%-------------------------------------Auxiliares para Funcionalidade 2-------------------------------------
+
+% Devolve os estafetas que entregaram determinada encomenda 
+ 
+estafetasEncCliente(IdEnc,L) :-
+	solucoes(IdEstafeta,estafeta(IdEstafeta,IdEnc,_,_),L).
+
 %---------------------------------------------------Extras---------------------------------------------------
 
 % Extensao do predicado pertence: Elemento,Lista -> {V,F}
