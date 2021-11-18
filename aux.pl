@@ -1,10 +1,11 @@
 % Extensão do predicado encomendasEcologicasCount: IdEstaf,Count -> {V,F}
 % Conta o número de encomendas cujo transporte foi mais ecológico, ou seja, por bicicleta.
-
+/*
 encomendasEcologicasCount(IdEstaf,Count) :-
-	solucoes(IdEnc,estafeta(IdEstaf,IdEnc,_,_),Lista),
+	solucoes(IdEnc,estafeta(IdEstaf,IdEnc,_,_),Lista),      % dá-me todas as encomendas do estafeta
+	solucoes(						% tenho de verificar aquelas que foram transportadas por bicicleta
 	length(Lista,Count).
-
+*/
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensao do predicado pertence: Elemento,Lista -> {V,F}
 
