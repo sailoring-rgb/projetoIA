@@ -2,8 +2,8 @@
 % Conta o número de encomendas cujo transporte foi mais ecológico, ou seja, por bicicleta.
 
 encomendasEcologicasCount(IdEstaf,Count) :-
-	solucoes(IdEnc,encomenda(IdEnc,_,IdEstaf,_,_,_,'Bicicleta'),Lista),
-	length(List,Count).
+	solucoes(IdEnc,estafeta(IdEstaf,IdEnc,_,_),Lista),
+	length(Lista,Count).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensao do predicado pertence: Elemento,Lista -> {V,F}
