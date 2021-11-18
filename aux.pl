@@ -10,17 +10,16 @@
 % Conta o número de encomendas cujo transporte foi mais ecológico, ou seja, por bicicleta.
 estafetaEncomendasEcologicas(IdEstaf,Conta) :-
 	solucoes(IdEnc,estafeta(IdEstaf,IdEnc,_,_),Lista),
-	encomendasBicicleta(Lista,Conta).
+	encomendasPorBicicleta(Lista,Conta).
 
-% Devolve a lista das encomendas de um estafeta
-estafetaEncomendas(IdEstaf,Lista) :-
-	solucoes(IdEnc,estafeta(IdEstaf,IdEnc,_,_),Lista).
-
-% Devolve o número de encomendas (de lista) transportadas por Bicicleta
-encomendasBicicleta([],0).
-encomendasBicicleta([IdEnc|T],Conta) :-
+% Devolve o número de encomendas (duma lista) transportadas pelo meio de transporte bicicleta
+encomendasPorBicicleta([],0).
+encomendasPorBicicleta([IdEnc|T],Conta) :-
+	nao(encomenda(IdEnc,_,_,_,_,'Bicicleta')),
+	encomendasPorBicicleta(T,Conta).
+encomendasPorBicicleta([IdEnc|T],Conta) :-
 	encomenda(IdEnc,_,_,_,_,'Bicicleta'),
-	encomendasBicicleta(T,Conta0),
+	encomendasPorBicicleta(T,Conta0),
 	Conta is Conta0 + 1.
 
 %-------------------------------------Auxiliares para Funcionalidade 2-------------------------------------

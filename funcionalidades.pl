@@ -15,14 +15,14 @@
 estafetaMaisEcologico([],0,_).
 
 estafetaMaisEcologico([IdEstaf],Max,IdEstaf) :-
-	estafetaEncomendasEcologicas(IdEstaf,Count),
-	Max = Count.
+	estafetaEncomendasEcologicas(IdEstaf,Contador),
+	Max = Contador.
 	
 estafetaMaisEcologico([IdEstaf|T],Max,IdMax) :-
-	estafetaEncomendasEcologicas(IdEstaf,Count),
-	estafetaMaisEcologico(T,CountMax,Id),
-	(Count > CountMax -> Max = Count, IdMax = IdEstaf;
-	 Max = CountMax, IdMax = Id).
+	estafetaEncomendasEcologicas(IdEstaf,Contador),
+	estafetaMaisEcologico(T,ContadorMax,Id),
+	(Contador > ContadorMax -> Max = Contador, IdMax = IdEstaf;
+	 Max = ContadorMax, IdMax = Id).
 	 
 %-----------------------------------------------------------------------------------------------------------
 % Extensao do predicado estafetasEncomendasCliente: Lista,Lista -> {V,F}
