@@ -8,23 +8,23 @@
 
 %Funcionalidades
 		
-%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+%-----------------------------------------------------------------------------------------------------------
 % Extensão do predicado estafetaMaisEcologico: Lista,Maximo,Id -> {V,F}
 % Identifica o estafeta que utilizou mais vezes um meio de transporte mais ecológico
 
 estafetaMaisEcologico([],0,_).
 
 estafetaMaisEcologico([IdEstaf],Max,IdEstaf) :-
-	encomendasEcologicasCount(IdEstaf,Count),
+	estafetaEncomendasEcologicas(IdEstaf,Count),
 	Max = Count.
 	
 estafetaMaisEcologico([IdEstaf|T],Max,IdMax) :-
-	encomendasEcologicasCount(IdEstaf,Count),
+	estafetaEncomendasEcologicas(IdEstaf,Count),
 	estafetaMaisEcologico(T,CountMax,Id),
 	(Count > CountMax -> Max = Count, IdMax = IdEstaf;
 	 Max = CountMax, IdMax = Id).
 	 
-%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+%-----------------------------------------------------------------------------------------------------------
 % Extensao do predicado estafetasEncomendasCliente: Id,Lista,Resultado -> {V,F}
 % Identifica que estafetas entregaram determinada(s) encomenda(s) a um determinado cliente
 
@@ -34,4 +34,3 @@ estafetasEncomendasCliente([IdEnc|Es]) :-
 
 estafetasEncCliente(IdEnc,L) :-
 	solucoes(IdEstafeta,estafeta(IdEstafeta,IdEnc,_,_),L).
-
