@@ -13,7 +13,7 @@ encomenda(5,4,1,25,'6h','Bicicleta').
 cliente(1,'6h',4).
 cliente(2,'2h',3.5).
 cliente(3,'3h', 5).
-cliente(3,'Imediato', 2).
+cliente(4,'Imediato', 2).
 
 %---------------------------Estafeta---------------------------
 % Estafeta: #IdEstf, #IdEnc, Rua, Freguesia
