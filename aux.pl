@@ -5,25 +5,32 @@
 
 :- style_check(-singleton).
 
-%-----------------------------------------------------------------------------------------------------------
+%-------------------------------------Usadas em várias funcionalidades-------------------------------------
 
-% Devolve o cliente de uma encomenda
-clienteDaEncomenda(IdEnc,IdClient) :-
-    encomenda(IdEnc,X,_,_,_,_),
-    IdClient is X.
+% Devolve a lista dos ids das encomendas de um estafeta
+encomendasDoEstafeta(IdEstaf,Lista) :-
+    estafeta(IdEstaf,Lista0),
+	encomendasDaLista(Lista0,Lista).
+
+% Devolve a lista dos ids das encomendas a partir da lista de encomendas de um estafeta: [(IdEnc,Nota,Rua,Freguesia)|T]
+encomendasDaLista([],[]).
+encomendasDaLista([(X,_,_,_)],[X]).
+encomendasDaLista([(X,_,_,_)|T],Lista) :-
+	encomendasDaLista(T,Lista0),
+	adiciona(X,Lista0,Lista).
 
 %-------------------------------------Auxiliares para Funcionalidade 1-------------------------------------
 
 % Conta o número de encomendas cujo transporte foi mais ecológico, ou seja, por bicicleta
-estafetaEncomendasEcologicas(IdEstaf,Conta) :-
-	solucoes(IdEnc,estafeta(IdEstaf,IdEnc,_,_),Lista),
-	encomendasPorBicicleta(Lista,Conta).
+estafetaEncomendasEcologicas( IdEstaf, Conta ) :-
+	encomendasDoEstafeta( IdEstaf, Lista ),
+	encomendasPorBicicleta( Lista, Conta ).
 
 % Devolve o número de encomendas (duma lista) transportadas pelo meio de transporte bicicleta
 encomendasPorBicicleta([],0).
 encomendasPorBicicleta([IdEnc|T],Conta) :-
 	nao(encomenda(IdEnc,_,_,_,_,'Bicicleta')),
-	encomendasPorBicicleta(T,Conta).
+	encomendasPorBicicleta( T, Conta ).
 encomendasPorBicicleta([IdEnc|T],Conta) :-
 	encomenda(IdEnc,_,_,_,_,'Bicicleta'),
 	encomendasPorBicicleta(T,Conta0),
@@ -38,16 +45,17 @@ estafetasEncCliente(IdEnc,L) :-
 
 %-------------------------------------Auxiliares para Funcionalidade 3-------------------------------------
 
-% Devolve a lista das encomendas de um estafeta
-estafetaEncomendas(IdEstaf,Lista) :-
-    solucoes(IdEnc,estafeta(IdEstaf,IdEnc,_,_),Lista).
-
-% Devolve a lista de clientes a partir de uma lista de encomendas (um cliente por encomenda)
+% Devolve a lista dos ids dos clientes que estão associados aos ids das encomendas
 listaClientesDasEnc([],[]).
 listaClientesDasEnc([IdEnc|T],Lista) :-
     clienteDaEncomenda(IdEnc,IdCliente),
     listaClientesDasEnc(T,Lista1),
     adiciona(IdCliente,Lista1,Lista).
+
+% Devolve o id do cliente de uma encomenda
+clienteDaEncomenda( IdEnc, IdClient ) :-
+    encomenda(IdEnc,X,_,_,_,_),
+    IdClient is X.
 
 %---------------------------------------------------Extras---------------------------------------------------
 
