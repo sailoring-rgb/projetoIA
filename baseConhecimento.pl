@@ -10,17 +10,14 @@ encomenda(5,4,1,25,'6h','Bicicleta').
 %----------------------------Cliente----------------------------
 % Cliente: #IdCliente, TempoMax, Nota 
 
-cliente(1,'6h',4).
-cliente(2,'2h',3.5).
-cliente(3,'3h', 5).
-cliente(4,'Imediato', 2).
+cliente(1).
+cliente(2).
+cliente(3).
+cliente(4).
 
 %---------------------------Estafeta---------------------------
-% Estafeta: #IdEstf, #IdEnc, Rua, Freguesia
+% Estafeta: #IdEstf, [ (#IdEnc,Nota,Rua,Freguesia) | T]
 
-estafeta(1,1,'Rua da Boavista','Real').
-estafeta(1,5,'Av. Conde Dom Henriques','Maximinos').
-estafeta(2,1,'Av. da Liberdade','São Lázaro').
-estafeta(2,2,'Av. Robert Smith','Lamaçães').
-estafeta(3,2,'Rua da Veiga','Dume').
-estafeta(3,3,'Rua da Universidade','Gualtar').
+estafeta(1,[ (1,3.2,'Rua da Boavista','Real'), (5,3.9,'Av. Conde Dom Henriques','Maximinos') ].
+estafeta(2,[ (1,3.5,'Av. da Liberdade','São Lázaro'),(2,4.6,'Av. Robert Smith','Lamaçães') ].
+estafeta(3,[ (2,4.7,'Rua da Veiga','Dume'),(3,4.9,'Rua da Universidade','Gualtar') ].
