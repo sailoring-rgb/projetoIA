@@ -5,9 +5,16 @@
 
 :- style_check(-singleton).
 
+%-----------------------------------------------------------------------------------------------------------
+
+% Devolve o cliente de uma encomenda
+clienteDaEncomenda(IdEnc,IdClient) :-
+    encomenda(IdEnc,X,_,_,_,_),
+    IdClient is X.
+
 %-------------------------------------Auxiliares para Funcionalidade 1-------------------------------------
 
-% Conta o número de encomendas cujo transporte foi mais ecológico, ou seja, por bicicleta.
+% Conta o número de encomendas cujo transporte foi mais ecológico, ou seja, por bicicleta
 estafetaEncomendasEcologicas(IdEstaf,Conta) :-
 	solucoes(IdEnc,estafeta(IdEstaf,IdEnc,_,_),Lista),
 	encomendasPorBicicleta(Lista,Conta).
@@ -29,11 +36,44 @@ encomendasPorBicicleta([IdEnc|T],Conta) :-
 estafetasEncCliente(IdEnc,L) :-
 	solucoes(IdEstafeta,estafeta(IdEstafeta,IdEnc,_,_),L).
 
+%-------------------------------------Auxiliares para Funcionalidade 3-------------------------------------
+
+% Devolve a lista das encomendas de um estafeta
+estafetaEncomendas(IdEstaf,Lista) :-
+    solucoes(IdEnc,estafeta(IdEstaf,IdEnc,_,_),Lista).
+
+% Devolve a lista de clientes a partir de uma lista de encomendas (um cliente por encomenda)
+listaClientesDasEnc([],[]).
+listaClientesDasEnc([IdEnc|T],Lista) :-
+    clienteDaEncomenda(IdEnc,IdCliente),
+    listaClientesDasEnc(T,Lista1),
+    adiciona(IdCliente,Lista1,Lista).
+
 %---------------------------------------------------Extras---------------------------------------------------
 
 % Extensao do predicado pertence: Elemento,Lista -> {V,F}
 pertence( X,[X|L] ).
 pertence( X,[Y|L] ) :- X \= Y, pertence( X,L ).
+
+
+% Adiciona um elemento a uma lista caso este ainda não pertença
+adiciona( X,[],[X] ).
+adiciona( X,L,[X|L] ) :- nao( pertence(X,L) ).
+adiciona( X,L,L ) :- pertence( X,L ).
+
+
+% Elimina os elementos repetidos numa lista
+removeRepetidos(L,R) :- removeRepAux(L,[],R).
+
+removeRepAux([],Temp,Temp).
+removeRepAux([H|T],Temp,R) :- pertence(H,Temp), removeRepAux(T,Temp,R).
+removeRepAux([H|T],Temp,R) :- removeRepAux(T,[H|Temp],R).
+
+
+% Concatena duas listas SEM a repetição de elementos
+concatena( [],L,L ).
+concatena( [X|[]],L,R ) :- adiciona(X,L,R).
+concatena( [X|T],L,R ) :- concatena(T,L,R1).
 
 
 % Extensao do meta-predicado nao: Questao -> {V,F}

@@ -34,3 +34,12 @@ estafetasEncomendasCliente([IdEnc|Es],L) :-
 	estafetasEncCliente(IdEnc,R),
 	estafetasEncomendasCliente(Es,L1),
 	append([R],[L1],L).
+
+%-----------------------------------------------------------------------------------------------------------
+% Extensão do predicado clientesPorEstafeta: Id,Lista -> {V,F}
+% Identifica os clientes servidos por um determinado estafeta
+
+clientesPorEstafeta(IdEstaf,ListaR) :-
+    estafetaEncomendas(IdEstaf,Lista0),
+    listaClientesDasEnc(Lista0,Lista1),
+    sort(0,@<,Lista1,ListaR).
