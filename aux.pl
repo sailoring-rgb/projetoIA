@@ -41,7 +41,12 @@ encomendasPorBicicleta([IdEnc|T],Conta) :-
 % Devolve os estafetas que entregaram determinada encomenda 
  
 estafetasEncCliente(IdEnc,L) :-
-	solucoes(IdEstafeta,estafeta(IdEstafeta,IdEnc,_,_),L).
+	solucoes(IdEstf,estafetaFezEncomenda(IdEstf,IdEnc),R),
+	sort(R,L).
+
+estafetaFezEncomenda(IdEstf, IdEnc) :- 
+	encomendasDoEstafeta(IdEstf,L),
+	membro(IdEnc,L).
 
 %-------------------------------------Auxiliares para Funcionalidade 3-------------------------------------
 

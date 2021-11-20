@@ -20,4 +20,4 @@ cliente(4).
 
 estafeta(1,[(1,3.2,'Rua da Boavista','Real'), (5,3.9,'Av. Conde Dom Henriques','Maximinos')]).
 estafeta(2,[(1,3.5,'Av. da Liberdade','São Lázaro'),(2,4.6,'Av. Robert Smith','Lamaçães')]).
-estafeta(3,[ (2,4.7,'Rua da Veiga','Dume'),(3,4.9,'Rua da Universidade','Gualtar')]).
+estafeta(3,[(2,4.7,'Rua da Veiga','Dume'),(3,4.9,'Rua da Universidade','Gualtar')]).
