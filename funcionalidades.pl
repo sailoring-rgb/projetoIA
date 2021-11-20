@@ -69,6 +69,16 @@ freguesiasComMaisEnc([IdEstaf|T],Max,ListaFreg) :-
 	 Contador == ContadorMax -> Max = ContadorMax, adiciona(Freguesia,ListaFreg0,ListaFreg);
 	 Max = ContadorMax, ListaFreg = ListaFreg0).
 
+%---------------------------------------------Funcionalidade 6---------------------------------------------
+% Extensão do predicado mediaSatisfacaoEstafeta : Id, Media -> {V,F}
+% Calcular a classificação média de satisfação de cliente para um determinado estafeta
+
+mediaSatisfacaoEstafeta(IdEstf,Media) :- 
+	classificacoesDoEstafeta(IdEstf,L),
+	soma(L,S),
+	comprimento(L,C),
+	Media is S / C.
+
 %---------------------------------------------Funcionalidade 7---------------------------------------------
 % 
 % Identifica o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo

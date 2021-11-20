@@ -13,8 +13,6 @@ comparaDatas(datime(AH,MH,DH,_,_,_),data(AP,MP,DP)) :-
     (AP =:= AH, (MP < MH;
     (MP =:= MH, DP < DH))).
 
-
-
 %--------------------------------------Usadas em várias funcionalidades--------------------------------------
 
 % Devolve a lista dos ids das encomendas de um estafeta
@@ -80,6 +78,21 @@ freguesiaDoEstafeta(IdEstaf,Freguesia) :-
 
 freguesiaDaLista([(_,_,_,X)|T],X).
 
+%--------------------------------------Auxiliares para Funcionalidade 6--------------------------------------
+
+% Devolve a lista das classificações de um estafeta
+classificacoesDoEstafeta(IdEstaf,L) :-
+	estafeta(IdEstaf,L1),
+	classificacoesDaLista(L1,L).
+
+% Devolve a lista das classificações a partir da lista de encomendas de um estafeta: [(IdEnc,Nota,Rua,Freguesia)|T]
+classificacoesDaLista([],[]).
+classificacoesDaLista([(_,C,_,_)], [C]).
+classificacoesDaLista([(_,C,_,_)|T],L) :-
+	classificacoesDaLista(T,L1),
+	adiciona(C,L1,L).    
+
+
 %---------------------------------------------------Extras---------------------------------------------------
 
 % Adiciona um elemento a uma lista caso este ainda não pertença
@@ -111,3 +124,8 @@ solucoes(X,Y,Z) :- findall(X,Y,Z).
 
 % Comprimento de uma lista
 comprimento(S,N) :- length(S,N).
+
+% Soma os elementos de uma lista 
+soma([],0).
+soma([X|Y],Total) :- soma(Y, Ac), Total is X + Ac.
+
