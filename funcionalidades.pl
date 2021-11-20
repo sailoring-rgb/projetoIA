@@ -12,12 +12,14 @@
 % Extensão do predicado estafetaMaisEcologico: Lista,Maximo,Id -> {V,F}
 % Identifica o estafeta que utilizou mais vezes um meio de transporte mais ecológico
 
-estafetaMaisEcologico([],0,_).
+estafetaMaisEcologico(Id) :-
+	solucoes(IdEstaf,estafeta(IdEstaf,_),ListaEstaf),
+	estafetaMaisEcologico(ListaEstaf,Max,Id).
 
+estafetaMaisEcologico([],0,_).
 estafetaMaisEcologico([IdEstaf],Max,IdEstaf) :-
 	estafetaEncomendasEcologicas(IdEstaf,Contador),
-	Max = Contador.
-	
+	Max = Contador.	
 estafetaMaisEcologico([IdEstaf|T],Max,IdMax) :-
 	estafetaEncomendasEcologicas(IdEstaf,Contador),
 	estafetaMaisEcologico(T,ContadorMax,Id),
@@ -27,7 +29,7 @@ estafetaMaisEcologico([IdEstaf|T],Max,IdMax) :-
 %---------------------------------------------Funcionalidade 2---------------------------------------------
 % Extensao do predicado estafetasEncomendasCliente: Lista,Lista -> {V,F}
 % Identifica que estafetas entregaram determinada(s) encomenda(s) a um determinado cliente
-
+	
 estafetasEncomendasCliente([],[]).
 estafetasEncomendasCliente([IdEnc],L) :- estafetasEncCliente(IdEnc,L).
 estafetasEncomendasCliente([IdEnc|Es],L) :- 
@@ -48,20 +50,21 @@ clientesPorEstafeta(IdEstaf,ListaR) :-
 % Extensão do predicado freguesiasComMaisEnc: Lista,Max, Lista -> {V,F}
 % Identifica quais as zonas (e.g., rua ou freguesia) com maior volume de entregas por parte da Green Distribution
 
-freguesiasComMaisEnc([],0,[]).
+freguesiasComMaisEnc(ListaFreg) :-
+	solucoes(IdEstaf,estafeta(IdEstaf,_),ListaEstaf),
+	freguesiasComMaisEnc(ListaEstaf,Max,ListaFreg).
 
+freguesiasComMaisEnc([],0,[]).
 freguesiasComMaisEnc([IdEstaf],Max,[Freguesia]) :-
 	encomendasDoEstafeta(IdEstaf,ListaEnc0),
 	comprimento(ListaEnc0,Contador),
 	freguesiaDoEstafeta(IdEstaf,Freguesia),
 	Max = Contador.
-
 freguesiasComMaisEnc([IdEstaf|T],Max,ListaFreg) :-
 	encomendasDoEstafeta(IdEstaf,ListaEnc0),
 	comprimento(ListaEnc0,Contador),
 	freguesiaDoEstafeta(IdEstaf,Freguesia),
 	freguesiasComMaisEnc(T,ContadorMax,ListaFreg0),
-	
 	(Contador > ContadorMax -> Max = Contador, ListaFreg = [Freguesia];
 	 Contador == ContadorMax -> Max = ContadorMax, adiciona(Freguesia,ListaFreg0,ListaFreg);
 	 Max = ContadorMax, ListaFreg = ListaFreg0).
@@ -69,6 +72,3 @@ freguesiasComMaisEnc([IdEstaf|T],Max,ListaFreg) :-
 %---------------------------------------------Funcionalidade 7---------------------------------------------
 % 
 % Identifica o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo
-
-...(...,DataHoraInicio,DataHoraInicio) :-
-	''
