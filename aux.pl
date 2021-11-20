@@ -8,10 +8,11 @@
 %-----------------------------------------Exclusivamente sobre datas-----------------------------------------
 
 % Verifica se a segunda data é anterior à primeira
-comparaDatas(datime(AH,MH,DH,_,_,_),data(AP,MP,DP)) :-
+comparaDatas(datime(AH,MH,DH,HH,MINH,_),data(AP,MP,DP,HP,MINP)) :-
     AP < AH;
     (AP =:= AH, (MP < MH;
-    (MP =:= MH, DP < DH))).
+    (MP =:= MH, (DP < DH;
+    (HP =:= HH, MINP < MINH))))).
 
 %--------------------------------------Usadas em várias funcionalidades--------------------------------------
 
@@ -37,10 +38,10 @@ estafetaEncomendasEcologicas( IdEstaf, Conta ) :-
 % Devolve o número de encomendas (duma lista) transportadas pelo meio de transporte bicicleta
 encomendasPorBicicleta([],0).
 encomendasPorBicicleta([IdEnc|T],Conta) :-
-	nao(encomenda(IdEnc,_,_,_,_,'Bicicleta')),
+	nao(encomenda(IdEnc,_,_,_,_,_,_,'Bicicleta')),
 	encomendasPorBicicleta( T, Conta ).
 encomendasPorBicicleta([IdEnc|T],Conta) :-
-	encomenda(IdEnc,_,_,_,_,'Bicicleta'),
+	encomenda(IdEnc,_,_,_,_,_,_'Bicicleta'),
 	encomendasPorBicicleta(T,Conta0),
 	Conta is Conta0 + 1.
 
@@ -67,8 +68,27 @@ listaClientesDasEnc([IdEnc|T],Lista) :-
 
 % Devolve o id do cliente de uma encomenda
 clienteDaEncomenda( IdEnc, IdClient ) :-
-    encomenda(IdEnc,X,_,_,_,_),
+    encomenda(IdEnc,X,_,_,_,_,_,_),
     IdClient is X.
+
+%--------------------------------------Auxiliares para Funcionalidade 4--------------------------------------
+
+% Falta completar
+% Devolve o preço associado ao serviço de entrega de uma encomenda
+% precoEncomenda(IdEnc,P) :- encomenda(IdEnc,_,Peso,Vol,Prazo,_,_,Trspt),
+%	P is 5*Peso + 4*Vol + 
+
+% Devolve a lista com os preços relativos a uma lista de encomendas
+precosListaEncomendas([],[]).
+precosListaEncomendas([IdEnc|T],L) :- 
+	precoEncomenda(IdEnc,P),
+	adiciona(P,L1,L).
+
+% Devolve a soma dos preços das encomendas
+totalEncomendas(L,V) :- soma(L,V).
+
+% Devolve todas as encomendas entregues num determinado dia
+encomendasDia(A,M,D,L) :- solucoes(IdEnc, encomenda(IdEnc,_,_,_,_,_,data(A,M,D,_,_),_), L).
 
 %--------------------------------------Auxiliares para Funcionalidade 5--------------------------------------
 
@@ -91,7 +111,6 @@ classificacoesDaLista([(_,C,_,_)], [C]).
 classificacoesDaLista([(_,C,_,_)|T],L) :-
 	classificacoesDaLista(T,L1),
 	adiciona(C,L1,L).    
-
 
 %---------------------------------------------------Extras---------------------------------------------------
 

@@ -1,12 +1,12 @@
 %---------------------------Encomenda---------------------------
-% Encomenda: #IdEnc, #IdCliente, Peso, Volume, Prazo, Transporte
+% Encomenda: #IdEnc, #IdCliente, Peso, Volume, Prazo, DataI, DataF, Transporte
 
-encomenda(1,1,30,20,'6h','Carro').
-encomenda(2,4,2,15,'Imediato','Bicicleta').
-encomenda(3,3,5,30,'2h','Bicicleta').
-encomenda(4,3,10,25,'3h','Mota').
-encomenda(5,4,1,25,'6h','Bicicleta').
-encomenda(6,2,70,40,'1 dia','Carro').
+encomenda(1,1,30,20,'6h',data(2021,7,25,10,0),data(2021,7,25,15,30),'Carro').
+encomenda(2,4,2,15,'Imediato', data(2021,8,1,12,30), data(2021,8,1,12,35), 'Bicicleta').
+encomenda(3,3,5,30,'2h', data(2021,4,10,17,20), data(0,0,0,0,0), 'Bicicleta'). % não entregue
+encomenda(4,3,10,25,'3h',data(2021,5,29,13,10), data(2021,5,29,16,0),'Mota').
+encomenda(5,4,1,25,'6h', data(2021,6,30,9,0), data(2021,6,30,16,45), 'Bicicleta'). % entregue com atraso 
+encomenda(6,2,70,40,'1 dia', data(2021,4,16,15,40), data(2021,4,17,15,0),'Carro').
 
 %----------------------------Cliente----------------------------
 % Cliente: #IdCliente, TempoMax, Nota 

@@ -46,6 +46,14 @@ clientesPorEstafeta(IdEstaf,ListaR) :-
     listaClientesDasEnc(Lista0,Lista1),
     sort(0,@<,Lista1,ListaR).
 
+%---------------------------------------------Funcionalidade 4---------------------------------------------
+% Extensão do predicado valorFaturadoDia: Ano,Mes,Dia,Valor -> {V,F}
+
+valorFaturadoDia(A,M,D,V) :- 
+	encomendasDia(A,M,D,L),
+	precosListasEncomendas(L,R),
+	totalEncomendas(R,V).
+
 %---------------------------------------------Funcionalidade 5---------------------------------------------
 % Extensão do predicado freguesiasComMaisEnc: Lista,Max, Lista -> {V,F}
 % Identifica quais as zonas (e.g., rua ou freguesia) com maior volume de entregas por parte da Green Distribution
