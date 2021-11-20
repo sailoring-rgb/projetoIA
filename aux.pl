@@ -5,7 +5,17 @@
 
 :- style_check(-singleton).
 
-%-------------------------------------Usadas em várias funcionalidades-------------------------------------
+%-----------------------------------------Exclusivamente sobre datas-----------------------------------------
+
+% Verifica se a segunda data é anterior à primeira
+comparaDatas(datime(AH,MH,DH,_,_,_),data(AP,MP,DP)) :-
+    AP < AH;
+    (AP =:= AH, (MP < MH;
+    (MP =:= MH, DP < DH))).
+
+
+
+%--------------------------------------Usadas em várias funcionalidades--------------------------------------
 
 % Devolve a lista dos ids das encomendas de um estafeta
 encomendasDoEstafeta(IdEstaf,Lista) :-
@@ -19,7 +29,7 @@ encomendasDaLista([(X,_,_,_)|T],Lista) :-
 	encomendasDaLista(T,Lista0),
 	adiciona(X,Lista0,Lista).
 
-%-------------------------------------Auxiliares para Funcionalidade 1-------------------------------------
+%--------------------------------------Auxiliares para Funcionalidade 1--------------------------------------
 
 % Conta o número de encomendas cujo transporte foi mais ecológico, ou seja, por bicicleta
 estafetaEncomendasEcologicas( IdEstaf, Conta ) :-
@@ -36,7 +46,7 @@ encomendasPorBicicleta([IdEnc|T],Conta) :-
 	encomendasPorBicicleta(T,Conta0),
 	Conta is Conta0 + 1.
 
-%-------------------------------------Auxiliares para Funcionalidade 2-------------------------------------
+%--------------------------------------Auxiliares para Funcionalidade 2--------------------------------------
 
 % Devolve os estafetas que entregaram determinada encomenda 
  
@@ -48,7 +58,7 @@ estafetaFezEncomenda(IdEstf, IdEnc) :-
 	encomendasDoEstafeta(IdEstf,L),
 	membro(IdEnc,L).
 
-%-------------------------------------Auxiliares para Funcionalidade 3-------------------------------------
+%--------------------------------------Auxiliares para Funcionalidade 3--------------------------------------
 
 % Devolve a lista dos ids dos clientes que estão associados aos ids das encomendas
 listaClientesDasEnc([],[]).
@@ -62,32 +72,29 @@ clienteDaEncomenda( IdEnc, IdClient ) :-
     encomenda(IdEnc,X,_,_,_,_),
     IdClient is X.
 
+%--------------------------------------Auxiliares para Funcionalidade 5--------------------------------------
+
+freguesiaDoEstafeta(IdEstaf,Freguesia) :-
+	estafeta(IdEstaf,Lista0),
+	freguesiaDaLista(Lista0,Freguesia).
+
+freguesiaDaLista([(_,_,_,X)|T],X).
+
 %---------------------------------------------------Extras---------------------------------------------------
-
-% Extensao do predicado pertence: Elemento,Lista -> {V,F}
-pertence( X,[X|L] ).
-pertence( X,[Y|L] ) :- X \= Y, pertence( X,L ).
-
 
 % Adiciona um elemento a uma lista caso este ainda não pertença
 adiciona( X,[],[X] ).
-adiciona( X,L,[X|L] ) :- nao( pertence(X,L) ).
-adiciona( X,L,L ) :- pertence( X,L ).
+adiciona( X,L,[X|L] ) :- nao( membro(X,L) ).
+adiciona( X,L,L ) :- membro( X,L ).
 
-
+/*
 % Elimina os elementos repetidos numa lista
 removeRepetidos(L,R) :- removeRepAux(L,[],R).
 
 removeRepAux([],Temp,Temp).
-removeRepAux([H|T],Temp,R) :- pertence(H,Temp), removeRepAux(T,Temp,R).
+removeRepAux([H|T],Temp,R) :- membro(H,Temp), removeRepAux(T,Temp,R).
 removeRepAux([H|T],Temp,R) :- removeRepAux(T,[H|Temp],R).
-
-
-% Concatena duas listas SEM a repetição de elementos
-concatena( [],L,L ).
-concatena( [X|[]],L,R ) :- adiciona(X,L,R).
-concatena( [X|T],L,R ) :- concatena(T,L,R1).
-
+*/
 
 % Extensao do meta-predicado nao: Questao -> {V,F}
 nao( Questao ) :-
@@ -97,8 +104,7 @@ nao( Questao ).
 
 % Extensao do meta-predicado membro: Elemento,Lista -> {V,F}
 membro(X, [X|_]).
-membro(X, [_|Xs]):-
-	membro(X, Xs).
+membro(X, [_|Xs]):- membro(X, Xs).
 
 
 solucoes(X,Y,Z) :- findall(X,Y,Z).

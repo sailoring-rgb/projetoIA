@@ -43,3 +43,32 @@ clientesPorEstafeta(IdEstaf,ListaR) :-
     encomendasDoEstafeta(IdEstaf,Lista0),
     listaClientesDasEnc(Lista0,Lista1),
     sort(0,@<,Lista1,ListaR).
+
+%---------------------------------------------Funcionalidade 5---------------------------------------------
+% Extensão do predicado freguesiasComMaisEnc: Lista,Max, Lista -> {V,F}
+% Identifica quais as zonas (e.g., rua ou freguesia) com maior volume de entregas por parte da Green Distribution
+
+freguesiasComMaisEnc([],0,[]).
+
+freguesiasComMaisEnc([IdEstaf],Max,[Freguesia]) :-
+	encomendasDoEstafeta(IdEstaf,ListaEnc0),
+	comprimento(ListaEnc0,Contador),
+	freguesiaDoEstafeta(IdEstaf,Freguesia),
+	Max = Contador.
+
+freguesiasComMaisEnc([IdEstaf|T],Max,ListaFreg) :-
+	encomendasDoEstafeta(IdEstaf,ListaEnc0),
+	comprimento(ListaEnc0,Contador),
+	freguesiaDoEstafeta(IdEstaf,Freguesia),
+	freguesiasComMaisEnc(T,ContadorMax,ListaFreg0),
+	
+	(Contador > ContadorMax -> Max = Contador, ListaFreg = [Freguesia];
+	 Contador == ContadorMax -> Max = ContadorMax, adiciona(Freguesia,ListaFreg0,ListaFreg);
+	 Max = ContadorMax, ListaFreg = ListaFreg0).
+
+%---------------------------------------------Funcionalidade 7---------------------------------------------
+% 
+% Identifica o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo
+
+...(...,DataHoraInicio,DataHoraInicio) :-
+	''
