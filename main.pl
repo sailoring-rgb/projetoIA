@@ -3,8 +3,7 @@
 :- consult('funcionalidades.pl').
 
 main :-
-    repeat,
-    nl,nl,
+    nl,
     write('---------------------------------------------------------MENU----------------------------------------------------------'), nl,
     write('1. Consultar o estafeta que utilizou mais vezes um meio de transporte mais ecológico.'), nl,
     write('2. Consultar que estafetas entregaram determinada(s) encomenda(s) a um determinado cliente.'), nl,
@@ -21,7 +20,7 @@ main :-
     write('Escolha um: '),
     read(X),
     ( X = 0 -> !, fail ; true ),
-    nl,nl,
+    nl,
     funcionalidade(X),
     fail.
 
@@ -29,25 +28,29 @@ main :-
 
 funcionalidade(1) :-
     estafetaMaisEcologico(ID),
-    write(ID), nl.
+    write(ID), nl,
+    main.
 
 funcionalidade(2) :-
-    write('Indique o ID do cliente: '),
+    write('Indique o ID do cliente: '),!,
     read(ID),
-    estafetasEncomendasCliente(ID,L),
-    write(L), nl.
+    estafetasEncomendasCliente(ID,L),nl,
+    write(L),nl,
+    main.
 
 funcionalidade(3) :-
-    write('Indique o ID do estafeta: '),
+    write('Indique o ID do estafeta: '),!,
     read(ID),
-    clientesPorEstafeta(ID,L),
-    write(L), nl.
+    clientesPorEstafeta(ID,L),nl,
+    write(L),nl,
+    main.
 
 % funcionalidade(4) :-
 
 funcionalidade(5) :-
     freguesiasComMaisEnc(L),
-    write(L),nl.
+    write(L),nl,
+    main.
 
 % funcionalidade(6) :-
 
