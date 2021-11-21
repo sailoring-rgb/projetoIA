@@ -90,3 +90,13 @@ mediaSatisfacaoEstafeta(IdEstf,Media) :-
 %---------------------------------------------Funcionalidade 7---------------------------------------------
 % 
 % Identifica o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo
+
+%---------------------------------------------Funcionalidade 10---------------------------------------------
+% Extensão do predicado : Id, Total -> {V,F}
+% calcula o peso total transportado por estafeta num determinado dia.
+
+pesoTotal(A,M,D,IdEstaf,Total) :-
+  encomendasDia(A,M,D,L), 
+  estaf(IdEstaf,L),
+  pesoEstafLista(L,P),
+  soma(L,S).
