@@ -21,7 +21,7 @@ cliente(5).
 % Estafeta: #IdEstf, [ (#IdEnc,Nota,Rua,Freguesia) | T]
 
 estafeta(1,[(1,3.2,'Rua da Boavista','Real')]).
-estafeta(2,[(1,3.5,'Av. da Liberdade','São Lázaro'),(2,4.6,'Rua do Raio','São Lázaro')]).
+estafeta(2,[(1,3.5,'Av. da Liberdade','São Lázaro'),(2,4.6,'Rua do Raio','São Lázaro'),(4,2.7,'Rua do Poço','São Lázaro')]).
 estafeta(3,[(2,4.7,'Rua José Antunes Guimarães','Gualtar'),(3,4.9,'Rua da Universidade','Gualtar')]).
 estafeta(4,[(5,3.9,'Av. Conde Dom Henriques','Maximinos')]).
 estafeta(5,[(6,3.9,'Rua da Veiga','Dume')]).

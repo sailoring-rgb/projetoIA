@@ -88,8 +88,12 @@ mediaSatisfacaoEstafeta(IdEstf,Media) :-
 	Media is S / C.
 
 %---------------------------------------------Funcionalidade 7---------------------------------------------
-% 
+% Extensão do predicado numeroTotalEntregas : DataInicio, DataFim, Contador-> {V,F}
 % Identifica o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo
+
+numeroTotalEntregas(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador) :-
+    listaTodasEncomendas(ListaEnc),
+    contaEntregasIntervalo(ListaEnc,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador).
 
 %---------------------------------------------Funcionalidade 10---------------------------------------------
 % Extensão do predicado : Id, Total -> {V,F}
