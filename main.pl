@@ -1,6 +1,7 @@
 %MENU
 
 :- consult('funcionalidades.pl').
+:- consult('aux.pl').
 
 main :-
     nl,
@@ -45,7 +46,12 @@ funcionalidade(3) :-
     write(L),nl,
     main.
 
-% funcionalidade(4) :-
+funcionalidade(4) :-
+    write('Indique uma data no formato AAAA-MM-DD: '),!,
+    stringParaDateTime(Date,A,M,D),
+    valorFaturadoDia(A,M,D,V),nl,
+    write(V),nl,
+    main.
 
 funcionalidade(5) :-
     freguesiasComMaisEnc(L),

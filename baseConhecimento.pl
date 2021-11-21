@@ -1,5 +1,5 @@
 %---------------------------Encomenda---------------------------
-% Encomenda: #IdEnc, #IdCliente, Peso, Volume, Prazo, DataI, DataF, Transporte
+% Encomenda: #IdEnc, #IdCliente, Peso, Volume, Prazo, DataInicio, DataFim, Transporte
 
 encomenda(1,1,30,20,'6h',data(2021,7,25,10,0),data(2021,7,25,15,30),'Carro').
 encomenda(2,4,2,15,'Imediato', data(2021,8,1,12,30), data(2021,8,1,12,35), 'Bicicleta').
@@ -9,7 +9,7 @@ encomenda(5,4,1,25,'6h', data(2021,6,30,9,0), data(2021,6,30,16,45), 'Bicicleta'
 encomenda(6,2,70,40,'1 dia', data(2021,4,16,15,40), data(2021,4,17,15,0),'Carro').
 
 %----------------------------Cliente----------------------------
-% Cliente: #IdCliente, TempoMax, Nota 
+% Cliente: #IdCliente
 
 cliente(1).
 cliente(2).

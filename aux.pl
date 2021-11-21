@@ -132,31 +132,34 @@ pesoEstaf(IdEnc,Peso) :-
 totalPesoEnc(L,V) :- soma(L,V).
 %---------------------------------------------------Extras---------------------------------------------------
 
+% Converte uma string para uma data
+stringParaDateTime(String,Ano,Mes,Dia) :-
+	read_string(Birthday),
+    parse_time(Birthday, Stamp),
+    stamp_date_time(Stamp, DateTime, 'UTC'),
+    DateTime = date(Year, Month, Day, _, _, _, _, _, _).
+	
+% Lê uma string dada como input
+read_string(String) :-
+    current_input(Input),
+    read_line_to_codes(Input, Codigos),
+    string_codes(String, Codigos).
+
 % Adiciona um elemento a uma lista caso este ainda não pertença
 adiciona( X,[],[X] ).
 adiciona( X,L,[X|L] ) :- nao( membro(X,L) ).
 adiciona( X,L,L ) :- membro( X,L ).
-
-/*
-% Elimina os elementos repetidos numa lista
-removeRepetidos(L,R) :- removeRepAux(L,[],R).
-
-removeRepAux([],Temp,Temp).
-removeRepAux([H|T],Temp,R) :- membro(H,Temp), removeRepAux(T,Temp,R).
-removeRepAux([H|T],Temp,R) :- removeRepAux(T,[H|Temp],R).
-*/
 
 % Extensao do meta-predicado nao: Questao -> {V,F}
 nao( Questao ) :-
     Questao, !, fail.
 nao( Questao ).
 
-
 % Extensao do meta-predicado membro: Elemento,Lista -> {V,F}
 membro(X, [X|_]).
 membro(X, [_|Xs]):- membro(X, Xs).
 
-
+% Devolve todas as soluções que respeitam uma determinada condição
 solucoes(X,Y,Z) :- findall(X,Y,Z).
 
 % Comprimento de uma lista
@@ -165,4 +168,3 @@ comprimento(S,N) :- length(S,N).
 % Soma os elementos de uma lista 
 soma([],0).
 soma([X|Y],Total) :- soma(Y, Ac), Total is X + Ac.
-

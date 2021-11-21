@@ -79,7 +79,7 @@ freguesiasComMaisEnc([IdEstaf|T],Max,ListaFreg) :-
 
 %---------------------------------------------Funcionalidade 6---------------------------------------------
 % Extensão do predicado mediaSatisfacaoEstafeta : Id, Media -> {V,F}
-% Calcular a classificação média de satisfação de cliente para um determinado estafeta
+% Calcular a classificação media de satisfação de cliente para um determinado estafeta
 
 mediaSatisfacaoEstafeta(IdEstf,Media) :- 
 	classificacoesDoEstafeta(IdEstf,L),
