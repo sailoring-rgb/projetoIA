@@ -99,4 +99,4 @@ pesoTotal(A,M,D,IdEstaf,Total) :-
   encomendasDia(A,M,D,L), 
   encomendasDoEstafeta(IdEstaf,L),
   pesoEstafLista(L,P),
-  totalPesoEnc(L,S).
+  totalPesoEnc(P,Total).
