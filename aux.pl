@@ -114,18 +114,6 @@ classificacoesDaLista([(_,C,_,_)|T],L) :-
 
 %--------------------------------------Auxiliares para Funcionalidade 10--------------------------------------
 
-% Devolve a lista  de Id das encomendas de um estafeta
-estaf(IdEstaf,L) :- 
-   estafeta(IdEstaf,L1), 
-   idEncLista(L1,L).
-
-% Devolve a lista de ID de encomendas a partir da lista de encomendas de um estafeta 
-idEncLista([],[]).
-idEncLista([(I,_,_,_)], [I]).
-idEncLista([(I,_,_,_)|R], L) :-
-	idEncLista(R,L1),
-	adiciona(I,L1,L). 
-
 % Devolve o peso de uma encomenda 
 pesoEstaf(IdEnc,Peso) :- 
    encomenda(IdEnc,_,P,_,_,_,_,_),
@@ -138,9 +126,10 @@ pesoEstaf(IdEnc,Peso) :-
 	pesoEstafLista(R,L1),
 	adiciona(P,L1,L).
 
-% Devolve todas as encomendas entregues num determinado dia
-encomendasDia(A,M,D,L) :- solucoes(IdEnc, encomenda(IdEnc,_,_,_,_,_,data(A,M,D,_,_),_), L)
 
+
+% Devolve a soma dos pesos das encomendas
+totalPesoEnc(L,V) :- soma(L,V).
 %---------------------------------------------------Extras---------------------------------------------------
 
 % Adiciona um elemento a uma lista caso este ainda não pertença

@@ -97,6 +97,6 @@ mediaSatisfacaoEstafeta(IdEstf,Media) :-
 
 pesoTotal(A,M,D,IdEstaf,Total) :-
   encomendasDia(A,M,D,L), 
-  estaf(IdEstaf,L),
+  encomendasDoEstafeta(IdEstaf,L),
   pesoEstafLista(L,P),
-  soma(L,S).
+  totalPesoEnc(L,S).
