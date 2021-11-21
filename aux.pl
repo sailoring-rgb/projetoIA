@@ -41,7 +41,7 @@ encomendasPorBicicleta([IdEnc|T],Conta) :-
 	nao(encomenda(IdEnc,_,_,_,_,_,_,'Bicicleta')),
 	encomendasPorBicicleta( T, Conta ).
 encomendasPorBicicleta([IdEnc|T],Conta) :-
-	encomenda(IdEnc,_,_,_,_,_,_'Bicicleta'),
+	encomenda(IdEnc,_,_,_,_,_,_,'Bicicleta'),
 	encomendasPorBicicleta(T,Conta0),
 	Conta is Conta0 + 1.
 
