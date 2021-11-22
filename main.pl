@@ -84,7 +84,15 @@ funcionalidade(7) :-
 
 % funcionalidade(8) :-
 
-% funcionalidade(9) :-
+funcionalidade(9) :-
+    write('Indique a data inicial no formato data(Ano,Mês,Dia,Horas,Minutos): '),!,
+    read(Input1),elementosDataTime(Input1,A1,M1,D1,H1,Min1),nl,
+    write('Indique a data final no formato data(Ano,Mês,Dia,Horas,Minutos): '),!,
+    read(Input2),elementosDataTime(Input2,A2,M2,D2,H2,Min2),nl,
+    numEntregasNaoEntregas(data(A1,M1,D1,H1,Min1),data(A2,M2,D2,H2,Min2),V1,V2),
+    write('Número total de encomendas entregues: '),write(V1),nl,
+    write('Número total de encomendas não entregues: '),write(V2),nl,
+    main.
 
 % funcionalidade(10) :-
 
