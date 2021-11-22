@@ -66,9 +66,13 @@ funcionalidade(5) :-
     write('Zona(s) com maior volume de entregas: '),write(L),nl,
     main.
 
-% funcionalidade(6) :-
+funcionalidade(6) :-
+    write('Indique o ID do estafeta: '),!,
+    read(ID),
+    mediaSatisfacaoEstafeta(ID,V),nl,
+    write('Classificação média de satisfação de cliente: '),write(V),nl,
+    main.
     
-
 funcionalidade(7) :-
     write('Indique a data inicial no formato data(Ano,Mês,Dia,Horas,Minutos): '),!,
     read(Input1),elementosDataTime(Input1,A1,M1,D1,H1,Min1),nl,
