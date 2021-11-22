@@ -32,6 +32,12 @@ dataValida(data(A,M,D,H,Min)) :-
 dataValida(data(A,M,D,H,Min)) :-
     A =\= 0, M =:= 2, mod(A,4) =\= 0, D >= 1, D =< 28, H >= 0, H =< 23, Min >= 0, Min < 60.
 
+% Verifica se uma data está dentro de um intervalo de tempo
+verificaIntervalo(data(AnoInicio,MesInicio,DiaInicio,HoraInicio,MinutoInicio),data(Ano,Mes,Dia,Hora,Minuto),data(AnoFim,MesFim,DiaFim,HoraFim,MinutoFim)) :-
+    dataValida(data(Ano,Mes,Dia,Hora,Minuto)),
+    comparaDatas(data(Ano,Mes,Dia,Hora,Minuto),data(AnoInicio,MesInicio,DiaInicio,HoraInicio,MinutoInicio)),
+    comparaDatas(data(AnoFim,MesFim,DiaFim,HoraFim,MinutoFim),data(Ano,Mes,Dia,Hora,Minuto)).
+    
 %--------------------------------------Usadas em várias funcionalidades--------------------------------------
 
 % Devolve a lista dos ids das encomendas de um estafeta
@@ -165,12 +171,6 @@ classificacoesDaLista([(_,C,_,_)|T],L) :-
 contaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador) :-
     listaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregas,_),
     comprimento(ListaEntregas,Contador).
-
-% Verifica se uma data está dentro de um intervalo de tempo
-verificaIntervalo(data(AnoInicio,MesInicio,DiaInicio,HoraInicio,MinutoInicio),data(Ano,Mes,Dia,Hora,Minuto),data(AnoFim,MesFim,DiaFim,HoraFim,MinutoFim)) :-
-    dataValida(data(Ano,Mes,Dia,Hora,Minuto)),
-    comparaDatas(data(Ano,Mes,Dia,Hora,Minuto),data(AnoInicio,MesInicio,DiaInicio,HoraInicio,MinutoInicio)),
-    comparaDatas(data(AnoFim,MesFim,DiaFim,HoraFim,MinutoFim),data(Ano,Mes,Dia,Hora,Minuto)).
 
 %--------------------------------------Auxiliares para Funcionalidade 9---------------------------------------
 
