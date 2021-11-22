@@ -60,6 +60,19 @@ listaTodasEncomendas([IdEstaf|T],ListaEnc) :-
     listaTodasEncomendas(T,Lista1),
     concatena(Lista0,Lista1,ListaEnc).
 
+% Devolve uma lista dos ids de encomendas entregues e outra lista dos ids de encomendas não entregues, naquele intervalo de tempo.
+listaEntregasIntervalo([],_,_,[],[]).
+listaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregas,ListaNaoEntregas) :-
+    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto),_),
+    verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF)),
+    listaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Lista0,ListaNaoEntregas),
+    adiciona(IdEnc,Lista0,ListaEntregas).
+listaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregas,ListaNaoEntregas) :-
+    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto),_),
+    nao(dataValida(data(Ano,Mes,Dia,Hora,Minuto))),
+    listaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregas,Lista1),
+    adiciona(IdEnc,Lista1,ListaNaoEntregas).
+   
 %--------------------------------------Auxiliares para Funcionalidade 1--------------------------------------
 
 % Conta o número de encomendas cujo transporte foi mais ecológico, ou seja, por bicicleta
@@ -124,10 +137,12 @@ encomendasDia(A,M,D,L) :- solucoes(IdEnc, encomenda(IdEnc,_,_,_,_,_,data(A,M,D,_
 
 %--------------------------------------Auxiliares para Funcionalidade 5--------------------------------------
 
+% Devolve a freguesia de um estafeta
 freguesiaDoEstafeta(IdEstaf,Freguesia) :-
 	estafeta(IdEstaf,Lista0),
 	freguesiaDaLista(Lista0,Freguesia).
 
+% Devolve a freguesia a partir da lista [(IdEnc,Nota,Rua,Freguesia)|T]
 freguesiaDaLista([(_,_,_,X)|T],X).
 
 %--------------------------------------Auxiliares para Funcionalidade 6--------------------------------------
@@ -144,28 +159,27 @@ classificacoesDaLista([(_,C,_,_)|T],L) :-
 	classificacoesDaLista(T,L1),
 	adiciona(C,L1,L).    
 
-%--------------------------------------Auxiliares para Funcionalidade 7--------------------------------------
+%--------------------------------------Auxiliares para Funcionalidade 7---------------------------------------
 
+% Conta o número de entregas feitas num intervalo de tempo
 contaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador) :-
-    listaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Lista),
-    comprimento(Lista,Contador).
+    listaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregas,_),
+    comprimento(ListaEntregas,Contador).
 
+% Verifica se uma data está dentro de um intervalo de tempo
 verificaIntervalo(data(AnoInicio,MesInicio,DiaInicio,HoraInicio,MinutoInicio),data(Ano,Mes,Dia,Hora,Minuto),data(AnoFim,MesFim,DiaFim,HoraFim,MinutoFim)) :-
     dataValida(data(Ano,Mes,Dia,Hora,Minuto)),
     comparaDatas(data(Ano,Mes,Dia,Hora,Minuto),data(AnoInicio,MesInicio,DiaInicio,HoraInicio,MinutoInicio)),
     comparaDatas(data(AnoFim,MesFim,DiaFim,HoraFim,MinutoFim),data(Ano,Mes,Dia,Hora,Minuto)).
 
-listaEntregasIntervalo([],[]).
-listaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Lista) :-
-    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto),_),
-    nao(verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF))),
-    listaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Lista).
-listaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Lista) :-
-    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto),_),
-    verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF)),
-    contaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Lista0),
-    adiciona(IdEnc,Lista0,Lista).
-    
+%--------------------------------------Auxiliares para Funcionalidade 9---------------------------------------
+
+% Conta o número de encomendas entregues e o número de encomendas não entregues num intervalo de tempo
+numEntregasNaoEntregas(ListaEnc,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador0,Contador1) :-
+    listaEntregasIntervalo(ListaEnc,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregas,ListaNaoEntregas),
+    comprimento(ListaEntregas,Contador0),
+    comprimento(ListaNaoEntregas,Contador1).
+
 %--------------------------------------Auxiliares para Funcionalidade 10--------------------------------------
 
 % Devolve o peso de uma encomenda 
