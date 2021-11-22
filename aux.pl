@@ -146,24 +146,26 @@ classificacoesDaLista([(_,C,_,_)|T],L) :-
 
 %--------------------------------------Auxiliares para Funcionalidade 7--------------------------------------
 
-contaEntregasIntervalo([],_,_,0).
-
 contaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador) :-
-    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto),_),
-    nao(verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF))),
-    contaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador).
-
-contaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador) :-
-    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto),_),
-    verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF)),
-    contaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador0),
-    Contador is Contador0 + 1.
+    listaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Lista),
+    comprimento(Lista,Contador).
 
 verificaIntervalo(data(AnoInicio,MesInicio,DiaInicio,HoraInicio,MinutoInicio),data(Ano,Mes,Dia,Hora,Minuto),data(AnoFim,MesFim,DiaFim,HoraFim,MinutoFim)) :-
     dataValida(data(Ano,Mes,Dia,Hora,Minuto)),
-	comparaDatas(data(Ano,Mes,Dia,Hora,Minuto),data(AnoInicio,MesInicio,DiaInicio,HoraInicio,MinutoInicio)),
+    comparaDatas(data(Ano,Mes,Dia,Hora,Minuto),data(AnoInicio,MesInicio,DiaInicio,HoraInicio,MinutoInicio)),
     comparaDatas(data(AnoFim,MesFim,DiaFim,HoraFim,MinutoFim),data(Ano,Mes,Dia,Hora,Minuto)).
 
+listaEntregasIntervalo([],[]).
+listaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Lista) :-
+    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto),_),
+    nao(verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF))),
+    listaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Lista).
+listaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Lista) :-
+    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto),_),
+    verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF)),
+    contaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Lista0),
+    adiciona(IdEnc,Lista0,Lista).
+    
 %--------------------------------------Auxiliares para Funcionalidade 10--------------------------------------
 
 % Devolve o peso de uma encomenda 
