@@ -93,7 +93,7 @@ mediaSatisfacaoEstafeta(IdEstf,Media) :-
 
 numeroTotalEntregas(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador) :-
     listaTodasEncomendas(ListaEnc),
-    contaEntregasIntervalo(ListaEnc,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador).
+    numEntregasNaoEntregas(ListaEnc,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador,_).
 
 %---------------------------------------------Funcionalidade 9---------------------------------------------
 % Extensão do predicado numEntregasNaoEntregas : DataInicio, DataFim, ContadorEntregas, ContadorNaoEntregas-> {V,F}

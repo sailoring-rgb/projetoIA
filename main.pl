@@ -7,7 +7,14 @@
 :- set_prolog_flag( single_var_warnings,off ).
 
 :- style_check(-singleton).
-
+ola :-
+write('Indique uma data no formato - data(Ano,Mês,Dia): '),!,
+    read(Input),
+    ((dataValida(Input),
+    elementosData(Input,A,M,D),
+    write(A),write(' '),write(M),write(' '),write(D),write(' '),nl);
+    write('A data que inseriu não é válida.')),
+    main.
 %-----------------------------------------------------------------------------------------------------------------------------------------
 
 main :-
@@ -54,11 +61,13 @@ funcionalidade(3) :-
     main.
 
 funcionalidade(4) :-
-    write('Indique uma data no formato data(Ano,Mês,Dia): '),!,
+    write('Indique uma data no formato - data(Ano,Mês,Dia): '),!,
     read(Input),
+    ((dataValida(Input),
     elementosData(Input,A,M,D),
     valorFaturadoDia(A,M,D,V),nl,
-    write('Valor faturado em '),write(D),write('/'),write(M),write('/'),write(A),write(' : '),write(V),nl,
+    write('Valor faturado em '),write(D),write('/'),write(M),write('/'),write(A),write(' : '),write(V),nl);
+    write('A data que inseriu não é válida.')),
     main.
 
 funcionalidade(5) :-
@@ -74,24 +83,32 @@ funcionalidade(6) :-
     main.
     
 funcionalidade(7) :-
-    write('Indique a data inicial no formato data(Ano,Mês,Dia,Horas,Minutos): '),!,
-    read(Input1),elementosDataTime(Input1,A1,M1,D1,H1,Min1),nl,
-    write('Indique a data final no formato data(Ano,Mês,Dia,Horas,Minutos): '),!,
-    read(Input2),elementosDataTime(Input2,A2,M2,D2,H2,Min2),nl,
-    numeroTotalEntregas(data(A1,M1,D1,H1,Min1),data(A2,M2,D2,H2,Min2),V),
-    write('Número total de entregas: '),write(V),nl,
+    write('Indique a data inicial no formato - data(Ano,Mês,Dia,Horas,Minutos): '),!,
+    read(Input1),
+        ((nao(dataTimeValida(Input1)) -> nl,write('A data que inseriu não é válida.'),nl);
+        elementosDataTime(Input1,A1,M1,D1,H1,Min1),nl,
+        write('Indique a data final no formato - data(Ano,Mês,Dia,Horas,Minutos): '),!,
+        read(Input2),
+            ((nao(dataTimeValida(Input2)) -> nl,write('A data que inseriu não é válida.'),nl);
+            elementosDataTime(Input2,A2,M2,D2,H2,Min2),nl,
+            numeroTotalEntregas(data(A1,M1,D1,H1,Min1),data(A2,M2,D2,H2,Min2),V),
+            write('Número total de entregas: '),write(V),nl)),
     main.
 
 % funcionalidade(8) :-
 
 funcionalidade(9) :-
-    write('Indique a data inicial no formato data(Ano,Mês,Dia,Horas,Minutos): '),!,
-    read(Input1),elementosDataTime(Input1,A1,M1,D1,H1,Min1),nl,
-    write('Indique a data final no formato data(Ano,Mês,Dia,Horas,Minutos): '),!,
-    read(Input2),elementosDataTime(Input2,A2,M2,D2,H2,Min2),nl,
-    numEntregasNaoEntregas(data(A1,M1,D1,H1,Min1),data(A2,M2,D2,H2,Min2),V1,V2),
-    write('Número total de encomendas entregues: '),write(V1),nl,
-    write('Número total de encomendas não entregues: '),write(V2),nl,
+    write('Indique a data inicial no formato - data(Ano,Mês,Dia,Horas,Minutos): '),!,
+    read(Input1),
+        ((nao(dataTimeValida(Input1)) -> nl,write('A data que inseriu não é válida.'),nl);
+        elementosDataTime(Input1,A1,M1,D1,H1,Min1),nl,
+        write('Indique a data final no formato - data(Ano,Mês,Dia,Horas,Minutos): '),!,
+        read(Input2),
+            ((nao(dataTimeValida(Input2)) -> nl,write('A data que inseriu não é válida.'),nl);
+            elementosDataTime(Input2,A2,M2,D2,H2,Min2),nl,
+            numEntregasNaoEntregas(data(A1,M1,D1,H1,Min1),data(A2,M2,D2,H2,Min2),V1,V2),
+            write('Número total de encomendas entregues: '),write(V1),nl,
+            write('Número total de encomendas não entregues: '),write(V2),nl)),
     main.
 
 % funcionalidade(10) :-

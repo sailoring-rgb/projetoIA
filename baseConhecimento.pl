@@ -1,5 +1,6 @@
 %---------------------------Encomenda---------------------------
 % Encomenda: #IdEnc, #IdCliente, Peso, Volume, Prazo, DataInicio, DataFim, Transporte
+% Data: #Ano, Mês, Dia, Hora, Minuto
 
 encomenda(1,1,30,20,'6h',data(2021,7,25,10,0),data(2021,7,25,15,30),'Carro').
 encomenda(2,4,2,15,'Imediato', data(2021,8,1,12,30), data(2021,8,1,12,35), 'Bicicleta').

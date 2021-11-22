@@ -21,20 +21,28 @@ comparaDatas(data(AH,MH,DH,HH,MinH),data(AP,MP,DP,HP,MinP)) :-
                             (DP =:= DH, (HP < HH;
                                         (HH =:= HP, (MinP < MinH;
                                                     (MinP =:= MinH))))))))).
+                                                    
+% Verifica se uma data AAAA-MM-DD é válida
+dataValida(data(A,M,D)) :-
+    ((A =:= 0; (M > 12; M < 1)), !, fail);
+    (membro(M,[1,3,5,7,8,10,12]), D >= 1, D =< 31);
+    (membro(M,[4,6,9,11]), D >= 1, D =< 30);
+    (M =:= 2, (mod(A,4) =:= 0, D >= 1, D =< 29);
+                              (D >= 1, D =< 28)).
 
-% Verifica se uma data é valida                                               
-dataValida(data(A,M,D,H,Min)) :-
+% Verifica se uma data AAAA-MM-DD-HH-Min é válida                                               
+dataTimeValida(data(A,M,D,H,Min)) :-
     A =\= 0, membro(M,[1,3,5,7,8,10,12]), D >= 1, D =< 31, H >= 0, H =< 23, Min >= 0, Min < 60.
-dataValida(data(A,M,D,H,Min)) :-
+dataTimeValida(data(A,M,D,H,Min)) :-
     A =\= 0, membro(M,[4,6,9,11]), D >= 1, D =< 30, H >= 0, H =< 23, Min >= 0, Min < 60.
-dataValida(data(A,M,D,H,Min)) :-
+dataTimeValida(data(A,M,D,H,Min)) :-
     A =\= 0, M =:= 2, mod(A,4) =:= 0, D >= 1, D =< 29, H >= 0, H =< 23, Min >= 0, Min < 60.
-dataValida(data(A,M,D,H,Min)) :-
+dataTimeValida(data(A,M,D,H,Min)) :-
     A =\= 0, M =:= 2, mod(A,4) =\= 0, D >= 1, D =< 28, H >= 0, H =< 23, Min >= 0, Min < 60.
 
 % Verifica se uma data está dentro de um intervalo de tempo
 verificaIntervalo(data(AnoInicio,MesInicio,DiaInicio,HoraInicio,MinutoInicio),data(Ano,Mes,Dia,Hora,Minuto),data(AnoFim,MesFim,DiaFim,HoraFim,MinutoFim)) :-
-    dataValida(data(Ano,Mes,Dia,Hora,Minuto)),
+    dataTimeValida(data(Ano,Mes,Dia,Hora,Minuto)),
     comparaDatas(data(Ano,Mes,Dia,Hora,Minuto),data(AnoInicio,MesInicio,DiaInicio,HoraInicio,MinutoInicio)),
     comparaDatas(data(AnoFim,MesFim,DiaFim,HoraFim,MinutoFim),data(Ano,Mes,Dia,Hora,Minuto)).
     
@@ -75,7 +83,7 @@ listaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),L
     adiciona(IdEnc,Lista0,ListaEntregas).
 listaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregas,ListaNaoEntregas) :-
     encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto),_),
-    nao(dataValida(data(Ano,Mes,Dia,Hora,Minuto))),
+    nao(verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF))),
     listaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregas,Lista1),
     adiciona(IdEnc,Lista1,ListaNaoEntregas).
    
@@ -165,14 +173,7 @@ classificacoesDaLista([(_,C,_,_)|T],L) :-
 	classificacoesDaLista(T,L1),
 	adiciona(C,L1,L).    
 
-%--------------------------------------Auxiliares para Funcionalidade 7---------------------------------------
-
-% Conta o número de entregas feitas num intervalo de tempo
-contaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador) :-
-    listaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregas,_),
-    comprimento(ListaEntregas,Contador).
-
-%--------------------------------------Auxiliares para Funcionalidade 9---------------------------------------
+%--------------------------------------Auxiliar para Funcionalidades 7 e 9---------------------------------------
 
 % Conta o número de encomendas entregues e o número de encomendas não entregues num intervalo de tempo
 numEntregasNaoEntregas(ListaEnc,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador0,Contador1) :-
