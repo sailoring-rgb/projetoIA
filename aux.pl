@@ -103,17 +103,17 @@ encomendasPorBicicleta([IdEnc|T],Conta) :-
 	encomenda(IdEnc,_,_,_,_,_,_,'Bicicleta'),
 	encomendasPorBicicleta(T,Conta0),
 	Conta is Conta0 + 1.
-
+    
 %--------------------------------------Auxiliares para Funcionalidade 2--------------------------------------
 
 % Devolve os estafetas que entregaram determinada encomenda 
  
 estafetasEncCliente(IdEnc,L) :-
-	solucoes(IdEstf,estafetaFezEncomenda(IdEstf,IdEnc),R),
+	solucoes(IdEstaf,estafetaFezEncomenda(IdEstaf,IdEnc),R),
 	sort(R,L).
 
-estafetaFezEncomenda(IdEstf, IdEnc) :- 
-	encomendasDoEstafeta(IdEstf,L),
+estafetaFezEncomenda(IdEstaf, IdEnc) :- 
+	encomendasDoEstafeta(IdEstaf,L),
 	membro(IdEnc,L).
 
 %--------------------------------------Auxiliares para Funcionalidade 3--------------------------------------
@@ -126,9 +126,9 @@ listaClientesDasEnc([IdEnc|T],Lista) :-
     adiciona(IdCliente,Lista1,Lista).
 
 % Devolve o id do cliente de uma encomenda
-clienteDaEncomenda( IdEnc, IdClient ) :-
+clienteDaEncomenda( IdEnc, IdCliente ) :-
     encomenda(IdEnc,X,_,_,_,_,_,_),
-    IdClient is X.
+    IdCliente is X.
 
 %--------------------------------------Auxiliares para Funcionalidade 4--------------------------------------
 
@@ -238,3 +238,21 @@ comprimento(S,N) :- length(S,N).
 % Soma os elementos de uma lista 
 soma([],0).
 soma([X|Y],Total) :- soma(Y, Ac), Total is X + Ac.
+
+% Verifica o tipo de dados da lista de encomendas do estafeta
+verificaDadosLista([]).
+verificaDadosLista([(IdEnc,Nota,Rua,Freguesia)|T]) :- 
+        integer(IdEnc),
+        float(Nota),
+        atom(Rua),
+        atom(Freguesia).
+
+% Devolve a freguesia de um estafeta numa lista (a lista contém apenas um elemento)
+% Este predicado só foi preciso para um invariante estrutural
+listaFreguesiasEstaf(IdEstaf,Lista,ListaFreg) :-
+    listaFreguesiasEstaf(Lista,ListaFreg).
+
+listaFreguesiasEstaf([],[]).
+listaFreguesiasEstaf([(_,_,_,Freg)|T],ListaFreg) :-
+    listaFreguesiasEstaf(T,Lista0),
+    adiciona(Freg,Lista0,ListaFreg).

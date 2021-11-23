@@ -19,7 +19,7 @@ cliente(4).
 cliente(5).
 
 %---------------------------Estafeta---------------------------
-% Estafeta: #IdEstf, [ (#IdEnc,Nota,Rua,Freguesia) | T]
+% Estafeta: #IdEstaf, [ (#IdEnc,Nota,Rua,Freguesia) | T]
 
 estafeta(1,[(1,3.2,'Rua da Boavista','Real')]).
 estafeta(2,[(1,3.5,'Av. da Liberdade','São Lázaro'),(2,4.6,'Rua do Raio','São Lázaro'),(4,2.7,'Rua do Poço','São Lázaro')]).

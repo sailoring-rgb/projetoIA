@@ -7,14 +7,7 @@
 :- set_prolog_flag( single_var_warnings,off ).
 
 :- style_check(-singleton).
-ola :-
-write('Indique uma data no formato - data(Ano,Mês,Dia): '),!,
-    read(Input),
-    ((dataValida(Input),
-    elementosData(Input,A,M,D),
-    write(A),write(' '),write(M),write(' '),write(D),write(' '),nl);
-    write('A data que inseriu não é válida.')),
-    main.
+
 %-----------------------------------------------------------------------------------------------------------------------------------------
 
 main :-

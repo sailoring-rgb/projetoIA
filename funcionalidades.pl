@@ -1,5 +1,6 @@
 :- consult('baseConhecimento.pl').
 :- consult('aux.pl').
+:- consult('invariantes.pl').
 
 :- set_prolog_flag( discontiguous_warnings,off ).
 :- set_prolog_flag( single_var_warnings,off ).
