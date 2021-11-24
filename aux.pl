@@ -256,3 +256,12 @@ listaFreguesiasEstaf([],[]).
 listaFreguesiasEstaf([(_,_,_,Freg)|T],ListaFreg) :-
     listaFreguesiasEstaf(T,Lista0),
     adiciona(Freg,Lista0,ListaFreg).
+
+% Verifica se o peso da encomenda e a velocidade do estafeta respeitaram os limites do meio de transporte usado
+transportePesoVelocidade([]).
+transportePesoVelocidade([(IdEnc,_,Velocidade,Transporte,_,_)|T]) :-
+    encomenda(IdEstaf,_,Peso,_,_,_,_),
+    ((Transporte == 'Bicicleta', Peso =< 5, Velocidade == 10);
+     (Transporte == 'Mota', Peso =< 20, Velocidade == 35);
+     (Transporte == 'Carro', Peso =< 100, Velocidade == 25)),
+     transportePesoVelocidade(T).
