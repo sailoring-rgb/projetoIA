@@ -19,10 +19,10 @@ estafetaMaisEcologico(Id) :-
 
 estafetaMaisEcologico([],0,_).
 estafetaMaisEcologico([IdEstaf],Max,IdEstaf) :-
-	estafetaEncomendasEcologicas(IdEstaf,Contador),
+	encomendasPorBicicleta(IdEstaf,Contador),
 	Max = Contador.	
 estafetaMaisEcologico([IdEstaf|T],Max,IdMax) :-
-	estafetaEncomendasEcologicas(IdEstaf,Contador),
+	encomendasPorBicicleta(IdEstaf,Contador),
 	estafetaMaisEcologico(T,ContadorMax,Id),
 	(Contador > ContadorMax -> Max = Contador, IdMax = IdEstaf;
 	 Max = ContadorMax, IdMax = Id).

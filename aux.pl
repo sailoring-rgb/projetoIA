@@ -53,10 +53,10 @@ encomendasDoEstafeta(IdEstaf,Lista) :-
     estafeta(IdEstaf,Lista0),
 	encomendasDaLista(Lista0,Lista).
 
-% Devolve a lista dos ids das encomendas a partir da lista de encomendas de um estafeta: [(IdEnc,Nota,Rua,Freguesia)|T]
+% Devolve a lista dos ids das encomendas a partir da lista de encomendas de um estafeta: [(IdEnc,Nota,Velocidade,Transporte,Rua,Freguesia)|T]
 encomendasDaLista([],[]).
-encomendasDaLista([(X,_,_,_)],[X]).
-encomendasDaLista([(X,_,_,_)|T],Lista) :-
+encomendasDaLista([(X,_,_,_,_,_)],[X]).
+encomendasDaLista([(X,_,_,_,_,_)|T],Lista) :-
 	encomendasDaLista(T,Lista0),
 	adiciona(X,Lista0,Lista).
 
@@ -77,33 +77,29 @@ listaTodasEncomendas([IdEstaf|T],ListaEnc) :-
 % Devolve uma lista dos ids de encomendas entregues e outra lista dos ids de encomendas não entregues, naquele intervalo de tempo.
 listaEntregasIntervalo([],_,_,[],[]).
 listaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregas,ListaNaoEntregas) :-
-    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto),_),
+    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto)),
     verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF)),
     listaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Lista0,ListaNaoEntregas),
     adiciona(IdEnc,Lista0,ListaEntregas).
 listaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregas,ListaNaoEntregas) :-
-    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto),_),
+    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto)),
     nao(verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF))),
     listaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregas,Lista1),
     adiciona(IdEnc,Lista1,ListaNaoEntregas).
-   
+
 %--------------------------------------Auxiliares para Funcionalidade 1--------------------------------------
 
-% Conta o número de encomendas cujo transporte foi mais ecológico, ou seja, por bicicleta
-estafetaEncomendasEcologicas( IdEstaf, Conta ) :-
-	encomendasDoEstafeta( IdEstaf, Lista ),
-	encomendasPorBicicleta( Lista, Conta ).
-
 % Devolve o número de encomendas (duma lista) transportadas pelo meio de transporte bicicleta
-encomendasPorBicicleta([],0).
-encomendasPorBicicleta([IdEnc|T],Conta) :-
-	nao(encomenda(IdEnc,_,_,_,_,_,_,'Bicicleta')),
-	encomendasPorBicicleta( T, Conta ).
-encomendasPorBicicleta([IdEnc|T],Conta) :-
-	encomenda(IdEnc,_,_,_,_,_,_,'Bicicleta'),
-	encomendasPorBicicleta(T,Conta0),
-	Conta is Conta0 + 1.
-    
+encomendasPorBicicleta(IdEstaf,Conta) :-
+    estafeta(IdEstaf,Lista),
+	verificaBicicleta(Lista,Conta).
+
+verificaBicicleta([],0).
+verificaBicicleta([(_,_,_,Transporte,_,_)|T],Conta) :-
+    verificaBicicleta(T,Conta0),
+    ((Transporte == 'Bicicleta' -> Conta is Conta0 + 1);
+     Conta is Conta0).
+
 %--------------------------------------Auxiliares para Funcionalidade 2--------------------------------------
 
 % Devolve os estafetas que entregaram determinada encomenda 
@@ -126,8 +122,8 @@ listaClientesDasEnc([IdEnc|T],Lista) :-
     adiciona(IdCliente,Lista1,Lista).
 
 % Devolve o id do cliente de uma encomenda
-clienteDaEncomenda( IdEnc, IdCliente ) :-
-    encomenda(IdEnc,X,_,_,_,_,_,_),
+clienteDaEncomenda(IdEnc,IdCliente) :-
+    encomenda(IdEnc,X,_,_,_,_,_),
     IdCliente is X.
 
 %--------------------------------------Auxiliares para Funcionalidade 4--------------------------------------
@@ -156,8 +152,8 @@ freguesiaDoEstafeta(IdEstaf,Freguesia) :-
 	estafeta(IdEstaf,Lista0),
 	freguesiaDaLista(Lista0,Freguesia).
 
-% Devolve a freguesia a partir da lista [(IdEnc,Nota,Rua,Freguesia)|T]
-freguesiaDaLista([(_,_,_,X)|T],X).
+% Devolve a freguesia a partir da lista [(IdEnc,Nota,Velocidade,Transporte,Rua,Freguesia)|T]
+freguesiaDaLista([(_,_,_,_,_,X)|T],X).
 
 %--------------------------------------Auxiliares para Funcionalidade 6--------------------------------------
 
@@ -241,9 +237,11 @@ soma([X|Y],Total) :- soma(Y, Ac), Total is X + Ac.
 
 % Verifica o tipo de dados da lista de encomendas do estafeta
 verificaDadosLista([]).
-verificaDadosLista([(IdEnc,Nota,Rua,Freguesia)|T]) :- 
+verificaDadosLista([(IdEnc,Nota,Velocidade,Transporte,Rua,Freguesia)|T]) :- 
         integer(IdEnc),
         float(Nota),
+        integer(Velocidade),
+        atom(Transporte),
         atom(Rua),
         atom(Freguesia).
 
@@ -253,7 +251,7 @@ listaFreguesiasEstaf(IdEstaf,Lista,ListaFreg) :-
     listaFreguesiasEstaf(Lista,ListaFreg).
 
 listaFreguesiasEstaf([],[]).
-listaFreguesiasEstaf([(_,_,_,Freg)|T],ListaFreg) :-
+listaFreguesiasEstaf([(_,_,_,_,_,Freg)|T],ListaFreg) :-
     listaFreguesiasEstaf(T,Lista0),
     adiciona(Freg,Lista0,ListaFreg).
 
