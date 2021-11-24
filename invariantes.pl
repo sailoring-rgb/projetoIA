@@ -17,31 +17,23 @@
 % # Invariantes sobre encomendas 
 
 % Invariante estrutural: os campos da Encomenda devem respeitar este tipo de dados
-+encomenda(IdEnc,IdCliente,Peso,Volume,Prazo,DataInicio,DataFim,Transporte) :: (
++encomenda(IdEnc,IdCliente,Peso,Volume,Prazo,DataInicio,DataFim) :: (
     integer(IdEnc),
     integer(IdCliente),
     integer(Peso),
     integer(Volume),
     atom(Prazo),
-    dataTimeValida(DataInicio),
-    atom(Transporte)
+    dataTimeValida(DataInicio)
 ).
 
 % Invariante estrutural: não permitir a entrada de uma encomenda cujo ID já exista
-+encomenda(IdEnc,_,_,_,_,_,_,_) :: (
-    solucoes(IdEnc,encomenda(IdEnc,_,_,_,_,_,_,_),L),
++encomenda(IdEnc,_,_,_,_,_,_) :: (
+    solucoes(IdEnc,encomenda(IdEnc,_,_,_,_,_,_),L),
     comprimento(L,1)
 ).
 
-% Invariante estrutural: não permitir a entrada de uma encomenda cujo peso ultrapassa o peso maximo permitido pelo tipo de tranporte usado
-+encomenda(_,_,Peso,_,_,_,_,Transporte) :: (
-    ((Transporte == 'Bicicleta', Peso =< 5);
-     (Transporte == 'Mota', Peso =< 20);
-     (Transporte == 'Carro', Peso =< 100))
-).
-
 % Invariante referencial: não permitir a remoção de uma encomenda que esteja associada a um estafeta
--encomenda(IdEnc,_,_,_,_,_,_,_) :: (
+-encomenda(IdEnc,_,_,_,_,_,_) :: (
     listaTodasEncomendas(L),
     nao(membro(IdEnc,L))
 ).
@@ -85,6 +77,11 @@
 +estafeta(IdEstaf,Lista) :: (
     listaFreguesiasEstaf(IdEstaf,Lista,L),
     comprimento(L,1)
+).
+
+% Invariante estrutural: não permitir a entrada de um estafeta cujo meio de transporte não suporte o peso da encomenda e a velocidade 
++estafeta(IdEstaf,Lista) :: (
+    transportePesoVelocidade(Lista)
 ).
 
 % Invariante referencial: não permitir a remoção de um estafeta que tenha feito entregas
