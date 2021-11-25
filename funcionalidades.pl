@@ -100,9 +100,9 @@ numeroTotalEntregas(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador) :-
 % Extensão do predicado numEntregasNaoEntregas : DataInicio, DataFim, ContadorEntregas, ContadorNaoEntregas-> {V,F}
 % Calcula o número de encomendas entregues e não entregues pela Green Distribution, num determinado período de tempo.
 
-numEntregasNaoEntregas(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador0,Contador1) :-
+numEntregasNaoEntregas(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador0,Contador1,Contador2) :-
     listaTodasEncomendas(ListaEnc),
-    numEntregasNaoEntregas(ListaEnc,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador0,Contador1).
+    contaEntregasIntervalo(ListaEnc,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador0,Contador1,Contador2).
 
 %---------------------------------------------Funcionalidade 10---------------------------------------------
 % Extensão do predicado : Id, Total -> {V,F}
