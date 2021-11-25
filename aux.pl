@@ -90,11 +90,11 @@ verificaBicicleta([(_,_,_,Transporte,_,_)|T],Conta) :-
 %--------------------------------------Auxiliares para Funcionalidade 2--------------------------------------
 
 % Devolve os estafetas que entregaram determinada encomenda 
- 
 estafetasEncCliente(IdEnc,L) :-
 	solucoes(IdEstaf,estafetaFezEncomenda(IdEstaf,IdEnc),R),
 	sort(R,L).
 
+% Indica se um dado estafeta entregou determinada encomenda
 estafetaFezEncomenda(IdEstaf, IdEnc) :- 
 	encomendasDoEstafeta(IdEstaf,L),
 	membro(IdEnc,L).
@@ -117,7 +117,7 @@ clienteDaEncomenda(IdEnc,IdCliente) :-
 
 % Falta completar
 % Devolve o preço associado ao serviço de entrega de uma encomenda
-% precoEncomenda(IdEnc,P) :- encomenda(IdEnc,_,Peso,Vol,Prazo,_,_,Trspt),
+% precoEncomenda(IdEnc,P) :- encomenda(IdEnc,_,Peso,Vol,Prazo,_,_),
 %	P is 5*Peso + 4*Vol + 
 
 % Devolve a lista com os preços relativos a uma lista de encomendas
@@ -130,7 +130,7 @@ precosListaEncomendas([IdEnc|T],L) :-
 totalEncomendas(L,V) :- soma(L,V).
 
 % Devolve todas as encomendas entregues num determinado dia
-encomendasDia(A,M,D,L) :- solucoes(IdEnc, encomenda(IdEnc,_,_,_,_,_,data(A,M,D,_,_),_), L).
+encomendasDia(A,M,D,L) :- solucoes(IdEnc, encomenda(IdEnc,_,_,_,_,_,data(A,M,D,_,_)), L).
 
 %--------------------------------------Auxiliares para Funcionalidade 5--------------------------------------
 
@@ -165,7 +165,7 @@ classificacoesDaLista([(_,C,_,_)|T],L) :-
 
 contaEntregasIntervalo([],_,_,0,0,0).
 contaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaEntregasPeriodo,ContaNaoEntregasPeriodo,ContaNuncaEntregues) :-
-    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto)),
+    sIdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto)),
     verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF)),
     contaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador0,ContaNaoEntregasPeriodo,ContaNuncaEntregues),
     ContaEntregasPeriodo is Contador0 + 1.
@@ -184,21 +184,50 @@ contaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),C
 %--------------------------------------Auxiliares para Funcionalidade 10--------------------------------------
 
 % Devolve o peso de uma encomenda 
-pesoEstaf(IdEnc,Peso) :- 
-   encomenda(IdEnc,_,P,_,_,_,_,_),
-   Peso is P.
+pesoEnc(IdEnc,P) :- encomenda(IdEnc,_,P,_,_,_,_).
 
-% Devolve a lista dos pesos 
- pesoEstafLista([],[]).
- pesoEstafLista([IdEnc|R],L) :- 
-    pesoEstaf(IdEnc,P),
-	pesoEstafLista(R,L1),
+% Devolve a lista dos pesos das encomendas 
+pesoEncLista([],[]).
+pesoEncLista([IdEnc|R],L) :- 
+    pesoEnc(IdEnc,P),
+	pesoEncLista(R,L1),
 	adiciona(P,L1,L).
 
+% Adiciona a uma lista de pares o par com o id de estafeta e o peso
+adicionaParPesoEstafeta(IdEstaf,Peso,[],[(IdEstaf,Peso)]).
+adicionaParPesoEstafeta(IdEstaf,Peso,L, [(IdEstaf,Peso) |L]) :- nao(membroPar(IdEstaf,L)).
+adicionaParPesoEstafeta(IdEstaf,Peso, [(E,P) | T], L) :- 
+	(IdEstaf == E -> NovoPeso is P + Peso, L = [(E,NovoPeso) | T]; adiciona((E,P),R1,R), adicionaParPesoEstafetaAux(IdEstaf,Peso,T,R,R,L)).
 
+adicionaParPesoEstafetaAux(IdEstaf,Peso, [(E,P) | T], R, R1, L) :- 
+	(IdEstaf == E -> NovoPeso is P + Peso, concatena([(E,NovoPeso) | T], R, L); concatena([(E,P)],R1,R2), adicionaParPesoEstafetaAux(IdEstaf,Peso,T,R2,R2,L)).
 
-% Devolve a soma dos pesos das encomendas
-totalPesoEnc(L,V) :- soma(L,V).
+% Devolve uma lista com todos os ids de estafetas existentes
+getIdsEstafetas(L) :- solucoes(IdEstaf,estafeta(IdEstaf,R),L).
+
+% Devolve a lista de pares estafeta e respetivo peso transportado num dia
+listaPesoTotalDia([E],L1,L) :- 
+	estafetasEncCliente(E,R),
+	pesoEnc(E,P),
+	adicionarParLista(R,P,L1,L).
+listaPesoTotalDia([E | T],L1,L) :-
+	estafetasEncCliente(E,R),
+	pesoEnc(E,P),
+	adicionarParLista(R,P,L1,L2),
+	listaPesoTotalDia(T,L2,L).
+
+% Adiciona a uma lista de pares os estafetas e o respetivo peso de uma encomenda 
+adicionarParLista([IdEstaf],P,L1,L) :- adicionaParPesoEstafeta(IdEstaf,P,L1,L).
+adicionarParLista([IdEstaf | T],P,L1,L) :-
+	adicionaParPesoEstafeta(IdEstaf,P,L1,L2),
+	adicionarParLista(T,P,L2,L).
+
+% Devolve o peso total de uma lista de encomendas
+calculaPesoEncomendas([],0).
+calculaPesoEncomendas(L, P) :- 
+  	pesoEncLista(L,Pesos),
+  	soma(Pesos,P). 
+
 %---------------------------------------------------Extras---------------------------------------------------
 
 % Adiciona um elemento a uma lista caso este ainda não pertença
@@ -228,6 +257,10 @@ nao( Questao ).
 % Extensao do meta-predicado membro: Elemento,Lista -> {V,F}
 membro(X, [X|_]).
 membro(X, [_|Xs]):- membro(X, Xs).
+
+% Extensao do predicado membroPar : Elemento,Lista -> {V,F}
+membroPar(X,[(X,Y) | _]).
+membroPar(X,[_|Xs]) :- membroPar(X,Xs).
 
 % Devolve todas as soluções que respeitam uma determinada condição
 solucoes(X,Y,Z) :- findall(X,Y,Z).

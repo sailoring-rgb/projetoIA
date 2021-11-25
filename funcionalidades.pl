@@ -105,11 +105,10 @@ numEntregasNaoEntregas(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador0,C
     contaEntregasIntervalo(ListaEnc,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador0,Contador1,Contador2).
 
 %---------------------------------------------Funcionalidade 10---------------------------------------------
-% Extensão do predicado : Id, Total -> {V,F}
-% calcula o peso total transportado por estafeta num determinado dia.
+% Extensão do predicado : Ano,Mes,Dia,Lista -> {V,F}
+% Calcula o peso total transportado por estafeta num determinado dia.
 
-pesoTotal(A,M,D,IdEstaf,Total) :-
-  encomendasDia(A,M,D,L), 
-  encomendasDoEstafeta(IdEstaf,L),
-  pesoEstafLista(L,P),
-  totalPesoEnc(P,Total).
+pesoTotalEstafetasDia(A,M,D,L) :-
+  encomendasDia(A,M,D,L1),
+  listaPesoTotalDia(L1,[],R),
+  sort(R,L).
