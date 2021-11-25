@@ -105,6 +105,12 @@ funcionalidade(9) :-
             write('Número total de encomendas nunca entregues: '),write(V3),nl)),
     main.
 
-% funcionalidade(10) :-
+funcionalidade(10) :-
+    write('Indique uma data no formato - data(Ano,Mês,Dia): '),!,
+    read(Input),
+    elementosData(Input,A,M,D),
+    pesoTotalEstafetasDia(A,M,D,L),
+    write('Peso total transportado por estafeta em '),write(D),write('/'),write(M),write('/'),write(A),write(': '),write(L),
+    main.
 
 %EXTRA Funcionalidades
