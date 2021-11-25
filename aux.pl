@@ -165,7 +165,7 @@ classificacoesDaLista([(_,C,_,_)|T],L) :-
 
 contaEntregasIntervalo([],_,_,0,0,0).
 contaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaEntregasPeriodo,ContaNaoEntregasPeriodo,ContaNuncaEntregues) :-
-    sIdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto)),
+    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto)),
     verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF)),
     contaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador0,ContaNaoEntregasPeriodo,ContaNuncaEntregues),
     ContaEntregasPeriodo is Contador0 + 1.
