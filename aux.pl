@@ -92,10 +92,8 @@ verificaBicicleta([(_,_,_,Transporte,_,_)|T],Conta) :-
 
 %--------------------------------------Auxiliares para Funcionalidade 2--------------------------------------
 
-% Devolve os estafetas que entregaram determinada encomenda 
-estafetasEncCliente(IdEnc,L) :-
-	solucoes(IdEstaf,estafetaFezEncomenda(IdEstaf,IdEnc),R),
-	sort(R,L).
+% Devolve o estafeta que entregou determinada encomenda 
+estafetaEncCliente(IdEnc,IdEstaf) :- estafetaFezEncomenda(IdEstaf,IdEnc).
 
 % Indica se um dado estafeta entregou determinada encomenda
 estafetaFezEncomenda(IdEstaf, IdEnc) :- 
@@ -238,22 +236,16 @@ adicionaParPesoEstafetaAux(IdEstaf,Peso, [(E,P) | T], R, R1, L) :-
 % Devolve uma lista com todos os ids de estafetas existentes
 getIdsEstafetas(L) :- solucoes(IdEstaf,estafeta(IdEstaf,R),L).
 
-% Devolve a lista de pares estafeta e respetivo peso transportado num dia
+% Devolve a lista de pares com o estafeta e o respetivo peso transportado num dia
 listaPesoTotalDia([E],L1,L) :- 
-	estafetasEncCliente(E,R),
+	estafetaEncCliente(E,IdEstaf),
 	pesoEnc(E,P),
-	adicionarParLista(R,P,L1,L).
+	adicionaParPesoEstafeta(IdEstaf,P,L1,L).
 listaPesoTotalDia([E | T],L1,L) :-
-	estafetasEncCliente(E,R),
+	estafetaEncCliente(E,IdEstaf),
 	pesoEnc(E,P),
-	adicionarParLista(R,P,L1,L2),
-	listaPesoTotalDia(T,L2,L).
-
-% Adiciona a uma lista de pares os estafetas e o respetivo peso de uma encomenda 
-adicionarParLista([IdEstaf],P,L1,L) :- adicionaParPesoEstafeta(IdEstaf,P,L1,L).
-adicionarParLista([IdEstaf | T],P,L1,L) :-
 	adicionaParPesoEstafeta(IdEstaf,P,L1,L2),
-	adicionarParLista(T,P,L2,L).
+	listaPesoTotalDia(T,L2,L).
 
 % Devolve o peso total de uma lista de encomendas
 calculaPesoEncomendas([],0).

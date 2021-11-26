@@ -101,7 +101,7 @@ numeroTotalEntregasTransporte(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Cont
 
 %---------------------------------------------Funcionalidade 9---------------------------------------------
 % Extensão do predicado numEntregasNaoEntregas : DataInicio, DataFim, ContadorEntregas, ContadorNaoEntregas-> {V,F}
-% Calcula o número de encomendas entregues e não entregues pela Green Distribution, num determinado período de tempo.
+% Calcula o número de encomendas entregues e não entregues pela Green Distribution, num determinado período de tempo
 
 numEntregasNaoEntregas(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador1,Contador2) :-
     solucoes(IdEnc,encomenda(IdEnc,_,_,_,_,_,_),ListaTodasEnc),
@@ -109,7 +109,7 @@ numEntregasNaoEntregas(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador1,C
 
 %---------------------------------------------Funcionalidade 10---------------------------------------------
 % Extensão do predicado : Ano,Mes,Dia,Lista -> {V,F}
-% Calcula o peso total transportado por estafeta num determinado dia.
+% Calcula o peso total transportado por estafeta num determinado dia
 
 pesoTotalEstafetasDia(A,M,D,L) :-
   encomendasDia(A,M,D,L1),
