@@ -92,9 +92,9 @@ mediaSatisfacaoEstafeta(IdEstf,Media) :-
 % Extensão do predicado numeroTotalEntregas : DataInicio, DataFim, Contador-> {V,F}
 % Identifica o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo
 
-numeroTotalEntregas(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador) :-
-    listaTodasEncomendas(ListaEnc),
-    numEntregasNaoEntregas(ListaEnc,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador,_).
+numeroTotalEntregasTransporte(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaCarro,ContaMota,ContaBicicleta) :-
+    solucoes(IdEstaf,estafeta(IdEstaf,_),ListaEstaf),
+    contaPorTransporteIntervalo(ListaEstaf,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaCarro,ContaMota,ContaBicicleta).
 
 %---------------------------------------------Funcionalidade 9---------------------------------------------
 % Extensão do predicado numEntregasNaoEntregas : DataInicio, DataFim, ContadorEntregas, ContadorNaoEntregas-> {V,F}
