@@ -135,13 +135,31 @@ encomendasDia(A,M,D,L) :- solucoes(IdEnc, encomenda(IdEnc,_,_,_,_,_,data(A,M,D,_
 
 %--------------------------------------Auxiliares para Funcionalidade 5--------------------------------------
 
-% Devolve a freguesia de um estafeta
-freguesiaDoEstafeta(IdEstaf,Freguesia) :-
-	estafeta(IdEstaf,Lista0),
-	freguesiaDaLista(Lista0,Freguesia).
+% Devolve a lista de todas as freguesias no formato de pares: (Freguesia,Num)
+% em que Freguesia é o nome da freguesia
+% e em que Num é o número de entregas feitas nessa freguesia 
+todasFreguesias([IdEstaf|T],ListaParFreg) :-
+	freguesiasDoEstafeta(IdEstaf,Lista0),
+	todasFreguesias(T,Lista1),
+	concatena(Lista0,Lista1,ListaParFreg).
+/*
+todasFreguesias([],[],[]).
+todasFreguesias([],Lista,Lista).
+todasFreguesias([(Freguesia,Num)|T],ListaRes,ListaParFreg) :-
+    membro((Freguesia,Num),ListaRes), 
+*/
+% Devolve a lista das freguesias de um estafeta no formato de pares: (Freguesia,Num)
+% em que Freguesia é o nome da freguesia
+% e em que Num é o número de entregas feitas nessa freguesia 
+freguesiasDoEstafeta(IdEstaf,ListaParFreg) :-
+	estafeta(IdEstaf,Lista),
+	freguesiasDoEstafetaAux(Lista,ListaParFreg).
 
-% Devolve a freguesia a partir da lista [(IdEnc,Nota,Velocidade,Transporte,Rua,Freguesia)|T]
-freguesiaDaLista([(_,_,_,_,_,X)|T],X).
+freguesiasDoEstafetaAux([],[]).
+freguesiasDoEstafetaAux([(_,_,_,_,_,Freguesia)|T],ListaParFreg) :-
+	freguesiasDoEstafetaAux(T,Lista1),
+	((nao(membro((Freguesia,Num),Lista1)), adiciona((Freguesia,1),Lista1,ListaParFreg));
+	 (membro((Freguesia,Num),Lista1), adiciona((Freguesia,Num1),Lista1,ListaRes), apaga(ListaRes,(Freguesia,Num),ListaParFreg), Num1 is Num +1)).
 
 %--------------------------------------Auxiliares para Funcionalidade 6--------------------------------------
 
@@ -159,6 +177,7 @@ classificacoesDaLista([(_,C,_,_)|T],L) :-
 
 %--------------------------------------Auxiliar para Funcionalidade 7---------------------------------------
 
+% Conta o número de encomendas entregues, num intervalo de tempo, pelos diferentes meios de transporte
 contaPorTransporteIntervalo([],[],_,_,0,0,0).
 contaPorTransporteIntervalo([IdEstaf],ListaEntregasPeriodo,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaCarro,ContaMota,ContaBicicleta) :-
     contaPorTransporte(IdEstaf,ListaEntregasPeriodo,ContaCarro,ContaMota,ContaBicicleta).
@@ -169,6 +188,7 @@ contaPorTransporteIntervalo([IdEstaf|T],ListaEntregasPeriodo,data(AI,MI,DI,HI,Mi
     ContaMota is ContaMota0 + ContaMota1,
     ContaBicicleta is ContaBicicleta0 + ContaBicicleta1.
 
+% Conta o número de encomendas entregues por um determinado estafeta, pelos diferentes meios de transporte
 contaPorTransporte(_,[],0,0,0).
 contaPorTransporte(IdEstaf,[IdEnc|T],ContaCarro,ContaMota,ContaBicicleta) :-
     estafeta(IdEstaf,Lista),
@@ -259,6 +279,8 @@ calculaPesoEncomendas(L, P) :-
 adiciona( X,[],[X] ).
 adiciona( X,L,[X|L] ) :- nao( membro(X,L) ).
 adiciona( X,L,L ) :- membro( X,L ).
+
+apaga(Lista,X,Lista0) :- delete(Lista,X,Lista0).
 
 % Concatena duas listas sem elementos repetidos
 concatena(L1,L2,CL):-

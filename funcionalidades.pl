@@ -60,24 +60,19 @@ valorFaturadoDia(A,M,D,V) :-
 % Extensão do predicado freguesiasComMaisEnc: Lista,Max, Lista -> {V,F}
 % Identifica quais as zonas (e.g., rua ou freguesia) com maior volume de entregas por parte da Green Distribution
 
-freguesiasComMaisEnc(ListaFreg) :-
+freguesiasMaisFrequentes(ListaMaisFrequentes) :-
 	solucoes(IdEstaf,estafeta(IdEstaf,_),ListaEstaf),
-	freguesiasComMaisEnc(ListaEstaf,Max,ListaFreg).
+	todasFreguesias(ListaEstaf,ListaParFreg),
+	freguesiasMaisFrequentes(ListaParFreg,Max,ListaMaisFrequentes).
 
-freguesiasComMaisEnc([],0,[]).
-freguesiasComMaisEnc([IdEstaf],Max,[Freguesia]) :-
-	encomendasDoEstafeta(IdEstaf,ListaEnc0),
-	comprimento(ListaEnc0,Contador),
-	freguesiaDoEstafeta(IdEstaf,Freguesia),
-	Max = Contador.
-freguesiasComMaisEnc([IdEstaf|T],Max,ListaFreg) :-
-	encomendasDoEstafeta(IdEstaf,ListaEnc0),
-	comprimento(ListaEnc0,Contador),
-	freguesiaDoEstafeta(IdEstaf,Freguesia),
-	freguesiasComMaisEnc(T,ContadorMax,ListaFreg0),
-	(Contador > ContadorMax -> Max = Contador, ListaFreg = [Freguesia];
-	 Contador == ContadorMax -> Max = ContadorMax, adiciona(Freguesia,ListaFreg0,ListaFreg);
-	 Max = ContadorMax, ListaFreg = ListaFreg0).
+freguesiasMaisFrequentes([],0,[]).
+freguesiasMaisFrequentes([(Freguesia,Num)],Max,[Freguesia]) :-
+	Max = Num.
+freguesiasMaisFrequentes([(Freguesia,Num)|T],Max,ListaMaisFrequentes) :-
+	freguesiasMaisFrequentes(T,NumMax,Lista0),
+	(Num > NumMax -> Max = Num, ListaMaisFrequentes = [Freguesia];
+	 Num == NumMax -> Max = NumMax, adiciona(Freguesia,Lista0,ListaMaisFrequentes);
+	 Max = NumMax, ListaMaisFrequentes = ListaFreg0).
 
 %---------------------------------------------Funcionalidade 6---------------------------------------------
 % Extensão do predicado mediaSatisfacaoEstafeta : Id, Media -> {V,F}
