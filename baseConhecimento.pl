@@ -1,3 +1,7 @@
+:- dynamic (encomenda/7).
+:- dynamic (cliente/1).
+:- dynamic (estafeta/2).
+
 %---------------------------Encomenda---------------------------
 % Encomenda: #IdEnc, #IdCliente, Peso, Volume, Prazo, DataInicio, DataFim
 % Data: #Ano, Mês, Dia, Hora, Minuto

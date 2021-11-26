@@ -1,6 +1,7 @@
 :- consult('baseConhecimento.pl').
 :- consult('aux.pl').
 :- consult('invariantes.pl').
+:- consult('evolucaoInvolucao.pl').
 
 :- set_prolog_flag( discontiguous_warnings,off ).
 :- set_prolog_flag( single_var_warnings,off ).
@@ -93,16 +94,18 @@ mediaSatisfacaoEstafeta(IdEstf,Media) :-
 % Identifica o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo
 
 numeroTotalEntregasTransporte(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaCarro,ContaMota,ContaBicicleta) :-
-    solucoes(IdEstaf,estafeta(IdEstaf,_),ListaEstaf),
-    contaPorTransporteIntervalo(ListaEstaf,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaCarro,ContaMota,ContaBicicleta).
+	solucoes(IdEstaf,estafeta(IdEstaf,_),ListaEstaf),
+    solucoes(IdEnc,encomenda(IdEnc,_,_,_,_,_,_),ListaTodasEnc),
+	contaEntregasIntervalo(ListaTodasEnc,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregasPeriodo,_),
+    contaPorTransporteIntervalo(ListaEstaf,ListaEntregasPeriodo,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaCarro,ContaMota,ContaBicicleta).
 
 %---------------------------------------------Funcionalidade 9---------------------------------------------
 % Extensão do predicado numEntregasNaoEntregas : DataInicio, DataFim, ContadorEntregas, ContadorNaoEntregas-> {V,F}
 % Calcula o número de encomendas entregues e não entregues pela Green Distribution, num determinado período de tempo.
 
-numEntregasNaoEntregas(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador0,Contador1,Contador2) :-
-    listaTodasEncomendas(ListaEnc),
-    contaEntregasIntervalo(ListaEnc,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador0,Contador1,Contador2).
+numEntregasNaoEntregas(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador1,Contador2) :-
+    solucoes(IdEnc,encomenda(IdEnc,_,_,_,_,_,_),ListaTodasEnc),
+    contaNaoEntregasIntervalo(ListaTodasEnc,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador1,Contador2).
 
 %---------------------------------------------Funcionalidade 10---------------------------------------------
 % Extensão do predicado : Ano,Mes,Dia,Lista -> {V,F}

@@ -14,6 +14,10 @@
     nao(-Termo)
 ).
 
++(-Termo) :: (
+    nao(Termo)
+).
+
 % # Invariantes sobre encomendas 
 
 % Invariante estrutural: os campos da Encomenda devem respeitar este tipo de dados

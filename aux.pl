@@ -1,5 +1,3 @@
-:- consult('baseConhecimento.pl').
-
 :- set_prolog_flag( discontiguous_warnings,off ).
 :- set_prolog_flag( single_var_warnings,off ).
 
@@ -60,6 +58,11 @@ encomendasDaLista([(X,_,_,_,_,_)|T],Lista) :-
 	encomendasDaLista(T,Lista0),
 	adiciona(X,Lista0,Lista).
 
+% Verifica se uma encomenda está associada a um determinado estafeta
+encomendaPertenceEstafeta([(IdEnc,_,_,_,_,_)|T],IdEnc).
+encomendaPertenceEstafeta([(X,_,_,_,_,_)|T],IdEnc) :- X \= IdEnc, encomendaPertenceEstafeta(T,IdEnc).
+
+/*
 % Devolve uma lista com os ids de todas as encomendas do sistema
 listaTodasEncomendas(ListaEnc) :-
     solucoes(IdEstaf,estafeta(IdEstaf,_),Lista0),
@@ -73,7 +76,7 @@ listaTodasEncomendas([IdEstaf|T],ListaEnc) :-
     encomendasDoEstafeta(IdEstaf,Lista0),
     listaTodasEncomendas(T,Lista1),
     concatena(Lista0,Lista1,ListaEnc).
-
+*/
 %--------------------------------------Auxiliares para Funcionalidade 1--------------------------------------
 
 % Devolve o número de encomendas (duma lista) transportadas pelo meio de transporte bicicleta
@@ -158,23 +161,28 @@ classificacoesDaLista([(_,C,_,_)|T],L) :-
 
 %--------------------------------------Auxiliar para Funcionalidade 7---------------------------------------
 
-contaPorTransporteIntervalo([IdEstaf|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaCarro,ContaMota,ContaBicicleta) :-
-    estafeta(IdEstaf,Lista),
-    contaPorTransporte(Lista,ContaCarro0,ContaMota0,ContaBicicleta0),
-    contaPorTransporteIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaCarro1,ContaMota1,ContaBicicleta1),
-    ContaCarro is ContaCarro0 + ContaCarro1, ContaMota is ContaMota0 + ContaMota1, ContaBicicleta is ContaBicicleta0 + ContaBicicleta1.
+contaPorTransporteIntervalo([],[],_,_,0,0,0).
+contaPorTransporteIntervalo([IdEstaf],ListaEntregasPeriodo,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaCarro,ContaMota,ContaBicicleta) :-
+    contaPorTransporte(IdEstaf,ListaEntregasPeriodo,ContaCarro,ContaMota,ContaBicicleta).
+contaPorTransporteIntervalo([IdEstaf|T],ListaEntregasPeriodo,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaCarro,ContaMota,ContaBicicleta) :-
+    contaPorTransporte(IdEstaf,ListaEntregasPeriodo,ContaCarro0,ContaMota0,ContaBicicleta0),
+    contaPorTransporteIntervalo(T,ListaEntregasPeriodo,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaCarro1,ContaMota1,ContaBicicleta1),
+    ContaCarro is ContaCarro0 + ContaCarro1,
+    ContaMota is ContaMota0 + ContaMota1,
+    ContaBicicleta is ContaBicicleta0 + ContaBicicleta1.
 
-contaPorTransporte([],0,0,0).
-contaPorTransporte([(IdEnc,_,_,Transporte,_,_)|T],ContaCarro,ContaMota,ContaBicicleta) :-
-    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto)),
-    nao(verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF))),
-    contaPorTransporte(T,ContaCarro,ContaMota,ContaBicicleta).
-contaPorTransporte([(IdEnc,_,_,Transporte,_,_)|T],ContaCarro,ContaMota,ContaBicicleta) :-
-    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto)),
-    verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF)),
-    ((Transporte == 'Carro', contaPorTransporte(T,Contador0,ContaMota,ContaBicicleta), ContaCarro is Contador0 + 1);
-     (Transporte == 'Mota', contaPorTransporte(T,ContaCarro,Contador1,ContaBicicleta), ContaMota is Contador1 + 1);
-     (Transporte == 'Bicicleta', contaPorTransporte(T,ContaCarro,ContaMota,Contador2), ContaBicicleta is Contador2 + 1)).
+contaPorTransporte(_,[],0,0,0).
+contaPorTransporte(IdEstaf,[IdEnc|T],ContaCarro,ContaMota,ContaBicicleta) :-
+    estafeta(IdEstaf,Lista),
+    nao(membro((IdEnc,A,B,C,D,E),Lista)),
+    contaPorTransporte(IdEstaf,T,ContaCarro,ContaMota,ContaBicicleta).
+contaPorTransporte(IdEstaf,[IdEnc|T],ContaCarro,ContaMota,ContaBicicleta) :-
+    estafeta(IdEstaf,Lista),
+    encomendaPertenceEstafeta(Lista,IdEnc),
+    membro((IdEnc,A,B,Transporte,D,E),Lista),
+    ((Transporte == 'Carro', contaPorTransporte(IdEstaf,T,Contador0,ContaMota,ContaBicicleta), ContaCarro is Contador0 + 1);
+     (Transporte == 'Mota', contaPorTransporte(IdEstaf,T,ContaCarro,Contador1,ContaBicicleta), ContaMota is Contador1 + 1);
+     (Transporte == 'Bicicleta', contaPorTransporte(IdEstaf,T,ContaCarro,ContaMota,Contador2), ContaBicicleta is Contador2 + 1)).
 
 %--------------------------------------Auxiliar para Funcionalidade 9---------------------------------------
 
@@ -183,23 +191,28 @@ contaPorTransporte([(IdEnc,_,_,Transporte,_,_)|T],ContaCarro,ContaMota,ContaBici
 % ContaNaoEntregasPeriodo - nº de encomendas que foram entregues antes ou depois daquele período de tempo
 % ContaNuncaEntregues - nº de encomendas que nunca chegaram a ser entregues
 
-contaEntregasIntervalo([],_,_,0,0,0).
-contaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaEntregasPeriodo,ContaNaoEntregasPeriodo,ContaNuncaEntregues) :-
+contaEntregasIntervalo([],_,_,[],0).
+contaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregasPeriodo,ContaEntregasPeriodo) :-
     encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto)),
-    verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF)),
-    contaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador0,ContaNaoEntregasPeriodo,ContaNuncaEntregues),
-    ContaEntregasPeriodo is Contador0 + 1.
-contaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaEntregasPeriodo,ContaNaoEntregasPeriodo,ContaNuncaEntregues) :-
+    ((verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF)),
+    contaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Lista0,Contador0),
+    adiciona(IdEnc,Lista0,ListaEntregasPeriodo),
+    ContaEntregasPeriodo is Contador0 + 1);
+    (nao(verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF)))),
+    contaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregasPeriodo,ContaEntregasPeriodo)).
+
+contaNaoEntregasIntervalo([],_,_,0,0).
+contaNaoEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaNaoEntregasPeriodo,ContaNuncaEntregues) :-
     encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto)),
-    nao(verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF))),
-    dataTimeValida(data(Ano,Mes,Dia,Hora,Minuto)),
-    contaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaEntregasPeriodo,Contador1,ContaNuncaEntregues),
-    ContaNaoEntregasPeriodo is Contador1 + 1.
-contaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaEntregasPeriodo,ContaNaoEntregasPeriodo,ContaNuncaEntregues) :-
-    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto)),
-    nao(dataTimeValida(data(Ano,Mes,Dia,Hora,Minuto))),
-    contaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaEntregasPeriodo,ContaNaoEntregasPeriodo,Contador2),
-    ContaNuncaEntregues is Contador2 + 1.
+    ((nao(verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF))),
+        ((dataTimeValida(data(Ano,Mes,Dia,Hora,Minuto)),
+            contaNaoEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador1,ContaNuncaEntregues),
+            ContaNaoEntregasPeriodo is Contador1 + 1);
+         (nao(dataTimeValida(data(Ano,Mes,Dia,Hora,Minuto))),
+            contaNaoEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaNaoEntregasPeriodo,Contador2),
+            ContaNuncaEntregues is Contador2 + 1)));
+     (verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF)),
+        contaNaoEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaNaoEntregasPeriodo,ContaNuncaEntregues))).
 
 %--------------------------------------Auxiliares para Funcionalidade 10--------------------------------------
 
