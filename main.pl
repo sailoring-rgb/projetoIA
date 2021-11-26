@@ -84,8 +84,10 @@ funcionalidade(7) :-
         read(Input2),
             ((nao(dataTimeValida(Input2)) -> nl,write('A data que inseriu não é válida.'),nl);
             elementosDataTime(Input2,A2,M2,D2,H2,Min2),nl,
-            numeroTotalEntregas(data(A1,M1,D1,H1,Min1),data(A2,M2,D2,H2,Min2),V),
-            write('Número total de entregas: '),write(V),nl)),
+            numeroTotalEntregasTransporte(data(A1,M1,D1,H1,Min1),data(A2,M2,D2,H2,Min2),V1,V2,V3),
+            write('Número total de entregas transportadas de carro: '),write(V1),nl,
+            write('Número total de entregas transportadas de mota: '),write(V2),nl,
+            write('Número total de entregas transportadas de bicicleta: '),write(V3),nl)),
     main.
 
 % funcionalidade(8) :-
