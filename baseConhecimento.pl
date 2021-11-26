@@ -30,6 +30,6 @@ cliente(5).
 
 estafeta(1,[(1,3.2,25,'Carro','Parque da Rodovia','São Victor')]).
 estafeta(2,[(3,3.5,25,'Carro','Rua de São Victor-O-Velho','São Victor'),(7,4.6,10,'Bicicleta','Parque da Rodovia','Gualtar'),(4,2.7,25,'Carro','Rua dos Congregados','São Vicente')]).
-estafeta(3,[(2,4.7,35,'Mota','Rua José Antunes Guimarães','Real'),(8,4.9,10,'Bicicleta','Rua da Universidade','Gualtar')]).
-estafeta(4,[(5,3.9,10,'Bicicleta','Av. Conde Dom Henriques','São Lázaro'),(9,4.3,10,'Bicicleta','Av. São Pedro de Maximinos','Maximinos')]).
+estafeta(3,[(2,4.7,35,'Mota','Rua José Antunes Guimarães','Real'),(8,4.9,10,'Carro','Rua da Universidade','Gualtar')]).
+estafeta(4,[(5,3.9,10,'Bicicleta','Av. Conde Dom Henriques','São Lázaro'),(9,4.3,10,'Mota','Av. São Pedro de Maximinos','Maximinos')]).
 estafeta(5,[(6,3.9,25,'Carro','Rua da Veiga','Dume')]).
