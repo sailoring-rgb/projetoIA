@@ -156,12 +156,32 @@ classificacoesDaLista([(_,C,_,_)|T],L) :-
 	classificacoesDaLista(T,L1),
 	adiciona(C,L1,L).    
 
-%--------------------------------------Auxiliar para Funcionalidades 7 e 9---------------------------------------
+%--------------------------------------Auxiliar para Funcionalidade 7---------------------------------------
+
+contaPorTransporteIntervalo([IdEstaf|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaCarro,ContaMota,ContaBicicleta) :-
+    estafeta(IdEstaf,Lista),
+    contaPorTransporte(Lista,ContaCarro0,ContaMota0,ContaBicicleta0),
+    contaPorTransporteIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaCarro1,ContaMota1,ContaBicicleta1),
+    ContaCarro is ContaCarro0 + ContaCarro1, ContaMota is ContaMota0 + ContaMota1, ContaBicicleta is ContaBicicleta0 + ContaBicicleta1.
+
+contaPorTransporte([],0,0,0).
+contaPorTransporte([(IdEnc,_,_,Transporte,_,_)|T],ContaCarro,ContaMota,ContaBicicleta) :-
+    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto)),
+    nao(verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF))),
+    contaPorTransporte(T,ContaCarro,ContaMota,ContaBicicleta).
+contaPorTransporte([(IdEnc,_,_,Transporte,_,_)|T],ContaCarro,ContaMota,ContaBicicleta) :-
+    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto)),
+    verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF)),
+    ((Transporte == 'Carro', contaPorTransporte(T,Contador0,ContaMota,ContaBicicleta), ContaCarro is Contador0 + 1);
+     (Transporte == 'Mota', contaPorTransporte(T,ContaCarro,Contador1,ContaBicicleta), ContaMota is Contador1 + 1);
+     (Transporte == 'Bicicleta', contaPorTransporte(T,ContaCarro,ContaMota,Contador2), ContaBicicleta is Contador2 + 1)).
+
+%--------------------------------------Auxiliar para Funcionalidade 9---------------------------------------
 
 % Conta o número de encomendas entregues e o número de encomendas não entregues num intervalo de tempo
-% Contador0 - nº de encomendas entregues naquele período de tempo
-% Contador1 - nº de encomendas que foram entregues antes ou depois daquele período de tempo
-% Contador2 - nº de encomendas que nunca chegaram a ser entregues
+% ContaEntregasPeriodo - nº de encomendas entregues naquele período de tempo
+% ContaNaoEntregasPeriodo - nº de encomendas que foram entregues antes ou depois daquele período de tempo
+% ContaNuncaEntregues - nº de encomendas que nunca chegaram a ser entregues
 
 contaEntregasIntervalo([],_,_,0,0,0).
 contaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaEntregasPeriodo,ContaNaoEntregasPeriodo,ContaNuncaEntregues) :-
