@@ -62,24 +62,26 @@ valorFaturadoDia(A,M,D,V) :-
 
 freguesiasMaisFrequentes(ListaMaisFrequentes) :-
 	solucoes(IdEstaf,estafeta(IdEstaf,_),ListaEstaf),
-	todasFreguesias(ListaEstaf,ListaParFreg),
-	freguesiasMaisFrequentes(ListaParFreg,Max,ListaMaisFrequentes).
+	todasAsFreguesias(ListaEstaf,ListaTodasFreg),
+	freguesiasMaisFrequentes(ListaTodasFreg,ListaEstaf,Max,ListaMaisFrequentes).
 
-freguesiasMaisFrequentes([],0,[]).
-freguesiasMaisFrequentes([(Freguesia,Num)],Max,[Freguesia]) :-
-	Max = Num.
-freguesiasMaisFrequentes([(Freguesia,Num)|T],Max,ListaMaisFrequentes) :-
-	freguesiasMaisFrequentes(T,NumMax,Lista0),
-	(Num > NumMax -> Max = Num, ListaMaisFrequentes = [Freguesia];
-	 Num == NumMax -> Max = NumMax, adiciona(Freguesia,Lista0,ListaMaisFrequentes);
-	 Max = NumMax, ListaMaisFrequentes = ListaFreg0).
-
+freguesiasMaisFrequentes([],_,0,[]).
+freguesiasMaisFrequentes([Freguesia],ListaEstaf,Max,[Freguesia]) :-
+    contaEntregasFreguesia(Freguesia,ListaEstaf,Contador),
+    Max = Contador.
+freguesiasMaisFrequentes([Freguesia|T],ListaEstaf,Max,ListaMaisFrequentes) :-
+    contaEntregasFreguesia(Freguesia,ListaEstaf,Contador),
+    freguesiasMaisFrequentes(T,ListaEstaf,ContadorMax,ListaFregAux),
+    ((Contador > ContadorMax, Max = Contador, ListaMaisFrequentes = [Freguesia]);
+     (Contador == ContadorMax, Max = ContadorMax, adiciona(Freguesia,ListaFregAux,ListaMaisFrequentes));
+     (Max = ContadorMax, ListaMaisFrequentes = ListaFregAux)).
+    
 %---------------------------------------------Funcionalidade 6---------------------------------------------
 % Extensão do predicado mediaSatisfacaoEstafeta : Id, Media -> {V,F}
 % Calcular a classificação media de satisfação de cliente para um determinado estafeta
 
-mediaSatisfacaoEstafeta(IdEstf,Media) :- 
-	classificacoesDoEstafeta(IdEstf,L),
+mediaSatisfacaoEstafeta(IdEstaf,Media) :- 
+	classificacoesDoEstafeta(IdEstaf,L),
 	soma(L,S),
 	comprimento(L,C),
 	Media is S / C.

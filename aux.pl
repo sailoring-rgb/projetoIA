@@ -62,21 +62,6 @@ encomendasDaLista([(X,_,_,_,_,_)|T],Lista) :-
 encomendaPertenceEstafeta([(IdEnc,_,_,_,_,_)|T],IdEnc).
 encomendaPertenceEstafeta([(X,_,_,_,_,_)|T],IdEnc) :- X \= IdEnc, encomendaPertenceEstafeta(T,IdEnc).
 
-/*
-% Devolve uma lista com os ids de todas as encomendas do sistema
-listaTodasEncomendas(ListaEnc) :-
-    solucoes(IdEstaf,estafeta(IdEstaf,_),Lista0),
-    listaTodasEncomendas(Lista0,ListaEnc).
-
-% Devolve uma lista com os ids de todas as encomendas a partir da lista de todos os estafetas do sistema
-listaTodasEncomendas([],[]).
-listaTodasEncomendas([IdEstaf],ListaEnc) :-
-    encomendasDoEstafeta(IdEstaf,ListaEnc).
-listaTodasEncomendas([IdEstaf|T],ListaEnc) :-
-    encomendasDoEstafeta(IdEstaf,Lista0),
-    listaTodasEncomendas(T,Lista1),
-    concatena(Lista0,Lista1,ListaEnc).
-*/
 %--------------------------------------Auxiliares para Funcionalidade 1--------------------------------------
 
 % Devolve o número de encomendas (duma lista) transportadas pelo meio de transporte bicicleta
@@ -135,31 +120,37 @@ encomendasDia(A,M,D,L) :- solucoes(IdEnc, encomenda(IdEnc,_,_,_,_,_,data(A,M,D,_
 
 %--------------------------------------Auxiliares para Funcionalidade 5--------------------------------------
 
-% Devolve a lista de todas as freguesias no formato de pares: (Freguesia,Num)
-% em que Freguesia é o nome da freguesia
-% e em que Num é o número de entregas feitas nessa freguesia 
-todasFreguesias([IdEstaf|T],ListaParFreg) :-
-	freguesiasDoEstafeta(IdEstaf,Lista0),
-	todasFreguesias(T,Lista1),
-	concatena(Lista0,Lista1,ListaParFreg).
-/*
-todasFreguesias([],[],[]).
-todasFreguesias([],Lista,Lista).
-todasFreguesias([(Freguesia,Num)|T],ListaRes,ListaParFreg) :-
-    membro((Freguesia,Num),ListaRes), 
-*/
-% Devolve a lista das freguesias de um estafeta no formato de pares: (Freguesia,Num)
-% em que Freguesia é o nome da freguesia
-% e em que Num é o número de entregas feitas nessa freguesia 
-freguesiasDoEstafeta(IdEstaf,ListaParFreg) :-
-	estafeta(IdEstaf,Lista),
-	freguesiasDoEstafetaAux(Lista,ListaParFreg).
+% Conta o número de entregas feitas nessa freguesia
+contaEntregasFreguesia(_,[],0).
+contaEntregasFreguesia(Freguesia,[IdEstaf|T],Contador) :-
+    estafeta(IdEstaf,ListaEncEstaf),
+    contaEntregasFreguesiaAux(Freguesia,ListaEncEstaf,Contador1),
+    contaEntregasFreguesia(Freguesia,T,Contador2),
+    Contador is Contador1 + Contador2.
+
+% Conta o número de entregas feitas nessa freguesia por um estafeta
+contaEntregasFreguesiaAux(_,[],0).
+contaEntregasFreguesiaAux(Freguesia,[(_,_,_,_,_,Freg)|T],Contador) :-
+    (Freguesia == Freg, contaEntregasFreguesiaAux(Freguesia,T,Contador1), Contador is Contador1 + 1);
+    (contaEntregasFreguesiaAux(Freguesia,T,Contador)).
+
+% Devolve uma lista com todas as freguesias onde foram feitas entregas
+todasAsFreguesias([],[]).
+todasAsFreguesias([IdEstaf|T],ListaTodasFreg) :-
+    freguesiasDoEstafeta(IdEstaf,ListaAux1),
+    todasAsFreguesias(T,ListaAux2),
+    concatena(ListaAux1,ListaAux2,ListaTodasFreg).
+
+% Devolve a lista de todas as freguesias de um determinado estafeta
+freguesiasDoEstafeta(IdEstaf,ListaFreg) :-
+    estafeta(IdEstaf,ListaEncEstaf),
+    freguesiasDoEstafetaAux(ListaEncEstaf,ListaFreg).
 
 freguesiasDoEstafetaAux([],[]).
-freguesiasDoEstafetaAux([(_,_,_,_,_,Freguesia)|T],ListaParFreg) :-
-	freguesiasDoEstafetaAux(T,Lista1),
-	((nao(membro((Freguesia,Num),Lista1)), adiciona((Freguesia,1),Lista1,ListaParFreg));
-	 (membro((Freguesia,Num),Lista1), adiciona((Freguesia,Num1),Lista1,ListaRes), apaga(ListaRes,(Freguesia,Num),ListaParFreg), Num1 is Num +1)).
+freguesiasDoEstafetaAux([(_,_,_,_,_,Freguesia)],[Freguesia]).
+freguesiasDoEstafetaAux([(_,_,_,_,_,Freguesia)|T],ListaFreg) :-
+    freguesiasDoEstafetaAux(T,ListaAux),
+    adiciona(Freguesia,ListaAux,ListaFreg).
 
 %--------------------------------------Auxiliares para Funcionalidade 6--------------------------------------
 

@@ -63,7 +63,7 @@ funcionalidade(4) :-
     main.
 
 funcionalidade(5) :-
-    freguesiasComMaisEnc(L),
+    freguesiasMaisFrequentes(L),
     write('Zona(s) com maior volume de entregas: '),write(L),nl,
     main.
 
