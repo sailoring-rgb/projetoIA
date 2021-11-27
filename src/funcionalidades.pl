@@ -14,19 +14,20 @@
 % Extensão do predicado estafetaMaisEcologico: Lista,Maximo,Id -> {V,F}
 % Identifica o estafeta que utilizou mais vezes um meio de transporte mais ecológico
 
-estafetaMaisEcologico(Id) :-
+estafetaMaisEcologico(Ids) :-
 	solucoes(IdEstaf,estafeta(IdEstaf,_),ListaEstaf),
-	estafetaMaisEcologico(ListaEstaf,Max,Id).
+	estafetaMaisEcologico(ListaEstaf,Max,Ids).
 
-estafetaMaisEcologico([],0,_).
-estafetaMaisEcologico([IdEstaf],Max,IdEstaf) :-
+estafetaMaisEcologico([],0,[]).
+estafetaMaisEcologico([IdEstaf],Max,[IdEstaf]) :-
 	encomendasPorBicicleta(IdEstaf,Contador),
 	Max = Contador.	
-estafetaMaisEcologico([IdEstaf|T],Max,IdMax) :-
+estafetaMaisEcologico([IdEstaf|T],Max,IdsMax) :-
 	encomendasPorBicicleta(IdEstaf,Contador),
-	estafetaMaisEcologico(T,ContadorMax,Id),
-	(Contador > ContadorMax -> Max = Contador, IdMax = IdEstaf;
-	 Max = ContadorMax, IdMax = Id).
+	estafetaMaisEcologico(T,ContadorMax,Ids),
+	((Contador > ContadorMax -> Max = Contador, IdsMax = [IdEstaf]);
+	(Contador == ContadorMax -> Max = ContadorMax, IdsMax = [IdEstaf|Ids]);
+	 Max = ContadorMax, IdsMax = Ids).
 	 
 %---------------------------------------------Funcionalidade 2---------------------------------------------
 % Extensao do predicado estafetasEncomendasCliente: Lista,Lista -> {V,F}
@@ -121,3 +122,22 @@ pesoTotalEstafetasDia(A,M,D,L) :-
   encomendasDia(A,M,D,L1),
   listaPesoTotalDia(L1,[],R),
   sort(R,L).
+
+%-------------------------------------------Funcionalidade Extra1--------------------------------------------
+
+clienteMaisEncomendas(Ids) :-
+	solucoes(IdCliente,cliente(IdCliente),ListaClientes),
+    clienteMaisEncomendas(ListaClientes,Max,Ids).
+
+clienteMaisEncomendas([],0,[]).
+clienteMaisEncomendas([IdCliente],Max,[IdCliente]) :-
+    solucoes(IdEnc,encomenda(IdEnc,IdCliente,_,_,_,_,_),ListaEncCliente),
+    comprimento(ListaEncCliente,Contador),
+	Max = Contador.
+clienteMaisEncomendas([IdCliente|T],Max,ListaIdMax) :-
+    solucoes(IdEnc,encomenda(IdEnc,IdCliente,_,_,_,_,_),ListaEncCliente),
+    comprimento(ListaEncCliente,Contador),
+    clienteMaisEncomendas(T,ContadorMax,ListaAux),
+    ((Contador > ContadorMax -> Max = Contador, ListaIdMax = [IdCliente]);
+     (Contador == ContadorMax -> Max = ContadorMax, ListaIdMax = [IdCliente|ListaAux]);
+     Max = ContadorMax, ListaIdMax = ListaAux).

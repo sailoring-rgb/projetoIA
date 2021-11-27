@@ -3,6 +3,37 @@
 
 :- style_check(-singleton).
 
+%-----------------------------------------Exclusivamente para invariantes------------------------------------
+
+% Verifica o tipo de dados da lista de encomendas do estafeta
+verificaDadosLista([]).
+verificaDadosLista([(IdEnc,Nota,Velocidade,Transporte,Rua,Freguesia)|T]) :- 
+        integer(IdEnc),
+        float(Nota),
+        integer(Velocidade),
+        atom(Transporte),
+        atom(Rua),
+        atom(Freguesia).
+
+% Devolve a freguesia de um estafeta numa lista (a lista contém apenas um elemento)
+% Este predicado só foi preciso para um invariante estrutural
+listaFreguesiasEstaf(IdEstaf,Lista,ListaFreg) :-
+    listaFreguesiasEstaf(Lista,ListaFreg).
+
+listaFreguesiasEstaf([],[]).
+listaFreguesiasEstaf([(_,_,_,_,_,Freg)|T],ListaFreg) :-
+    listaFreguesiasEstaf(T,Lista0),
+    adiciona(Freg,Lista0,ListaFreg).
+
+% Verifica se o peso da encomenda e a velocidade do estafeta respeitaram os limites do meio de transporte usado
+transportePesoVelocidade([]).
+transportePesoVelocidade([(IdEnc,_,Velocidade,Transporte,_,_)|T]) :-
+    encomenda(IdEstaf,_,Peso,_,_,_,_),
+    ((Transporte == 'Bicicleta', Peso =< 5, Velocidade == 10);
+     (Transporte == 'Mota', Peso =< 20, Velocidade == 35);
+     (Transporte == 'Carro', Peso =< 100, Velocidade == 25)),
+     transportePesoVelocidade(T).
+
 %-----------------------------------------Exclusivamente sobre datas-----------------------------------------
 
 % Extrai o ano, mes, dia
@@ -284,18 +315,11 @@ adiciona( X,L,L ) :- membro( X,L ).
 apaga(Lista,X,Lista0) :- delete(Lista,X,Lista0).
 
 % Concatena duas listas sem elementos repetidos
-concatena(L1,L2,CL):-
-	concatenaAux(L1,L2,L0),
-	append(L0,L2,AL),
-	sort(AL,CL).
+concatena(L1,L2,CL):- concatenaAux(L1,L2,L0), append(L0,L2,AL), sort(AL,CL).
 
 concatenaAux([],_,[]).
-concatenaAux([H|T],L2,[H|R]):-
-    nao(membro(H,L2)),
-    concatenaAux(T,L2,R).
-concatenaAux([H|T],L2,R):-
-    membro(H,L2),
-    concatenaAux(T,L2,R).
+concatenaAux([H|T],L2,[H|R]):- nao(membro(H,L2)), concatenaAux(T,L2,R).
+concatenaAux([H|T],L2,R):- membro(H,L2), concatenaAux(T,L2,R).
 
 % Extensao do meta-predicado nao: Questao -> {V,F}
 nao( Questao ) :-
@@ -319,32 +343,3 @@ comprimento(S,N) :- length(S,N).
 % Soma os elementos de uma lista 
 soma([],0).
 soma([X|Y],Total) :- soma(Y, Ac), Total is X + Ac.
-
-% Verifica o tipo de dados da lista de encomendas do estafeta
-verificaDadosLista([]).
-verificaDadosLista([(IdEnc,Nota,Velocidade,Transporte,Rua,Freguesia)|T]) :- 
-        integer(IdEnc),
-        float(Nota),
-        integer(Velocidade),
-        atom(Transporte),
-        atom(Rua),
-        atom(Freguesia).
-
-% Devolve a freguesia de um estafeta numa lista (a lista contém apenas um elemento)
-% Este predicado só foi preciso para um invariante estrutural
-listaFreguesiasEstaf(IdEstaf,Lista,ListaFreg) :-
-    listaFreguesiasEstaf(Lista,ListaFreg).
-
-listaFreguesiasEstaf([],[]).
-listaFreguesiasEstaf([(_,_,_,_,_,Freg)|T],ListaFreg) :-
-    listaFreguesiasEstaf(T,Lista0),
-    adiciona(Freg,Lista0,ListaFreg).
-
-% Verifica se o peso da encomenda e a velocidade do estafeta respeitaram os limites do meio de transporte usado
-transportePesoVelocidade([]).
-transportePesoVelocidade([(IdEnc,_,Velocidade,Transporte,_,_)|T]) :-
-    encomenda(IdEstaf,_,Peso,_,_,_,_),
-    ((Transporte == 'Bicicleta', Peso =< 5, Velocidade == 10);
-     (Transporte == 'Mota', Peso =< 20, Velocidade == 35);
-     (Transporte == 'Carro', Peso =< 100, Velocidade == 25)),
-     transportePesoVelocidade(T).

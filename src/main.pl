@@ -13,7 +13,7 @@ main :-
     nl,
     write('---------------------------------------------------------MENU----------------------------------------------------------'), nl,
     write('1. Consultar o estafeta que utilizou mais vezes um meio de transporte mais ecológico.'), nl,
-    write('2. Consultar que estafetas entregaram determinada(s) encomenda(s) a um determinado cliente.'), nl,
+    write('2. Consultar os estafetas que entregaram determinada(s) encomenda(s) a um determinado cliente.'), nl,
     write('3. Consultar os clientes servidos por um determinado estafeta.'), nl,
     write('4. Calcular o valor faturado pela Green Distribution num determinado dia.'), nl,
     write('5. Consultar quais as zonas (e.g., rua ou freguesia) com maior volume de entregas por parte da Green Distribution.'), nl,
@@ -22,27 +22,31 @@ main :-
     write('8. Consultar o número total de entregas pelos estafetas, num determinado intervalo de tempo.'), nl,
     write('9. Calcular o número de encomendas entregues e não entregues pela Green Distribution, num determinado período de tempo.'), nl,
     write('10. Calcular o peso total transportado por estafeta num determinado dia.'), nl,
-    write('Carregue em . para sair'), nl,
+    write('11. Consultar o cliente que fez mais encomendas.'), nl,
+    write('Digite 0. para sair'), nl,
     write('-----------------------------------------------------------------------------------------------------------------------'), nl,nl,
     write('Escolha um: '),
     read(X),
-    ( X = 0 -> !, fail ; true ),
+    (X == 0 -> !, fail; true),
     nl,
     funcionalidade(X),
     fail.
 
+funcionalidade(0) :-
+    !, fail.
+
 % # Funcionalidades
 
 funcionalidade(1) :-
-    estafetaMaisEcologico(ID),
-    write('ID do Estafeta: '), write(ID), nl,
+    estafetaMaisEcologico(IDs),
+    write('ID(s) do(s) estafeta(s) mais ecológicos: '), write(IDs), nl,
     main.
 
 funcionalidade(2) :-
     write('Indique o ID do cliente: '),!,
     read(ID),
     estafetasEncomendasCliente(ID,L),nl,
-    write(L),nl,
+    write('ID(s) do(s) estafeta(s) que serviram o cliente '),write(ID),write(' : '),write(L),nl,
     main.
 
 funcionalidade(3) :-
@@ -115,3 +119,8 @@ funcionalidade(10) :-
     main.
 
 %EXTRA Funcionalidades
+
+funcionalidade(11) :-
+    clienteMaisEncomendas(IDs),
+    write('ID(s) do(s) clientes(s) com mais encomendas: '), write(IDs), nl,
+    main.
