@@ -62,6 +62,27 @@ encomendasDaLista([(X,_,_,_,_,_)|T],Lista) :-
 encomendaPertenceEstafeta([(IdEnc,_,_,_,_,_)|T],IdEnc).
 encomendaPertenceEstafeta([(X,_,_,_,_,_)|T],IdEnc) :- X \= IdEnc, encomendaPertenceEstafeta(T,IdEnc).
 
+% Verifica se os ids de encomendas de uma lista existem
+existeEncomenda([]).
+existeEncomenda([IdEnc|T]) :-
+    encomenda(IdEnc,_,_,_,_,_,_),
+    existeEncomenda(T).
+
+% Devolve a lista dos ids das encomendas entregues naquele intervalo de tempo
+contaEntregasIntervalo(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregasPeriodo,Contador) :-
+    solucoes(IdEnc,encomenda(IdEnc,_,_,_,_,_,_),ListaTodasEnc),
+    contaEntregasIntervalo(ListaTodasEnc,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregasPeriodo),
+    comprimento(ListaEntregasPeriodo,Contador).
+
+contaEntregasIntervalo([],_,_,[]).
+contaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregasPeriodo) :-
+    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto)),
+    ((verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF)),
+        contaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Lista0),
+        adiciona(IdEnc,Lista0,ListaEntregasPeriodo));
+    (nao(verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF))),
+        contaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregasPeriodo))).
+
 %--------------------------------------Auxiliares para Funcionalidade 1--------------------------------------
 
 % Devolve o número de encomendas (duma lista) transportadas pelo meio de transporte bicicleta
@@ -195,20 +216,9 @@ contaPorTransporte(IdEstaf,[IdEnc|T],ContaCarro,ContaMota,ContaBicicleta) :-
 
 %--------------------------------------Auxiliar para Funcionalidade 9---------------------------------------
 
-% Conta o número de encomendas entregues e o número de encomendas não entregues num intervalo de tempo
-% ContaEntregasPeriodo - nº de encomendas entregues naquele período de tempo
-% ContaNaoEntregasPeriodo - nº de encomendas que foram entregues antes ou depois daquele período de tempo
-% ContaNuncaEntregues - nº de encomendas que nunca chegaram a ser entregues
-
-contaEntregasIntervalo([],_,_,[],0).
-contaEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregasPeriodo,ContaEntregasPeriodo) :-
-    encomenda(IdEnc,_,_,_,_,_,data(Ano,Mes,Dia,Hora,Minuto)),
-    ((verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF)),
-    contaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Lista0,Contador0),
-    adiciona(IdEnc,Lista0,ListaEntregasPeriodo),
-    ContaEntregasPeriodo is Contador0 + 1);
-    (nao(verificaIntervalo(data(AI,MI,DI,HI,MinI),data(Ano,Mes,Dia,Hora,Minuto),data(AF,MF,DF,HF,MinF)))),
-    contaEntregasIntervalo(T,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregasPeriodo,ContaEntregasPeriodo)).
+% Conta o número de encomendas não entregues, num intervalo de tempo, e o número de encomendas nunca entregues
+%ContaNaoEntregasPeriodo - nº de encomendas que foram entregues antes ou depois daquele período de tempo
+%ContaNuncaEntregues - nº de encomendas que nunca chegaram a ser entregues
 
 contaNaoEntregasIntervalo([],_,_,0,0).
 contaNaoEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaNaoEntregasPeriodo,ContaNuncaEntregues) :-

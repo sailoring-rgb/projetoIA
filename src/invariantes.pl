@@ -14,10 +14,6 @@
     nao(-Termo)
 ).
 
-+(-Termo) :: (
-    nao(Termo)
-).
-
 % # Invariantes sobre encomendas 
 
 % Invariante estrutural: os campos da Encomenda devem respeitar este tipo de dados
@@ -33,6 +29,12 @@
 % Invariante estrutural: não permitir a entrada de uma encomenda cujo ID já exista
 +encomenda(IdEnc,_,_,_,_,_,_) :: (
     solucoes(IdEnc,encomenda(IdEnc,_,_,_,_,_,_),L),
+    comprimento(L,1)
+).
+
+% Invariante estrutural: não permitir a entrada de uma encomenda que esteja associada a um cliente que não exista
++encomenda(IdEnc,IdCliente,_,_,_,_,_) :: (
+    solucoes(IdCliente,encomenda(IdEnc,IdCliente,_,_,_,_,_),L),
     comprimento(L,1)
 ).
 
@@ -77,15 +79,15 @@
     comprimento(L,1)
 ).
 
-% Invariante estrutural: não permitir a entrada de um estafeta que está associado a mais do que uma freguesia
-+estafeta(IdEstaf,Lista) :: (
-    listaFreguesiasEstaf(IdEstaf,Lista,L),
-    comprimento(L,1)
-).
-
 % Invariante estrutural: não permitir a entrada de um estafeta cujo meio de transporte não suporte o peso da encomenda e a velocidade 
 +estafeta(IdEstaf,Lista) :: (
     transportePesoVelocidade(Lista)
+).
+
+% Invariante estrutural: não permitir a entrada de um estafeta que esteja associado à entrega de uma encomenda que não exista
++estafeta(IdEstaf,Lista) :: (
+    encomendasDoEstafeta(IdEstaf,ListaIdEnc),
+    existeEncomenda(ListaIdEnc)
 ).
 
 % Invariante referencial: não permitir a remoção de um estafeta que tenha feito entregas
