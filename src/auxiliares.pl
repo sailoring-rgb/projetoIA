@@ -119,12 +119,6 @@ encomendasDaLista([(X,_,_,_,_,_)|T],Lista) :-
 encomendaPertenceEstafeta([(IdEnc,_,_,_,_,_)|T],IdEnc).
 encomendaPertenceEstafeta([(X,_,_,_,_,_)|T],IdEnc) :- X \= IdEnc, encomendaPertenceEstafeta(T,IdEnc).
 
-% Verifica se os ids de encomendas de uma lista existem
-existeEncomenda([]).
-existeEncomenda([IdEnc|T]) :-
-    encomenda(IdEnc,_,_,_,_,_,_),
-    existeEncomenda(T).
-
 % Devolve a lista dos ids das encomendas entregues naquele intervalo de tempo
 contaEntregasIntervalo(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregasPeriodo,Contador) :-
     solucoes(IdEnc,encomenda(IdEnc,_,_,_,_,_,_),ListaTodasEnc),
