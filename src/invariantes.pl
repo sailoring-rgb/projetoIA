@@ -92,12 +92,6 @@
     transportePesoVelocidade(Lista)
 ).
 
-% Invariante estrutural: não permitir a entrada de um estafeta que esteja associado à entrega de uma encomenda que não exista
-+estafeta(IdEstaf,Lista) :: (
-    encomendasDoEstafeta(IdEstaf,ListaIdEnc),
-    existeEncomenda(ListaIdEnc)
-).
-
 % Invariante referencial: não permitir a remoção de um estafeta que tenha feito entregas
 -estafeta(IdEstaf,Lista) :: (
     estafeta(IdEstaf,[])
