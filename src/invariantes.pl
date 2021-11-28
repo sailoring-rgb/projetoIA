@@ -9,10 +9,18 @@
 
 %-----------------------------------------------------------------------------------------------------------------------------------------
 
+% # Invariantes gerais 
+
 % Invariante estrutural: não permitir a entrada de conhecimento contraditório
 +Termo :: (
     nao(-Termo)
 ).
+
+% Invariante estrutural: não permitir a entrada de conhecimento contraditório
++(-Termo) :: (
+    nao(Termo)
+).
+
 
 % # Invariantes sobre encomendas 
 
