@@ -91,10 +91,6 @@ mediaSatisfacaoEstafeta(IdEstaf,Media) :-
 % Extensão do predicado numeroTotalEntregas : DataInicio, DataFim, Contador-> {V,F}
 % Identifica o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo
 
-%ContaCarro: número de encomendas entregues, naquele intervalo de tempo, por carro
-%ContaMota: número de encomendas entregues, naquele intervalo de tempo, por mota
-%ContaBicicleta: número de encomendas entregues, naquele intervalo de tempo, por bicicleta
-
 numeroTotalEntregasTransporte(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaCarro,ContaMota,ContaBicicleta) :-
 	solucoes(IdEstaf,estafeta(IdEstaf,_),ListaEstaf),
 	contaEntregasIntervalo(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregasPeriodo,_),

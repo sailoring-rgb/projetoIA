@@ -70,10 +70,10 @@ dataTimeValida(data(A,M,D,H,Min)) :-
     A =\= 0, M =:= 2, mod(A,4) =\= 0, D >= 1, D =< 28, H >= 0, H =< 23, Min >= 0, Min < 60.
 
 % Verifica se uma data está dentro de um intervalo de tempo
-verificaIntervalo(data(AnoInicio,MesInicio,DiaInicio,HoraInicio,MinutoInicio),data(Ano,Mes,Dia,Hora,Minuto),data(AnoFim,MesFim,DiaFim,HoraFim,MinutoFim)) :-
-    dataTimeValida(data(Ano,Mes,Dia,Hora,Minuto)),
-    comparaDatas(data(Ano,Mes,Dia,Hora,Minuto),data(AnoInicio,MesInicio,DiaInicio,HoraInicio,MinutoInicio)),
-    comparaDatas(data(AnoFim,MesFim,DiaFim,HoraFim,MinutoFim),data(Ano,Mes,Dia,Hora,Minuto)).
+verificaIntervalo(data(AnoI,MesI,DiaI,HoraI,MinI),data(Ano,Mes,Dia,Hora,Min),data(AnoF,MesF,DiaF,HoraF,MinF)) :-
+    dataTimeValida(data(Ano,Mes,Dia,Hora,Min)),
+    comparaDatas(data(Ano,Mes,Dia,Hora,Min),data(AnoI,MesI,DiaI,HoraI,MinI)),
+    comparaDatas(data(AnoF,MesF,DiaF,HoraF,MinF),data(Ano,Mes,Dia,Hora,Min)).
     
 %--------------------------------------Usadas em várias funcionalidades--------------------------------------
 
@@ -305,14 +305,12 @@ calculaPesoEncomendas(L, P) :-
   	pesoEncLista(L,Pesos),
   	soma(Pesos,P). 
 
-%---------------------------------------------------Extras---------------------------------------------------
+%---------------------------------------------------Anexos---------------------------------------------------
 
 % Adiciona um elemento a uma lista caso este ainda não pertença
 adiciona( X,[],[X] ).
 adiciona( X,L,[X|L] ) :- nao( membro(X,L) ).
 adiciona( X,L,L ) :- membro( X,L ).
-
-apaga(Lista,X,Lista0) :- delete(Lista,X,Lista0).
 
 % Concatena duas listas sem elementos repetidos
 concatena(L1,L2,CL):- concatenaAux(L1,L2,L0), append(L0,L2,AL), sort(AL,CL).
