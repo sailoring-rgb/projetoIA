@@ -7,6 +7,13 @@
 
 %-----------------------------------------Exclusivamente para invariantes------------------------------------
 
+% Verifica que uma encomenda não se encontra na lista de encomendas de nenhum estafeta 
+encomendaNaoTemEstafeta([],_).
+encomendaNaoTemEstafeta([IdEstaf|T],IdEnc) :-
+    estafeta(IdEstaf,Lista),
+    nao(membro((IdEnc,A,B,C,D,E),Lista)),
+    encomendaNaoTemEstafeta(T,IdEnc).
+
 % Verifica o tipo de dados da lista de encomendas do estafeta
 verificaDadosLista([]).
 verificaDadosLista([(IdEnc,Nota,Velocidade,Transporte,Rua,Freguesia)|T]) :- 
@@ -77,7 +84,7 @@ verificaIntervalo(data(AnoI,MesI,DiaI,HoraI,MinI),data(Ano,Mes,Dia,Hora,Min),dat
     comparaDatas(data(Ano,Mes,Dia,Hora,Min),data(AnoI,MesI,DiaI,HoraI,MinI)),
     comparaDatas(data(AnoF,MesF,DiaF,HoraF,MinF),data(Ano,Mes,Dia,Hora,Min)).
 
-% Devolve a diferença em horas entre duas datas, assumindo que cumprem os requisitos de tempo máximo de entrega
+% Devolve a diferença em horas entre duas datas, assumindo que cumprem os requisitos de tempo maximo de entrega
 diferencaDatas(data(AI,MI,DI,HI,MinI), data(AF,MF,DF,HF,MinF), R) :- (AI == AF -> 
 	(MI == MF -> 
 		(DI == DF -> R is HF-HI; R is (24-HI) + HF + 24*(DF-DI-1)); 
@@ -87,11 +94,11 @@ diferencaDatas(data(AI,MI,DI,HI,MinI), data(AF,MF,DF,HF,MinF), R) :- (AI == AF -
 % Verica se um ano é ou não bissexto
 bissexto(A) :- 0 =:= mod(A,4).
 
-% Retorna o número de dias de um mês
+% Retorna o número de dias de um mes
 diasMes(A,2,Dias) :- bissexto(A) -> Dias is 29; Dias is 28. 
 diasMes(_,M,Dias) :- dias31(M), Dias is 31; Dias is 30. 
 
-% Verifica que um mês têm 31 dias
+% Verifica que um mes tem 31 dias
 dias31(M) :- M == 1; M == 3; M == 5; M ==7; M == 8; M ==10; M == 12.
     
 %--------------------------------------Usadas em várias funcionalidades--------------------------------------
