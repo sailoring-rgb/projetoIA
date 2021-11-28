@@ -1,3 +1,5 @@
+:- consult('baseConhecimento.pl').
+
 :- set_prolog_flag( discontiguous_warnings,off ).
 :- set_prolog_flag( single_var_warnings,off ).
 
@@ -74,6 +76,23 @@ verificaIntervalo(data(AnoI,MesI,DiaI,HoraI,MinI),data(Ano,Mes,Dia,Hora,Min),dat
     dataTimeValida(data(Ano,Mes,Dia,Hora,Min)),
     comparaDatas(data(Ano,Mes,Dia,Hora,Min),data(AnoI,MesI,DiaI,HoraI,MinI)),
     comparaDatas(data(AnoF,MesF,DiaF,HoraF,MinF),data(Ano,Mes,Dia,Hora,Min)).
+
+% Devolve a diferença em horas entre duas datas, assumindo que cumprem os requisitos de tempo máximo de entrega
+diferencaDatas(data(AI,MI,DI,HI,MinI), data(AF,MF,DF,HF,MinF), R) :- (AI == AF -> 
+	(MI == MF -> 
+		(DI == DF -> R is HF-HI; R is (24-HI) + HF + 24*(DF-DI-1)); 
+		diasMes(AI,MI,Dias), R is (24-HI) + HF + (DF-(Dias-DI)-1) * 24); 
+	diasMes(AI,MI,Dias), R is (24-HI) + HF + (DF-(Dias-DI)-1) * 24).
+
+% Verica se um ano é ou não bissexto
+bissexto(A) :- 0 =:= mod(A,4).
+
+% Retorna o número de dias de um mês
+diasMes(A,2,Dias) :- bissexto(A) -> Dias is 29; Dias is 28. 
+diasMes(_,M,Dias) :- dias31(M), Dias is 31; Dias is 30. 
+
+% Verifica que um mês têm 31 dias
+dias31(M) :- M == 1; M == 3; M == 5; M ==7; M == 8; M ==10; M == 12.
     
 %--------------------------------------Usadas em várias funcionalidades--------------------------------------
 
@@ -153,15 +172,63 @@ clienteDaEncomenda(IdEnc,IdCliente) :-
 
 %--------------------------------------Auxiliares para Funcionalidade 4--------------------------------------
 
-% Falta completar
 % Devolve o preço associado ao serviço de entrega de uma encomenda
-% precoEncomenda(IdEnc,P) :- encomenda(IdEnc,_,Peso,Vol,Prazo,_,_),
-%	P is 5*Peso + 4*Vol + 
+precoEncomenda(IdEnc,P) :- 
+	encomenda(IdEnc,_,Peso,Vol,Prazo,_,_),
+	transporteEncomenda(IdEnc,Transporte),
+	calculaPrecoPorTransporte(Transporte,PT),
+	getPrazoEncomendaHoras(Prazo,Horas),
+	calculaPrecoPorPrazo(Horas,PP),
+	P is 3*Peso + 2*Vol + PT + PP.
+
+% Devolve o número de horas correspondente a um prazo de uma encomenda
+getPrazoEncomendaHoras(Prazo,Horas) :-
+	(Prazo == 'Imediato' -> Horas is 0;
+	getListaAtom([A,S],Prazo),
+	numeroAtom(A,N),
+	(S == 'horas' -> Horas is N; Horas is N*24)).
+
+% Devolve o preço relativo a cada prazo de entrega
+calculaPrecoPorPrazo(PrazoH,Preco) :- 
+	(PrazoH < 7 -> calculaPrecoAte7Horas(PrazoH,Preco);
+		PrazoH < 13 -> Preco is 8;
+		PrazoH < 25 -> Preco is 5;
+		PrazoH < 73 -> Preco is 4;
+		PrazoH < 121 -> Preco is 3;
+		Preco is 2). 
+
+% Devolve o preço relativo a cada prazo inferior a 7 horas                               
+calculaPrecoAte7Horas(0,25).
+calculaPrecoAte7Horas(1,20).
+calculaPrecoAte7Horas(2,18).
+calculaPrecoAte7Horas(3,16).
+calculaPrecoAte7Horas(4,14).
+calculaPrecoAte7Horas(5,12).
+calculaPrecoAte7Horas(6,10).
+
+% Devolve o transporte de uma encomenda
+transporteEncomenda(IdEnc,Transporte) :-
+	estafetaEncCliente(IdEnc,IdEstaf),
+	estafeta(IdEstaf,L),
+	procuraTransporteEncomenda(IdEnc,L,Transporte).
+
+% Procura o transporte de uma encomenda numa lista de encomendas de um estafeta
+procuraTransporteEncomenda(IdEnc,[(IdEnc,_,_,Transporte,_,_)],Transporte).
+procuraTransporteEncomenda(IdEnc,[(IdEnc,_,_,Transporte,_,_) | T], Transporte).
+procuraTransporteEncomenda(IdEnc,[(_,_,_,_,_,_) | T], Transporte) :- procuraTransporteEncomenda(IdEnc,T,Transporte).
+
+% Devolve o preço a ser cobrado conforme cada meio de transporte
+calculaPrecoPorTransporte(Transporte,P) :-
+	(Transporte == 'Bicicleta' -> P is 5;
+	  Transporte == 'Mota' -> P is 10;
+	  Transporte == 'Carro' -> P is 15).
 
 % Devolve a lista com os preços relativos a uma lista de encomendas
 precosListaEncomendas([],[]).
+precosListaEncomendas([IdEnc],L) :- precoEncomenda(IdEnc,P), adiciona(P,L1,L).
 precosListaEncomendas([IdEnc|T],L) :- 
-	precoEncomenda(IdEnc,P),
+	precoEncomenda(IdEnc,P), 
+	precosListaEncomendas(T,L1),
 	adiciona(P,L1,L).
 
 % Devolve a soma dos preços das encomendas
@@ -218,7 +285,7 @@ classificacoesDaLista([(_,C,_,_)|T],L) :-
 	classificacoesDaLista(T,L1),
 	adiciona(C,L1,L).    
 
-%--------------------------------------Auxiliar para Funcionalidade 7---------------------------------------
+%--------------------------------------Auxiliar para Funcionalidade 7 e 8---------------------------------------
 
 % Conta o número de encomendas entregues, num intervalo de tempo, pelos diferentes meios de transporte
 contaPorTransporteIntervalo([],[],_,_,0,0,0).
@@ -248,8 +315,8 @@ contaPorTransporte(IdEstaf,[IdEnc|T],ContaCarro,ContaMota,ContaBicicleta) :-
 %--------------------------------------Auxiliar para Funcionalidade 9---------------------------------------
 
 % Conta o número de encomendas não entregues, num intervalo de tempo, e o número de encomendas nunca entregues
-%ContaNaoEntregasPeriodo - nº de encomendas que foram entregues antes ou depois daquele período de tempo
-%ContaNuncaEntregues - nº de encomendas que nunca chegaram a ser entregues
+% ContaNaoEntregasPeriodo - nº de encomendas que foram entregues antes ou depois daquele período de tempo
+% ContaNuncaEntregues - nº de encomendas que nunca chegaram a ser entregues
 
 contaNaoEntregasIntervalo([],_,_,0,0).
 contaNaoEntregasIntervalo([IdEnc|T],data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaNaoEntregasPeriodo,ContaNuncaEntregues) :-
@@ -341,3 +408,10 @@ comprimento(S,N) :- length(S,N).
 % Soma os elementos de uma lista 
 soma([],0).
 soma([X|Y],Total) :- soma(Y, Ac), Total is X + Ac.
+
+% Torna um atom numa lista 
+getListaAtom([N,S],P) :- atomic_list_concat([N,S],' ',P).
+
+% Devolve o número contido num atom
+numeroAtom(A,N) :- atom_number(A, N).
+

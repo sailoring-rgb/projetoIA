@@ -54,7 +54,7 @@ clientesPorEstafeta(IdEstaf,ListaR) :-
 
 valorFaturadoDia(A,M,D,V) :- 
 	encomendasDia(A,M,D,L),
-	precosListasEncomendas(L,R),
+	precosListaEncomendas(L,R),
 	totalEncomendas(R,V).
 
 %---------------------------------------------Funcionalidade 5---------------------------------------------
@@ -96,14 +96,22 @@ numeroTotalEntregasTransporte(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Cont
 	contaEntregasIntervalo(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregasPeriodo,_),
     contaPorTransporteIntervalo(ListaEstaf,ListaEntregasPeriodo,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ContaCarro,ContaMota,ContaBicicleta).
 
+%---------------------------------------------Funcionalidade 8---------------------------------------------
+% Extensão do predicado totalEntregasEstafetas : DataInicio,DataFim, Total -> {V,F}
+% identificar o número total de entregas pelos estafetas, num determinado intervalo de tempo
+
+totalEntregasEstafetas(AI,MI,DI,HI,MinI,AF,MF,DF,HF,MinF,Total) :- 
+	solucoes(IdEnc,encomenda(IdEnc,_,_,_,_,_,_),Encs),
+	contaEntregasIntervalo(Encs,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),_,Total).
+
 %---------------------------------------------Funcionalidade 9---------------------------------------------
 % Extensão do predicado numEntregasNaoEntregas : DataInicio, DataFim, ContadorEntregas, ContadorNaoEntregas, ContadorNuncaEntregues -> {V,F}
 % Calcula o número de encomendas entregues e não entregues pela Green Distribution, num determinado período de tempo, e, ainda, o número de
 % encomendas nunca entregues.
 
-%Contador1: número de encomendas entregues naquele intervalo de tempo
-%Contador2: número de encomendas não entregues naquele intervalo de tempo
-%Contador3: número de encomendas nunca entregues
+% Contador1: número de encomendas entregues naquele intervalo de tempo
+% Contador2: número de encomendas não entregues naquele intervalo de tempo
+% Contador3: número de encomendas nunca entregues
 
 numEntregasNaoEntregas(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador1,Contador2,Contador3) :-
     solucoes(IdEnc,encomenda(IdEnc,_,_,_,_,_,_),ListaTodasEnc),
