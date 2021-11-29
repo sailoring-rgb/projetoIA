@@ -1,5 +1,5 @@
 :- consult('baseConhecimento.pl').
-:- consult('aux.pl').
+:- consult('auxiliares.pl').
 :- consult('invariantes.pl').
 :- consult('evolucaoInvolucao.pl').
 
@@ -32,12 +32,16 @@ estafetaMaisEcologico([IdEstaf|T],Max,IdsMax) :-
 %---------------------------------------------Funcionalidade 2---------------------------------------------
 % Extensao do predicado estafetasEncomendasCliente: Lista,Lista -> {V,F}
 % Identifica que estafetas entregaram determinada(s) encomenda(s) a um determinado cliente
-	
-estafetasEncomendasCliente([],[]).
-estafetasEncomendasCliente([IdEnc],L) :- estafetasEncCliente(IdEnc,L).
-estafetasEncomendasCliente([IdEnc|Es],L) :- 
+
+estafetasEncomendasCliente(IdCliente,ListaEstaf) :-
+	solucoes(IdEnc,encomenda(IdEnc,IdCliente,_,_,_,_,_),ListaEnc),
+	estafetasEncomendasClienteAux(ListaEnc,ListaEstaf).
+
+estafetasEncomendasClienteAux([],[]).
+estafetasEncomendasClienteAux([IdEnc],L) :- estafetasEncCliente(IdEnc,L).
+estafetasEncomendasClienteAux([IdEnc|Es],L) :- 
 	estafetasEncCliente(IdEnc,R),
-	estafetasEncomendasCliente(Es,L1),
+	estafetasEncomendasClienteAux(Es,L1),
 	append([R],[L1],L).
 
 %---------------------------------------------Funcionalidade 3---------------------------------------------

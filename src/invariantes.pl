@@ -49,7 +49,7 @@
 % Invariante referencial: não permitir a remoção de uma encomenda que esteja associada a um estafeta
 -encomenda(IdEnc,_,_,_,_,_,_) :: (
     solucoes(IdEstaf,estafeta(IdEstaf,_),ListaEstaf),
-    encomendaNaoTemEstafeta(ListaEstaf,IdEnc).
+    encomendaNaoTemEstafeta(ListaEstaf,IdEnc)
 ).
 
 
