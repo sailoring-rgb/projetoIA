@@ -38,11 +38,11 @@ estafetasEncomendasCliente(IdCliente,ListaEstaf) :-
 	estafetasEncomendasClienteAux(ListaEnc,ListaEstaf).
 
 estafetasEncomendasClienteAux([],[]).
-estafetasEncomendasClienteAux([IdEnc],L) :- estafetasEncCliente(IdEnc,L).
+estafetasEncomendasClienteAux([IdEnc],[R]) :- estafetaEncCliente(IdEnc,R).
 estafetasEncomendasClienteAux([IdEnc|Es],L) :- 
-	estafetasEncCliente(IdEnc,R),
+	estafetaEncCliente(IdEnc,R),
 	estafetasEncomendasClienteAux(Es,L1),
-	append([R],[L1],L).
+	adiciona(R,L1,L).
 
 %---------------------------------------------Funcionalidade 3---------------------------------------------
 % Extensão do predicado clientesPorEstafeta: Id,Lista -> {V,F}

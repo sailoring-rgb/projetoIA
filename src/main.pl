@@ -46,7 +46,7 @@ funcionalidade(2) :-
     write('Indique o ID do cliente: '),!,
     read(ID),
     estafetasEncomendasCliente(ID,L),nl,
-    write('ID(s) do(s) estafeta(s) que serviram o cliente '),write(ID),write(' : '),write(L),nl,
+    write('ID(s) do(s) estafeta(s) que serviram o cliente '),write(ID),write(': '),write(L),nl,
     main.
 
 funcionalidade(3) :-
@@ -62,7 +62,7 @@ funcionalidade(4) :-
     ((dataValida(Input),
     elementosData(Input,A,M,D),
     valorFaturadoDia(A,M,D,V),nl,
-    write('Valor faturado em '),write(D),write('/'),write(M),write('/'),write(A),write(' : '),write(V),nl);
+    write('Valor faturado em '),write(D),write('/'),write(M),write('/'),write(A),write(': '),write(V),write(' euros'),nl);
     write('A data que inseriu não é válida.')),
     main.
 
@@ -114,8 +114,9 @@ funcionalidade(10) :-
     write('Indique uma data no formato - data(Ano,Mês,Dia): '),!,
     read(Input),
     elementosData(Input,A,M,D),
-    pesoTotalEstafetasDia(A,M,D,L),
-    write('Peso total transportado por estafeta em '),write(D),write('/'),write(M),write('/'),write(A),write(': '),write(L),
+    pesoTotalEstafetasDia(A,M,D,L),nl,
+    write('Peso total transportado por estafeta em '),
+    write(D),write('/'),write(M),write('/'),write(A),write(': '),write(L),nl,
     main.
 
 %EXTRA Funcionalidades
