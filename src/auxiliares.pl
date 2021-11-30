@@ -413,6 +413,13 @@ soma([X|Y],Total) :- soma(Y, Ac), Total is X + Ac.
 % Torna um atom numa lista 
 getListaAtom([N,S],P) :- atomic_list_concat([N,S],' ',P).
 
+% Torna um atom separado por vírgulas numa lista
+getAtomVirgulaLista(L,A) :- atomic_list_concat(L,,,A).
+
 % Devolve o número contido num atom
 numeroAtom(A,N) :- atom_number(A, N).
 
+% Devolve uma lista de número a partir de uma lista de atom
+listaNumAtom([],[]).
+listaNumAtom([A],L) :- numeroAtom(A,N), adiciona(N,L1,L).
+listaNumAtom([A|T],L) :- numeroAtom(A,N), listaNumAtom(T,L1), adiciona(N,L1,L). 

@@ -8,7 +8,7 @@
 
 :- style_check(-singleton).
 
-%Funcionalidades
+% Funcionalidades
 		
 %---------------------------------------------Funcionalidade 1---------------------------------------------
 % Extensão do predicado estafetaMaisEcologico: Lista,Maximo,Id -> {V,F}
@@ -33,16 +33,13 @@ estafetaMaisEcologico([IdEstaf|T],Max,IdsMax) :-
 % Extensao do predicado estafetasEncomendasCliente: Lista,Lista -> {V,F}
 % Identifica que estafetas entregaram determinada(s) encomenda(s) a um determinado cliente
 
-estafetasEncomendasCliente(IdCliente,ListaEstaf) :-
-	solucoes(IdEnc,encomenda(IdEnc,IdCliente,_,_,_,_,_),ListaEnc),
-	estafetasEncomendasClienteAux(ListaEnc,ListaEstaf).
-
-estafetasEncomendasClienteAux([],[]).
-estafetasEncomendasClienteAux([IdEnc],[R]) :- estafetaEncCliente(IdEnc,R).
-estafetasEncomendasClienteAux([IdEnc|Es],L) :- 
+estafetasEncomendasCliente([],[]).
+estafetasEncomendasCliente([IdEnc],L) :- estafetaEncCliente(IdEnc,R), adiciona((IdEnc,R),L1,L).
+estafetasEncomendasCliente([IdEnc|Es],L) :- 
 	estafetaEncCliente(IdEnc,R),
-	estafetasEncomendasClienteAux(Es,L1),
-	adiciona(R,L1,L).
+	estafetasEncomendasCliente(Es,L1),
+	adiciona((IdEnc,R),L1,L).
+	% concatena([(IdEnc,R)],[L1],L).
 
 %---------------------------------------------Funcionalidade 3---------------------------------------------
 % Extensão do predicado clientesPorEstafeta: Id,Lista -> {V,F}
