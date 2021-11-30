@@ -417,7 +417,7 @@ getListaAtom([N,S],P) :- atomic_list_concat([N,S],' ',P).
 getAtomVirgulaLista(L,A) :- atomic_list_concat(L,,,A).
 
 % Devolve o número contido num atom
-numeroAtom(A,N) :- atom_number(A, N).
+numeroAtom(A,N) :- atom_number(A,N).
 
 % Devolve uma lista de número a partir de uma lista de atom
 listaNumAtom([],[]).

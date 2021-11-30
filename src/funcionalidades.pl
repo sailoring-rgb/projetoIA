@@ -99,7 +99,7 @@ numeroTotalEntregasTransporte(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Cont
 
 %---------------------------------------------Funcionalidade 8---------------------------------------------
 % Extensão do predicado totalEntregasEstafetas : DataInicio,DataFim, Total -> {V,F}
-% identificar o número total de entregas pelos estafetas, num determinado intervalo de tempo
+% Identificar o número total de entregas pelos estafetas, num determinado intervalo de tempo
 
 totalEntregasEstafetas(AI,MI,DI,HI,MinI,AF,MF,DF,HF,MinF,Total) :- 
 	solucoes(IdEnc,encomenda(IdEnc,_,_,_,_,_,_),Encs),

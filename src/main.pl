@@ -40,10 +40,11 @@ funcionalidade(1) :-
 
 funcionalidade(2) :-
     write('Indique os IDs de encomendas, separados por vírgulas: '),!,nl,
-    read_line_to_codes(user_input,IDs),
-    string_to_atom(IDs,ID),
-    getAtomVirgulaLista(A,ID),
-    listaNumAtom(A,L),
+    read(L),
+    %read_line_to_codes(user_input,IDs),
+    %string_to_atom(IDs,ID),
+    %getAtomVirgulaLista(A,ID),
+    %listaNumAtom(A,L),
     estafetasEncomendasCliente(L,R),nl,
     write('ID(s) do(s) estafeta(s) que entregaram as referidas encomendas: '),write(R),!,nl.
 
@@ -80,13 +81,23 @@ funcionalidade(7) :-
         write('Indique a data final no formato - data(Ano,Mês,Dia,Horas,Minutos): '),!,nl,
         read(Input2),
             ((nao(dataTimeValida(Input2)) -> nl,write('A data que inseriu não é válida.'),nl);
-            elementosDataTime(Input2,A2,M2,D2,H2,Min2),nl,
-            numeroTotalEntregasTransporte(data(A1,M1,D1,H1,Min1),data(A2,M2,D2,H2,Min2),V1,V2,V3),
+            elementosDataTime(Input2,A2,M2,D2,H2,Min2),
+            numeroTotalEntregasTransporte(data(A1,M1,D1,H1,Min1),data(A2,M2,D2,H2,Min2),V1,V2,V3),nl,
             write('Número total de entregas transportadas de carro: '),write(V1),nl,
             write('Número total de entregas transportadas de mota: '),write(V2),nl,
             write('Número total de entregas transportadas de bicicleta: '),write(V3),nl)),!.
 
-% funcionalidade(8) :-
+funcionalidade(8) :-
+    write('Indique a data inicial no formato - data(Ano,Mês,Dia,Horas,Minutos): '),!,nl,
+    read(Input1),
+        ((nao(dataTimeValida(Input1)) -> nl,write('A data que inseriu não é válida.'),nl);
+        elementosDataTime(Input1,A1,M1,D1,H1,Min1),nl,
+        write('Indique a data final no formato - data(Ano,Mês,Dia,Horas,Minutos): '),!,nl,
+        read(Input2),
+            ((nao(dataTimeValida(Input2)) -> nl,write('A data que inseriu não é válida.'),nl);
+            elementosDataTime(Input2,A2,M2,D2,H2,Min2),
+            totalEntregasEstafetas(data(A1,M1,D1,H1,Min1),data(A2,M2,D2,H2,Min2),L),nl,
+            write('Número total de entregas por cada estafeta: '),write(L),nl)),!.
 
 funcionalidade(9) :-
     write('Indique a data inicial no formato - data(Ano,Mês,Dia,Horas,Minutos): '),!,nl,
@@ -96,8 +107,8 @@ funcionalidade(9) :-
         write('Indique a data final no formato - data(Ano,Mês,Dia,Horas,Minutos): '),!,nl,
         read(Input2),
             ((nao(dataTimeValida(Input2)) -> nl,write('A data que inseriu não é válida.'),nl);
-            elementosDataTime(Input2,A2,M2,D2,H2,Min2),nl,
-            numEntregasNaoEntregas(data(A1,M1,D1,H1,Min1),data(A2,M2,D2,H2,Min2),V1,V2,V3),
+            elementosDataTime(Input2,A2,M2,D2,H2,Min2),
+            numEntregasNaoEntregas(data(A1,M1,D1,H1,Min1),data(A2,M2,D2,H2,Min2),V1,V2,V3),nl,
             write('Número total de encomendas entregues: '),write(V1),nl,
             write('Número total de encomendas não entregues naquele período de tempo: '),write(V2),nl,
             write('Número total de encomendas nunca entregues: '),write(V3),nl)),!.
