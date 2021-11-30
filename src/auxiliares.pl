@@ -101,6 +101,35 @@ diasMes(_,M,Dias) :- dias31(M), Dias is 31; Dias is 30.
 % Verifica que um mes tem 31 dias
 dias31(M) :- M == 1; M == 3; M == 5; M ==7; M == 8; M ==10; M == 12.
     
+%----------------------------------------- Exclusivamente para penalizar Estafetas -----------------------------------------
+% Devolve a lista com as encomendas entregues em atraso de um dado estafeta
+encAtrasoEstafeta(IdEstaf,R) :- 
+       encomendasDoEstafeta(IdEstaf,L),
+       encomendasEntreguesAtraso(L1),
+       comuns(L,L1,R).
+
+
+% Devolve  a penalizacao do estafeta ao atraso de entrega da encomenda
+calculaPenalizacaoPorAtraso(Atraso,Penalizacao) :- 
+	(
+        Atraso < 1 -> Penalizacao is 0;
+		Atraso < 24 -> Penalizacao is 0.2;
+		Atraso < 48 -> Penalizacao is 0.3;
+		Penalizacao is 0.7). 
+
+% Devolve o atraso com que foi entregue uma encomenda
+calculaAtraso(DataI,DataF,Prazo,Atraso) :- 
+      getPrazoEncomendaHoras(Prazo,PH),
+      diferencaDatas(DataI,DataF,D),
+      (D =< PH -> Atraso is 0;
+       D > PH  -> Atraso is D-PH).
+
+% Aplica a penalizacao ao estafeta
+estafetaPenalizacao(IdEstaf,DataI,DataF,Prazo,L):- 
+        calculaAtraso(DataI,DataF,Prazo,A),
+        calculaPenalizacaoPorAtraso(A,P),
+        estafeta(IdEstaf,[(_,Nota-P,_,_,_,_)]).
+
 %--------------------------------------Usadas em várias funcionalidades--------------------------------------
 
 % Devolve a lista dos ids das encomendas de um estafeta
@@ -484,3 +513,6 @@ numeroAtom(A,N) :- atom_number(A,N).
 listaNumAtom([],[]).
 listaNumAtom([A],L) :- numeroAtom(A,N), adiciona(N,L1,L).
 listaNumAtom([A|T],L) :- numeroAtom(A,N), listaNumAtom(T,L1), adiciona(N,L1,L). 
+
+% Devolve a lista com os elementos comuns 
+comuns(L1,L2,R) :- intersection(L1,L2,R).
