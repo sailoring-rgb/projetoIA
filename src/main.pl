@@ -56,7 +56,7 @@ funcionalidade(3) :-
     write('Indique o ID do estafeta: '),!,nl,
     read(ID),
     clientesPorEstafeta(ID,L),nl,
-    write('ID(s) do(s) cliente(s): '),write(L),nl,
+    write('ID(s) do(s) cliente(s) servidos pelo estafeta '),write(ID),write(': '),write(L),nl,
     main.
 
 funcionalidade(4) :-
