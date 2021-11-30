@@ -24,9 +24,10 @@ main :-
     write('9. Calcular o número de encomendas entregues e não entregues pela Green Distribution, num determinado período de tempo.'), nl,
     write('10. Calcular o peso total transportado por estafeta num determinado dia.'), nl,
     write('11. Consultar o cliente que fez mais encomendas.'), nl,
+    write('12. Consultar os estefetas que são menos pontuais a fazer as suas entregas.'),nl,
     write('0. Sair'), nl,
     write('-----------------------------------------------------------------------------------------------------------------------'), nl,nl,
-    write('Escolha um: '),
+    write('Escolha um: '),nl,
     read(X),
     (X = 0 -> !, fail; true),
     nl,
@@ -40,11 +41,10 @@ funcionalidade(1) :-
 
 funcionalidade(2) :-
     write('Indique os IDs de encomendas, separados por vírgulas: '),!,nl,
-    read(L),
-    %read_line_to_codes(user_input,IDs),
-    %string_to_atom(IDs,ID),
-    %getAtomVirgulaLista(A,ID),
-    %listaNumAtom(A,L),
+    read_line_to_codes(user_input,IDs),
+    string_to_atom(IDs,ID),
+    getAtomVirgulaLista(A,ID),
+    listaNumAtom(A,L),
     estafetasEncomendasCliente(L,R),nl,
     write('ID(s) do(s) estafeta(s) que entregaram as referidas encomendas: '),write(R),!,nl.
 
@@ -126,3 +126,7 @@ funcionalidade(10) :-
 funcionalidade(11) :-
     clienteMaisEncomendas(IDs),
     write('ID(s) do(s) clientes(s) com mais encomendas: '), write(IDs),!,nl.
+
+funcionalidade(12) :-
+    estafetasMenosPontuais(L),
+    write('IDs dos estafetas menos pontuais: '),write(L),!,nl.
