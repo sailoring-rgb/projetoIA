@@ -10,6 +10,7 @@
 %-----------------------------------------------------------------------------------------------------------------------------------------
 
 main :-
+    repeat,
     nl,
     write('---------------------------------------------------------MENU----------------------------------------------------------'), nl,
     write('1. Consultar o estafeta que utilizou mais vezes um meio de transporte mais ecológico.'), nl,
@@ -23,24 +24,19 @@ main :-
     write('9. Calcular o número de encomendas entregues e não entregues pela Green Distribution, num determinado período de tempo.'), nl,
     write('10. Calcular o peso total transportado por estafeta num determinado dia.'), nl,
     write('11. Consultar o cliente que fez mais encomendas.'), nl,
-    write('Digite 0. para sair'), nl,
+    write('0. Sair'), nl,
     write('-----------------------------------------------------------------------------------------------------------------------'), nl,nl,
     write('Escolha um: '),
     read(X),
-    (X == 0 -> !, fail; true),
+    (X = 0 -> !, fail; true),
     nl,
-    funcionalidade(X),
-    fail.
-
-funcionalidade(0) :-
-    !, fail.
+    funcionalidade(X),fail.
 
 % # Funcionalidades
 
 funcionalidade(1) :-
     estafetaMaisEcologico(IDs),
-    write('ID(s) do(s) estafeta(s) mais ecológicos: '), write(IDs), nl,
-    main.
+    write('ID(s) do(s) estafeta(s) mais ecológicos: '),write(IDs),!,nl.
 
 funcionalidade(2) :-
     write('Indique os IDs de encomendas, separados por vírgulas: '),!,nl,
@@ -49,15 +45,13 @@ funcionalidade(2) :-
     getAtomVirgulaLista(A,ID),
     listaNumAtom(A,L),
     estafetasEncomendasCliente(L,R),nl,
-    write('ID(s) do(s) estafeta(s) que entregaram as referidas encomendas: '),write(R),nl,
-    main.
+    write('ID(s) do(s) estafeta(s) que entregaram as referidas encomendas: '),write(R),!,nl.
 
 funcionalidade(3) :-
     write('Indique o ID do estafeta: '),!,nl,
     read(ID),
     clientesPorEstafeta(ID,L),nl,
-    write('ID(s) do(s) cliente(s) servidos pelo estafeta '),write(ID),write(': '),write(L),nl,
-    main.
+    write('ID(s) do(s) cliente(s) servidos pelo estafeta '),write(ID),write(': '),write(L),!,nl.
 
 funcionalidade(4) :-
     write('Indique uma data no formato - data(Ano,Mês,Dia): '),!,nl,
@@ -65,36 +59,32 @@ funcionalidade(4) :-
     ((dataValida(Input),
     elementosData(Input,A,M,D),
     valorFaturadoDia(A,M,D,V),nl,
-    write('Valor faturado em '),write(D),write('/'),write(M),write('/'),write(A),write(': '),write(V),write(' euros'),nl);
-    write('A data que inseriu não é válida.')),
-    main.
+    write('Valor faturado em '),write(D),write('/'),write(M),write('/'),write(A),write(': '),write(V),write('€'),nl);
+    write('A data que inseriu não é válida.'),nl),!.
 
 funcionalidade(5) :-
     freguesiasMaisFrequentes(L),
-    write('Zona(s) com maior volume de entregas: '),write(L),nl,
-    main.
+    write('Zona(s) com maior volume de entregas: '),write(L),!,nl.
 
 funcionalidade(6) :-
     write('Indique o ID do estafeta: '),!,nl,
     read(ID),
     mediaSatisfacaoEstafeta(ID,V),nl,
-    write('Classificação média de satisfação de cliente: '),write(V),nl,
-    main.
+    write('Classificação média de satisfação de cliente: '),write(V),!,nl.
     
 funcionalidade(7) :-
     write('Indique a data inicial no formato - data(Ano,Mês,Dia,Horas,Minutos): '),!,nl,
     read(Input1),
         ((nao(dataTimeValida(Input1)) -> nl,write('A data que inseriu não é válida.'),nl);
         elementosDataTime(Input1,A1,M1,D1,H1,Min1),nl,
-        write('Indique a data final no formato - data(Ano,Mês,Dia,Horas,Minutos): '),!,
+        write('Indique a data final no formato - data(Ano,Mês,Dia,Horas,Minutos): '),!,nl,
         read(Input2),
             ((nao(dataTimeValida(Input2)) -> nl,write('A data que inseriu não é válida.'),nl);
             elementosDataTime(Input2,A2,M2,D2,H2,Min2),nl,
             numeroTotalEntregasTransporte(data(A1,M1,D1,H1,Min1),data(A2,M2,D2,H2,Min2),V1,V2,V3),
             write('Número total de entregas transportadas de carro: '),write(V1),nl,
             write('Número total de entregas transportadas de mota: '),write(V2),nl,
-            write('Número total de entregas transportadas de bicicleta: '),write(V3),nl)),
-    main.
+            write('Número total de entregas transportadas de bicicleta: '),write(V3),nl)),!.
 
 % funcionalidade(8) :-
 
@@ -110,8 +100,7 @@ funcionalidade(9) :-
             numEntregasNaoEntregas(data(A1,M1,D1,H1,Min1),data(A2,M2,D2,H2,Min2),V1,V2,V3),
             write('Número total de encomendas entregues: '),write(V1),nl,
             write('Número total de encomendas não entregues naquele período de tempo: '),write(V2),nl,
-            write('Número total de encomendas nunca entregues: '),write(V3),nl)),
-    main.
+            write('Número total de encomendas nunca entregues: '),write(V3),nl)),!.
 
 funcionalidade(10) :-
     write('Indique uma data no formato - data(Ano,Mês,Dia): '),!,nl,
@@ -119,12 +108,10 @@ funcionalidade(10) :-
     elementosData(Input,A,M,D),
     pesoTotalEstafetasDia(A,M,D,L),nl,
     write('Peso total transportado por estafeta em '),
-    write(D),write('/'),write(M),write('/'),write(A),write(': '),write(L),nl,
-    main.
+    write(D),write('/'),write(M),write('/'),write(A),write(': '),write(L),!,nl.
 
 % EXTRA Funcionalidades
 
 funcionalidade(11) :-
     clienteMaisEncomendas(IDs),
-    write('ID(s) do(s) clientes(s) com mais encomendas: '), write(IDs), nl,
-    main.
+    write('ID(s) do(s) clientes(s) com mais encomendas: '), write(IDs),!,nl.
