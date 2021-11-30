@@ -39,7 +39,6 @@ estafetasEncomendasCliente([IdEnc|Es],L) :-
 	estafetaEncCliente(IdEnc,R),
 	estafetasEncomendasCliente(Es,L1),
 	adiciona((IdEnc,R),L1,L).
-	% concatena([(IdEnc,R)],[L1],L).
 
 %---------------------------------------------Funcionalidade 3---------------------------------------------
 % Extensão do predicado clientesPorEstafeta: Id,Lista -> {V,F}
@@ -120,7 +119,7 @@ numEntregasNaoEntregas(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador1,C
     contaNaoEntregasIntervalo(ListaTodasEnc,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador2,Contador3).
 
 %---------------------------------------------Funcionalidade 10---------------------------------------------
-% Extensão do predicado : Ano,Mes,Dia,Lista -> {V,F}
+% Extensão do predicado pesoTotalEstafetasDia : Ano,Mes,Dia,Lista -> {V,F}
 % Calcula o peso total transportado por estafeta num determinado dia
 
 pesoTotalEstafetasDia(A,M,D,L) :-
@@ -146,3 +145,14 @@ clienteMaisEncomendas([IdCliente|T],Max,ListaIdMax) :-
     ((Contador > ContadorMax -> Max = Contador, ListaIdMax = [IdCliente]);
      (Contador == ContadorMax -> Max = ContadorMax, ListaIdMax = [IdCliente|ListaAux]);
      Max = ContadorMax, ListaIdMax = ListaAux).
+
+%-------------------------------------------Funcionalidade Extra2--------------------------------------------
+% Extensão do predicado estafetasMenosPontuais : Lista -> {V,F}
+% Identifica quais estefetas são menos pontuais, ou seja, quais têm um maior rácio entre encomendas 
+% não entregues/entregues com atraso e encomendas entregues
+
+estafetasMenosPontuais(L) :- 
+	getIdsEstafetas(Etfs),
+    encomendasNaoEntreguesEAtrasadas(R),
+    racioEstafetasAux(Etfs,R,Ratio),
+    estafetasMaiorRacio(Ratio,R,L).

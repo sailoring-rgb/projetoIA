@@ -373,6 +373,67 @@ calculaPesoEncomendas(L, P) :-
   	pesoEncLista(L,Pesos),
   	soma(Pesos,P). 
 
+%--------------------------------------Auxiliares para Funcionalidade Extra2--------------------------------------
+
+% Devolve o maior rácio entre encomendas não entregues/entregues com atraso e encomendas entregues existente entre todos os estafetas
+racioEstafetasAux([IdEstaf],L,Ratio) :- racioEstafeta(IdEstaf,L,Ratio).
+racioEstafetasAux([IdEstaf | T], L, MaxRatio) :-
+    racioEstafeta(IdEstaf,L,Ratio),
+    racioEstafetasAux(T,L,Ratio1),
+    (Ratio > Ratio1 -> MaxRatio = Ratio; MaxRatio = Ratio1).
+
+% Devolve o rácio entre encomendas não entregues/entregues com atraso e encomendas entregues de um estafeta
+racioEstafeta(IdEstaf,L,Ratio) :-
+    contaEncomendasEstafetaLista(IdEstaf,L,C),
+    encomendasDoEstafeta(IdEstaf,E),
+    comprimento(E,T),
+    Ratio is C / T.
+
+% Devolve a lista de estafetas com maior rácio entre encomendas não entregues/entregues com atraso e encomendas entregues 
+estafetasMaiorRacio(Ratio,R,L) :- 
+    solucoes(IdEstaf,racioEstafeta(IdEstaf,R,Ratio),S),
+    sort(S,L).
+
+% Devolve o número de encomendas feitas por um estafeta dada a lista de encomendas não entregues e entregues com atraso
+contaEncomendasEstafetaLista(IdEstaf,[],0).
+contaEncomendasEstafetaLista(IdEstaf,[IdEnc],1) :-
+    encomendasDoEstafeta(IdEstaf,R),
+    membro(IdEnc,R).
+contaEncomendasEstafetaLista(IdEstaf,[IdEnc],0) :-
+    encomendasDoEstafeta(IdEstaf,R),
+    nao(membro(IdEnc,R)).
+contaEncomendasEstafetaLista(IdEstaf,[IdEnc | T], Contador) :-
+    encomendasDoEstafeta(IdEstaf,R),
+    membro(IdEnc,R),
+    contaEncomendasEstafetaLista(IdEstaf,T,Contador1),
+    Contador is Contador1+1.
+contaEncomendasEstafetaLista(IdEstaf,[IdEnc | T], Contador) :-
+    encomendasDoEstafeta(IdEstaf,R),
+    nao(membro(IdEnc,R)),
+    contaEncomendasEstafetaLista(IdEstaf,T,Contador).
+
+% Devolve uma lista com as encomendas não entregues e entregues com atraso
+encomendasNaoEntreguesEAtrasadas(L) :- 
+    encomendasEntreguesAtraso(A),
+    encomendasNaoEntregues(NE),
+    concatena(A,NE,L).
+
+% Devolve uma lista com todas as encomendas entregues com atraso
+encomendasEntreguesAtraso(L) :- solucoes(IdEnc,encEntregueAtraso(IdEnc),L).
+
+% Determina se uma encomenda foi entregue com atraso
+encEntregueAtraso(IdEnc) :- 
+    encomenda(IdEnc,_,_,_,Prazo,DataI,DataF),
+    getPrazoEncomendaHoras(Prazo,Horas),
+    diferencaDatas(DataI,DataF,DifH),
+    DifH > Horas.
+
+% Devolve uma lista com todas as encomendas não entregues
+encomendasNaoEntregues(L) :- solucoes(IdEnc, encNaoEntregue(IdEnc),L).
+
+% Determina se uma determinada encomenda não foi entregue
+encNaoEntregue(IdEnc) :- encomenda(IdEnc,_,_,_,_,_,data(0,0,0,0,0)).
+
 %---------------------------------------------------Anexos---------------------------------------------------
 
 % Adiciona um elemento a uma lista caso este ainda não pertença
