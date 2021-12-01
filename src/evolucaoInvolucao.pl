@@ -14,7 +14,7 @@ evolucao(Termo) :-
     teste(Lista).
 
 % Extensao do predicado involucao: Termo -> {V, F}
-involucao(Termo) :- 
+involucao(Termo) :- Termo,
     solucoes(Invariantes,-Termo::Invariantes, Lista),
     remocao(Termo),
     teste(Lista).

@@ -53,16 +53,16 @@ funcionalidade(3) :-
     write('Indique o ID do estafeta: '),!,nl,
     read(ID),
     clientesPorEstafeta(ID,L),nl,
-    write('ID(s) do(s) cliente(s) servidos pelo estafeta '),write(ID),write(': '),write(L),!.
+    write('ID(s) do(s) cliente(s) servidos pelo estafeta '),write(ID),write(': '),write(L),!,nl.
 
 funcionalidade(4) :-
     write('Indique uma data no formato - data(Ano,Mês,Dia): '),!,nl,
-    read(Input),
+    read(Input),nl,
     ((dataValida(Input),
     elementosData(Input,A,M,D),
     valorFaturadoDia(A,M,D,V),nl,
     write('Valor faturado em '),write(D),write('/'),write(M),write('/'),write(A),write(': '),write(V),write('€'),nl);
-    write('A data que inseriu não é válida.'),nl),!.
+    (nao(dataValida(Input)),write('A data que inseriu não é válida.'),nl)),!.
 
 funcionalidade(5) :-
     freguesiasMaisFrequentes(L),
@@ -77,7 +77,7 @@ funcionalidade(6) :-
 funcionalidade(7) :-
     write('Indique a data inicial no formato - data(Ano,Mês,Dia,Horas,Minutos): '),!,nl,
     read(Input1),
-        ((nao(dataTimeValida(Input1)) -> nl,write('A data que inseriu não é válida.'),nl);
+        ((nao(dataTimeValida(Input1)),nl,write('A data que inseriu não é válida.'),nl);
         elementosDataTime(Input1,A1,M1,D1,H1,Min1),nl,
         write('Indique a data final no formato - data(Ano,Mês,Dia,Horas,Minutos): '),!,nl,
         read(Input2),
@@ -98,7 +98,7 @@ funcionalidade(8) :-
             ((nao(dataTimeValida(Input2)) -> nl,write('A data que inseriu não é válida.'),nl);
             elementosDataTime(Input2,A2,M2,D2,H2,Min2),
             totalEntregasEstafetas(data(A1,M1,D1,H1,Min1),data(A2,M2,D2,H2,Min2),L),nl,
-            write('Número total de entregas por cada estafeta: '),write(L),nl)),!.
+            write('Número total de entregas pelos estafetas: '),write(L),nl)),!.
 
 funcionalidade(9) :-
     write('Indique a data inicial no formato - data(Ano,Mês,Dia,Horas,Minutos): '),!,nl,
@@ -116,11 +116,13 @@ funcionalidade(9) :-
 
 funcionalidade(10) :-
     write('Indique uma data no formato - data(Ano,Mês,Dia): '),!,nl,
-    read(Input),
+    read(Input),nl,
+    ((dataValida(Input),
     elementosData(Input,A,M,D),
     pesoTotalEstafetasDia(A,M,D,L),nl,
     write('Peso total transportado por estafeta em '),
-    write(D),write('/'),write(M),write('/'),write(A),write(': '),write(L),!,nl.
+    write(D),write('/'),write(M),write('/'),write(A),write(': '),write(L),nl);
+    (nao(dataValida(Input)),write('A data que inseriu não é válida.'),nl)),!.
 
 % EXTRA Funcionalidades
 

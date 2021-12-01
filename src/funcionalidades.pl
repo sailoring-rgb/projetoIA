@@ -100,10 +100,11 @@ numeroTotalEntregasTransporte(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Cont
 % Extensão do predicado totalEntregasEstafetas : DataInicio,DataFim, Total -> {V,F}
 % Identificar o número total de entregas pelos estafetas, num determinado intervalo de tempo
 
-totalEntregasEstafetas(AI,MI,DI,HI,MinI,AF,MF,DF,HF,MinF,Total) :- 
-	solucoes(IdEnc,encomenda(IdEnc,_,_,_,_,_,_),Encs),
-	contaEntregasIntervalo(Encs,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),_,Total).
-
+totalEntregasEstafetas(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Total) :- 
+    solucoes(IdEnc,encomenda(IdEnc,_,_,_,_,_,_),Encs),
+    contaEntregasIntervalo(Encs,data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Lista),
+    comprimento(Lista,Total).
+    
 %---------------------------------------------Funcionalidade 9---------------------------------------------
 % Extensão do predicado numEntregasNaoEntregas : DataInicio, DataFim, ContadorEntregas, ContadorNaoEntregas, ContadorNuncaEntregues -> {V,F}
 % Calcula o número de encomendas entregues e não entregues pela Green Distribution, num determinado período de tempo, e, ainda, o número de

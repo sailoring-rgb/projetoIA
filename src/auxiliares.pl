@@ -508,30 +508,15 @@ comprimento(S,N) :- length(S,N).
 soma([],0).
 soma([X|Y],Total) :- soma(Y, Ac), Total is X + Ac.
 
-
 % Torna um atom numa lista 
 getListaAtom([N,S],P) :- atomic_list_concat([N,S],' ',P).
-
-/*
-% Torna um atom separado por vírgulas numa lista
-getAtomVirgulaLista(L,A) :- atomic_list_concat(L,,,A).
-
-
-% Converte uma lista de átomos em inteiros
-convertAtomsNumbers([],[]).
-convertAtomsNumbers([H|T],Numbers) :-
-    atom_number(H,X),
-    convertAtomsNumbers(T,Numbers0),
-    adiciona(X,Numbers0,Numbers).
 
 % Devolve o número contido num atom
 numeroAtom(A,N) :- atom_number(A,N).
 
-/*
-% Devolve uma lista de número a partir de uma lista de atom
-listaNumAtom([],[]).
-listaNumAtom([A],L) :- numeroAtom(A,N), adiciona(N,L1,L).
-listaNumAtom([A|T],L) :- numeroAtom(A,N), listaNumAtom(T,L1), adiciona(N,L1,L). 
-
-% Devolve a lista com os elementos comuns 
-comuns(L1,L2,R) :- intersection(L1,L2,R).
+% Converte uma lista de átomos em inteiros
+convertAtomsNumbers([],[]).
+convertAtomsNumbers([H|T],Numbers) :-
+    numeroAtom(H,X),
+    convertAtomsNumbers(T,Numbers0),
+    adiciona(X,Numbers0,Numbers).
