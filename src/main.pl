@@ -10,8 +10,8 @@
 %-----------------------------------------------------------------------------------------------------------------------------------------
 
 main :-
-    repeat,
     nl,
+    repeat,
     write('---------------------------------------------------------MENU----------------------------------------------------------'), nl,
     write('1. Consultar o estafeta que utilizou mais vezes um meio de transporte mais ecológico.'), nl,
     write('2. Consultar os estafetas que entregaram determinada(s) encomenda(s) a um determinado cliente.'), nl,
@@ -24,7 +24,7 @@ main :-
     write('9. Calcular o número de encomendas entregues e não entregues pela Green Distribution, num determinado período de tempo.'), nl,
     write('10. Calcular o peso total transportado por estafeta num determinado dia.'), nl,
     write('11. Consultar o cliente que fez mais encomendas.'), nl,
-    write('12. Consultar os estefetas que são menos pontuais a fazer as suas entregas.'),nl,
+    write('12. Consultar os estefetas menos pontuais a fazer as suas entregas.'),nl,
     write('0. Sair'), nl,
     write('-----------------------------------------------------------------------------------------------------------------------'), nl,nl,
     write('Escolha um: '),nl,
@@ -125,8 +125,9 @@ funcionalidade(10) :-
 
 funcionalidade(11) :-
     clienteMaisEncomendas(IDs),
-    write('ID(s) do(s) clientes(s) com mais encomendas: '), write(IDs),!,nl.
+    write('ID(s) do(s) cliente(s) com mais encomendas: '), write(IDs),!,nl.
 
 funcionalidade(12) :-
     estafetasMenosPontuais(L),
     write('IDs dos estafetas menos pontuais: '),write(L),!,nl.
+

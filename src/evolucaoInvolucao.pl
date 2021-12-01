@@ -1,5 +1,11 @@
-%EVOLUCAO
-%INVOLUCAO
+:- consult('baseConhecimento.pl').
+:- consult('auxiliares.pl').
+:- consult('invariantes.pl').
+
+:- op( 900,xfy,'::' ).
+
+% EVOLUCAO
+% INVOLUCAO
 
 % Extensao do predicado evolucao: Termo -> {V, F}
 evolucao(Termo) :-
@@ -8,10 +14,10 @@ evolucao(Termo) :-
     teste(Lista).
 
 % Extensao do predicado involucao: Termo -> {V, F}
-involucao(Termo) :- Termo,
-            solucoes(Invariantes, -Termo::Invariantes, Lista),
-            remove(Termo),
-            teste(Lista).
+involucao(Termo) :- 
+    solucoes(Invariantes,-Termo::Invariantes, Lista),
+    remocao(Termo),
+    teste(Lista).
 
 % Extensao do predicado insercao: Termo -> {V, F}
 insercao(Termo) :- assert(Termo).
