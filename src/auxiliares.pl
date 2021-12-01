@@ -43,15 +43,16 @@ transportePesoVelocidade([(IdEnc,_,Velocidade,Transporte,_,_)|T]) :-
      (Transporte == 'Carro', Peso =< 100, Velocidade == 25)),
      transportePesoVelocidade(T).
 
-% Verifica se um estafeta não tem classificação superior a X caso tenha uma encomenda entregue com atraso (estou a assumir X como 3.5 para já)
+% Verifica se um estafeta não tem classificação superior a X caso tenha uma encomenda entregue com atraso
 verificaClafMaiorQueX(IdEstaf,L) :-
-    verificaClafMaiorQueXAux(L,L1).
-
+    verificaClafMaiorQueXAux(L).
+    
 verificaClafMaiorQueXAux([],_).
 verificaClafMaiorQueXAux([(IdEnc,Nota,_,_,_,_)],X) :- encEntregueAtraso(IdEnc), encomenda(IdEnc,_,_,_,Prazo,DataI,DataF), estafetaPenalizacao(DataI,DataF,Prazo,P).
 verificaClafMaiorQueXAux([(IdEnc,_,_,_,_,_)],X) :- nao(encEntregueAtraso(IdEnc)).
 verificaClafMaiorQueXAux([(IdEnc,Nota,_,_,_,_) | T],X) :-
     (encEntregueAtraso(IdEnc) -> (encomenda(IdEnc,_,_,_,Prazo,DataI,DataF),estafetaPenalizacao(DataI,DataF,Prazo,P)) ; verificaClafMaiorQueXAux(T,X)).
+
 
 % Verifica se um estafeta tem classificação 0 caso não tenha entregue uma encomenda
 verificaClafZero(IdEstaf,L):-
@@ -122,26 +123,25 @@ diasMes(_,M,Dias) :- dias31(M), Dias is 31; Dias is 30.
 dias31(M) :- M == 1; M == 3; M == 5; M ==7; M == 8; M ==10; M == 12.
     
 %----------------------------------------- Exclusivamente para penalizar Estafetas -----------------------------------------.
-% Devolve  a penalizacao do estafeta ao atraso de entrega da encomenda
+% Devolve a penalizacao de um estafeta tendo em conta o atraso de entrega da encomenda
 calculaPenalizacaoPorAtraso(Atraso,Penalizacao) :- 
-	(
-        Atraso < 1 -> Penalizacao is 0;
-		Atraso < 24 -> Penalizacao is 0.2;
-		Atraso < 48 -> Penalizacao is 0.3;
-		Penalizacao is 0.7). 
+	(Atraso < 1 -> Penalizacao is 0;
+	 Atraso < 24 -> Penalizacao is 0.2;
+     Atraso < 48 -> Penalizacao is 0.3;
+     Penalizacao is 0.5). 
 
-% Devolve o atraso com que foi entregue uma encomenda
+% Devolve o atraso, em horas, com que foi entregue uma encomenda
 calculaAtraso(DataI,DataF,Prazo,Atraso) :- 
       getPrazoEncomendaHoras(Prazo,PH),
-      diferencaDatas(DataI,DataF,D),
-      (D =< PH -> Atraso is 0;
-       D > PH  -> Atraso is D-PH).
+      diferencaDatas(DataI,DataF,H),
+      (H =< PH -> Atraso is 0;
+       H > PH  -> Atraso is H-PH).
 
-% Aplica a penalizacao ao estafeta indicando o numero maximo que pode ter de estrelas
-estafetaPenalizacao(DataI,DataF,Prazo,E):- 
+% Devolve a classificacao maxima que um estafeta podera ter apos a sua penalizacao
+estafetaPenalizacao(DataI,DataF,Prazo,Max):- 
         calculaAtraso(DataI,DataF,Prazo,A),
         calculaPenalizacaoPorAtraso(A,P),
-        E is 5-5*P.
+        Max is 5-5*P.
 
 %--------------------------------------Usadas em várias funcionalidades--------------------------------------
 
