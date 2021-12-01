@@ -121,14 +121,7 @@ diasMes(_,M,Dias) :- dias31(M), Dias is 31; Dias is 30.
 % Verifica que um mes tem 31 dias
 dias31(M) :- M == 1; M == 3; M == 5; M ==7; M == 8; M ==10; M == 12.
     
-%----------------------------------------- Exclusivamente para penalizar Estafetas -----------------------------------------
-% Devolve a lista com as encomendas entregues em atraso de um dado estafeta
-encAtrasoEstafeta(IdEstaf,R) :- 
-       encomendasDoEstafeta(IdEstaf,L),
-       encomendasEntreguesAtraso(L1),
-       comuns(L,L1,R).
-
-
+%----------------------------------------- Exclusivamente para penalizar Estafetas -----------------------------------------.
 % Devolve  a penalizacao do estafeta ao atraso de entrega da encomenda
 calculaPenalizacaoPorAtraso(Atraso,Penalizacao) :- 
 	(
@@ -144,11 +137,12 @@ calculaAtraso(DataI,DataF,Prazo,Atraso) :-
       (D =< PH -> Atraso is 0;
        D > PH  -> Atraso is D-PH).
 
-% Aplica a penalizacao ao estafeta
-estafetaPenalizacao(IdEstaf,DataI,DataF,Prazo,L):- 
+
+% Aplica a penalizacao ao estafeta indicando o numero maximo que pode ter de estrelas
+estafetaPenalizacao(IdEstaf,DataI,DataF,Prazo,E):- 
         calculaAtraso(DataI,DataF,Prazo,A),
         calculaPenalizacaoPorAtraso(A,P),
-        estafeta(IdEstaf,[(_,Nota-P,_,_,_,_)]).
+        E is 5-5*P.
 
 %--------------------------------------Usadas em várias funcionalidades--------------------------------------
 
