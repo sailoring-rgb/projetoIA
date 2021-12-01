@@ -82,7 +82,7 @@
 
 % Invariante estrutural: não permitir a entrada de um estafeta cujas classficações não estejam de acordo com os atrasos nas entregas
 +estafeta(IdEstaf,Lista) :: (
-    verificaClafMaiorQueX(IdEstaf,Lista),verificaClafZero(IdEstaf,Lista)).
+    verificaClafMaiorQueX(Lista),verificaClafZero(Lista)).
 
 % Invariante referencial: não permitir a remoção de um estafeta que tenha feito entregas
 -estafeta(IdEstaf,Lista) :: (

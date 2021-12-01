@@ -44,25 +44,20 @@ transportePesoVelocidade([(IdEnc,_,Velocidade,Transporte,_,_)|T]) :-
      transportePesoVelocidade(T).
 
 % Verifica se um estafeta não tem classificação superior a X caso tenha uma encomenda entregue com atraso
-verificaClafMaiorQueX(IdEstaf,L) :-
-    verificaClafMaiorQueXAux(L).
-    
-verificaClafMaiorQueXAux([],_).
-verificaClafMaiorQueXAux([(IdEnc,Nota,_,_,_,_)],X) :- encEntregueAtraso(IdEnc), encomenda(IdEnc,_,_,_,Prazo,DataI,DataF), estafetaPenalizacao(DataI,DataF,Prazo,P).
-verificaClafMaiorQueXAux([(IdEnc,_,_,_,_,_)],X) :- nao(encEntregueAtraso(IdEnc)).
-verificaClafMaiorQueXAux([(IdEnc,Nota,_,_,_,_) | T],X) :-
-    (encEntregueAtraso(IdEnc) -> (encomenda(IdEnc,_,_,_,Prazo,DataI,DataF),estafetaPenalizacao(DataI,DataF,Prazo,P)) ; verificaClafMaiorQueXAux(T,X)).
-
+verificaClafMaiorQueX([]).
+verificaClafMaiorQueX([(IdEnc,Nota,_,_,_,_)]) :- encEntregueAtraso(IdEnc), encomenda(IdEnc,_,_,_,Prazo,DataI,DataF), estafetaPenalizacao(DataI,DataF,Prazo,P), Nota =< P.
+verificaClafMaiorQueX([(IdEnc,_,_,_,_,_)]) :- nao(encEntregueAtraso(IdEnc)).
+verificaClafMaiorQueX([(IdEnc,Nota,_,_,_,_) | T]) :-
+    (encEntregueAtraso(IdEnc) -> 
+        ((encomenda(IdEnc,_,_,_,Prazo,DataI,DataF),estafetaPenalizacao(DataI,DataF,Prazo,P), Nota =< P) -> verificaClafMaiorQueX(T); fail); 
+    verificaClafMaiorQueX(T)).
 
 % Verifica se um estafeta tem classificação 0 caso não tenha entregue uma encomenda
-verificaClafZero(IdEstaf,L):-
-    verificaClafZeroAux(L).
-
-verificaClafZeroAux([]).
-verificaClafZeroAux([(IdEnc,0,_,_,_,_)]) :- encNaoEntregue(IdEnc).
-verificaClafZeroAux([(IdEnc,_,_,_,_,_)]) :- nao(encNaoEntregue(IdEnc)).
-verificaClafZeroAux([(IdEnc,Nota,_,_,_,_) | T]) :-  
-    (encNaoEntregue(IdEnc) -> (Nota == 0 -> verificaClafZeroAux(T); fail); verificaClafZeroAux(T)).
+verificaClafZero([]).
+verificaClafZero([(IdEnc,0,_,_,_,_)]) :- encNaoEntregue(IdEnc).
+verificaClafZero([(IdEnc,_,_,_,_,_)]) :- nao(encNaoEntregue(IdEnc)).
+verificaClafZero([(IdEnc,Nota,_,_,_,_) | T]) :-  
+    (encNaoEntregue(IdEnc) -> (Nota == 0 -> verificaClafZero(T); fail); verificaClafZero(T)).
 
 %-----------------------------------------Exclusivamente sobre datas-----------------------------------------
 
@@ -122,7 +117,7 @@ diasMes(_,M,Dias) :- dias31(M), Dias is 31; Dias is 30.
 % Verifica que um mes tem 31 dias
 dias31(M) :- M == 1; M == 3; M == 5; M ==7; M == 8; M ==10; M == 12.
     
-%----------------------------------------- Exclusivamente para penalizar Estafetas -----------------------------------------.
+%-----------------------------------------Exclusivamente sobre penalização de estafetas-----------------------------------------.
 % Devolve a penalizacao de um estafeta tendo em conta o atraso de entrega da encomenda
 calculaPenalizacaoPorAtraso(Atraso,Penalizacao) :- 
 	(Atraso < 1 -> Penalizacao is 0;
@@ -517,6 +512,7 @@ soma([X|Y],Total) :- soma(Y, Ac), Total is X + Ac.
 % Torna um atom numa lista 
 getListaAtom([N,S],P) :- atomic_list_concat([N,S],' ',P).
 
+/*
 % Torna um atom separado por vírgulas numa lista
 getAtomVirgulaLista(L,A) :- atomic_list_concat(L,,,A).
 
@@ -528,10 +524,14 @@ convertAtomsNumbers([H|T],Numbers) :-
     convertAtomsNumbers(T,Numbers0),
     adiciona(X,Numbers0,Numbers).
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 % Devolve o número contido num atom
 numeroAtom(A,N) :- atom_number(A,N).
 
+/*
 % Devolve uma lista de número a partir de uma lista de atom
 listaNumAtom([],[]).
 listaNumAtom([A],L) :- numeroAtom(A,N), adiciona(N,L1,L).
