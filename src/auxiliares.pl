@@ -524,10 +524,6 @@ convertAtomsNumbers([H|T],Numbers) :-
     convertAtomsNumbers(T,Numbers0),
     adiciona(X,Numbers0,Numbers).
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 % Devolve o número contido num atom
 numeroAtom(A,N) :- atom_number(A,N).
 
