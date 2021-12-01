@@ -45,13 +45,14 @@ transportePesoVelocidade([(IdEnc,_,Velocidade,Transporte,_,_)|T]) :-
 
 % Verifica se um estafeta não tem classificação superior a X caso tenha uma encomenda entregue com atraso (estou a assumir X como 3.5 para já)
 verificaClafMaiorQueX(IdEstaf,L) :-
-    verificaClafMaiorQueXAux(L,3.5).
+    verificaClafMaiorQueXAux(L,L1).
 
 verificaClafMaiorQueXAux([],_).
-verificaClafMaiorQueXAux([(IdEnc,Nota,_,_,_,_)],X) :- encEntregueAtraso(IdEnc),Nota =< X.
+verificaClafMaiorQueXAux([(IdEnc,Nota,_,_,_,_)],X) :- encEntregueAtraso(IdEnc), encomenda(IdEnc,_,_,_,Prazo,DataI,DataF), estafetaPenalizacao(DataI,DataF,Prazo,P).
 verificaClafMaiorQueXAux([(IdEnc,_,_,_,_,_)],X) :- nao(encEntregueAtraso(IdEnc)).
-verificaClafMaiorQueXAux([(IdEnc,Nota,_,_,_,_) | T],X) :-
-    (encEntregueAtraso(IdEnc) -> (Nota =< X -> verificaClafMaiorQueXAux(T,X); fail) ; verificaClafZeroAux(T,X)).
+
+verificaClafMaiorQueX([(IdEnc,Nota,_,_,_,_) | T],X) :-
+    (encEntregueAtraso(IdEnc) -> (encomenda(IdEnc,_,_,_,Prazo,DataI,DataF),estafetaPenalizacao(DataI,DataF,Prazo,P)) ; verificaClafMaiorQueXAux(T,X)).
 
 % Verifica se um estafeta tem classificação 0 caso não tenha entregue uma encomenda
 verificaClafZero(IdEstaf,L):-
@@ -137,9 +138,8 @@ calculaAtraso(DataI,DataF,Prazo,Atraso) :-
       (D =< PH -> Atraso is 0;
        D > PH  -> Atraso is D-PH).
 
-
 % Aplica a penalizacao ao estafeta indicando o numero maximo que pode ter de estrelas
-estafetaPenalizacao(IdEstaf,DataI,DataF,Prazo,E):- 
+estafetaPenalizacao(DataI,DataF,Prazo,E):- 
         calculaAtraso(DataI,DataF,Prazo,A),
         calculaPenalizacaoPorAtraso(A,P),
         E is 5-5*P.
