@@ -50,8 +50,7 @@ verificaClafMaiorQueX(IdEstaf,L) :-
 verificaClafMaiorQueXAux([],_).
 verificaClafMaiorQueXAux([(IdEnc,Nota,_,_,_,_)],X) :- encEntregueAtraso(IdEnc), encomenda(IdEnc,_,_,_,Prazo,DataI,DataF), estafetaPenalizacao(DataI,DataF,Prazo,P).
 verificaClafMaiorQueXAux([(IdEnc,_,_,_,_,_)],X) :- nao(encEntregueAtraso(IdEnc)).
-
-verificaClafMaiorQueX([(IdEnc,Nota,_,_,_,_) | T],X) :-
+verificaClafMaiorQueXAux([(IdEnc,Nota,_,_,_,_) | T],X) :-
     (encEntregueAtraso(IdEnc) -> (encomenda(IdEnc,_,_,_,Prazo,DataI,DataF),estafetaPenalizacao(DataI,DataF,Prazo,P)) ; verificaClafMaiorQueXAux(T,X)).
 
 % Verifica se um estafeta tem classificação 0 caso não tenha entregue uma encomenda
@@ -514,13 +513,13 @@ comprimento(S,N) :- length(S,N).
 soma([],0).
 soma([X|Y],Total) :- soma(Y, Ac), Total is X + Ac.
 
-/*
+
 % Torna um atom numa lista 
 getListaAtom([N,S],P) :- atomic_list_concat([N,S],' ',P).
 
 % Torna um atom separado por vírgulas numa lista
 getAtomVirgulaLista(L,A) :- atomic_list_concat(L,,,A).
-*/
+
 
 % Converte uma lista de átomos em inteiros
 convertAtomsNumbers([],[]).
@@ -529,7 +528,7 @@ convertAtomsNumbers([H|T],Numbers) :-
     convertAtomsNumbers(T,Numbers0),
     adiciona(X,Numbers0,Numbers).
 
-/*
+
 % Devolve o número contido num atom
 numeroAtom(A,N) :- atom_number(A,N).
 
@@ -540,4 +539,3 @@ listaNumAtom([A|T],L) :- numeroAtom(A,N), listaNumAtom(T,L1), adiciona(N,L1,L).
 
 % Devolve a lista com os elementos comuns 
 comuns(L1,L2,R) :- intersection(L1,L2,R).
-*/
