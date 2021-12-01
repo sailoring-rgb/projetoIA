@@ -50,7 +50,7 @@ verificaClafMaiorQueX(IdEstaf,L) :-
 verificaClafMaiorQueXAux([],_).
 verificaClafMaiorQueXAux([(IdEnc,Nota,_,_,_,_)],X) :- encEntregueAtraso(IdEnc),Nota =< X.
 verificaClafMaiorQueXAux([(IdEnc,_,_,_,_,_)],X) :- nao(encEntregueAtraso(IdEnc)).
-verificaClafMaiorQueX([(IdEnc,Nota,_,_,_,_) | T],X) :-
+verificaClafMaiorQueXAux([(IdEnc,Nota,_,_,_,_) | T],X) :-
     (encEntregueAtraso(IdEnc) -> (Nota =< X -> verificaClafMaiorQueXAux(T,X); fail) ; verificaClafZeroAux(T,X)).
 
 % Verifica se um estafeta tem classificação 0 caso não tenha entregue uma encomenda
@@ -519,6 +519,13 @@ getListaAtom([N,S],P) :- atomic_list_concat([N,S],' ',P).
 
 % Torna um atom separado por vírgulas numa lista
 getAtomVirgulaLista(L,A) :- atomic_list_concat(L,,,A).
+
+% Converte uma lista de átomos em inteiros
+convertAtomsNumbers([],[]).
+convertAtomsNumbers([H|T],Numbers) :-
+    atom_number(H,X),
+    convertAtomsNumbers(T,Numbers0),
+    adiciona(X,Numbers0,Numbers).
 
 % Devolve o número contido num atom
 numeroAtom(A,N) :- atom_number(A,N).

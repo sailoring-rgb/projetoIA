@@ -10,8 +10,8 @@
 %-----------------------------------------------------------------------------------------------------------------------------------------
 
 main :-
-    nl,
     repeat,
+    nl,
     write('---------------------------------------------------------MENU----------------------------------------------------------'), nl,
     write('1. Consultar o estafeta que utilizou mais vezes um meio de transporte mais ecológico.'), nl,
     write('2. Consultar os estafetas que entregaram determinada(s) encomenda(s) a um determinado cliente.'), nl,
@@ -33,6 +33,7 @@ main :-
     nl,
     funcionalidade(X),fail.
 
+
 % # Funcionalidades
 
 funcionalidade(1) :-
@@ -41,10 +42,10 @@ funcionalidade(1) :-
 
 funcionalidade(2) :-
     write('Indique os IDs de encomendas, separados por vírgulas: '),!,nl,
-    read_line_to_codes(user_input,IDs),
-    string_to_atom(IDs,ID),
-    getAtomVirgulaLista(A,ID),
-    listaNumAtom(A,L),
+    read(Input),
+    format(atom(A), "~w", Input),
+    atomic_list_concat(N,,,A),
+    convertAtomsNumbers(N,L),
     estafetasEncomendasCliente(L,R),nl,
     write('ID(s) do(s) estafeta(s) que entregaram as referidas encomendas: '),write(R),!,nl.
 
@@ -52,7 +53,7 @@ funcionalidade(3) :-
     write('Indique o ID do estafeta: '),!,nl,
     read(ID),
     clientesPorEstafeta(ID,L),nl,
-    write('ID(s) do(s) cliente(s) servidos pelo estafeta '),write(ID),write(': '),write(L),!,nl.
+    write('ID(s) do(s) cliente(s) servidos pelo estafeta '),write(ID),write(': '),write(L),!.
 
 funcionalidade(4) :-
     write('Indique uma data no formato - data(Ano,Mês,Dia): '),!,nl,
@@ -130,4 +131,3 @@ funcionalidade(11) :-
 funcionalidade(12) :-
     estafetasMenosPontuais(L),
     write('IDs dos estafetas menos pontuais: '),write(L),!,nl.
-
