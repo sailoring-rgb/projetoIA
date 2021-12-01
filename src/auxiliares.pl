@@ -43,6 +43,30 @@ transportePesoVelocidade([(IdEnc,_,Velocidade,Transporte,_,_)|T]) :-
      (Transporte == 'Carro', Peso =< 100, Velocidade == 25)),
      transportePesoVelocidade(T).
 
+% Verifica se um estafeta não tem classificação superior a X caso tenha uma encomenda entregue com atraso (estou a assumir X como 3.5 para já)
+verificaClafMaiorQueX(IdEstaf) :-
+    encomendasDoEstafeta(IdEstaf,L),
+    estafeta(IdEstaf,Encs),
+    verificaClafMaiorQueXAux(Encs,3.5).
+
+verificaClafMaiorQueXAux([],_).
+verificaClafMaiorQueXAux([(IdEnc,Nota,_,_,_,_)],X) :- encEntregueAtraso(IdEnc),Nota =< X.
+verificaClafMaiorQueXAux([(IdEnc,_,_,_,_,_)],X) :- nao(encEntregueAtraso(IdEnc)).
+verificaClafMaiorQueX([(IdEnc,Nota,_,_,_,_) | T],X) :-
+    (encEntregueAtraso(IdEnc) -> (Nota =< X -> verificaClafMaiorQueXAux(T,X); fail) ; verificaClafZeroAux(T,X)).
+
+% Verifica se um estafeta tem classificação 0 caso não tenha entregue uma encomenda
+verificaClafZero(IdEstaf):-
+    encomendasDoEstafeta(IdEstaf,L),
+    estafeta(IdEstaf,Encs),
+    verificaClafZeroAux(Encs).
+
+verificaClafZeroAux([]).
+verificaClafZeroAux([(IdEnc,0,_,_,_,_)]) :- encNaoEntregue(IdEnc).
+verificaClafZeroAux([(IdEnc,_,_,_,_,_)]) :- nao(encNaoEntregue(IdEnc)).
+verificaClafZeroAux([(IdEnc,Nota,_,_,_,_) | T]) :-  
+    (encNaoEntregue(IdEnc) -> (Nota == 0 -> verificaClafZeroAux(T); fail); verificaClafZeroAux(T)).
+
 %-----------------------------------------Exclusivamente sobre datas-----------------------------------------
 
 % Extrai o ano, mes, dia
