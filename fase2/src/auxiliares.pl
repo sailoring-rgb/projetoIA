@@ -11,17 +11,15 @@
 encomendaNaoTemEstafeta([],_).
 encomendaNaoTemEstafeta([IdEstaf|T],IdEnc) :-
     estafeta(IdEstaf,Lista),
-    nao(membro((IdEnc,A,B,C,D,E),Lista)),
+    nao(membro((IdEnc,A,B,C),Lista)),
     encomendaNaoTemEstafeta(T,IdEnc).
 
 % Verifica o tipo de dados da lista de encomendas do estafeta
 verificaDadosLista([]).
-verificaDadosLista([(IdEnc,Nota,Velocidade,Transporte,Rua,Freguesia)|T]) :- 
+verificaDadosLista([(IdEnc,Nota,Transporte,Freguesia)|T]) :- 
         integer(IdEnc),
         float(Nota),
-        integer(Velocidade),
         atom(Transporte),
-        atom(Rua),
         atom(Freguesia).
 
 % Devolve a freguesia de um estafeta numa lista (a lista contém apenas um elemento)
@@ -30,33 +28,37 @@ listaFreguesiasEstaf(IdEstaf,Lista,ListaFreg) :-
     listaFreguesiasEstaf(Lista,ListaFreg).
 
 listaFreguesiasEstaf([],[]).
-listaFreguesiasEstaf([(_,_,_,_,_,Freg)|T],ListaFreg) :-
+listaFreguesiasEstaf([(_,_,_,Freg)|T],ListaFreg) :-
     listaFreguesiasEstaf(T,Lista0),
     adiciona(Freg,Lista0,ListaFreg).
 
 % Verifica se o peso da encomenda e a velocidade do estafeta respeitaram os limites do meio de transporte usado
 transportePesoVelocidade([]).
-transportePesoVelocidade([(IdEnc,_,Velocidade,Transporte,_,_)|T]) :-
+transportePesoVelocidade([(IdEnc,_,Transporte,_)|T]) :-
     encomenda(IdEstaf,_,Peso,_,_,_,_),
-    ((Transporte == 'Bicicleta', Peso =< 5, Velocidade == 10);
-     (Transporte == 'Mota', Peso =< 20, Velocidade == 35);
-     (Transporte == 'Carro', Peso =< 100, Velocidade == 25)),
+    ((Transporte == 'Bicicleta', Peso =< 5);
+     (Transporte == 'Mota', Peso =< 20);
+     (Transporte == 'Carro', Peso =< 100)),
      transportePesoVelocidade(T).
 
 % Verifica se um estafeta não tem classificação superior a X caso tenha uma encomenda entregue com atraso
 verificaClafMaiorQueX([]).
-verificaClafMaiorQueX([(IdEnc,Nota,_,_,_,_)]) :- encEntregueAtraso(IdEnc), encomenda(IdEnc,_,_,_,Prazo,DataI,DataF), estafetaPenalizacao(DataI,DataF,Prazo,P), Nota =< P.
-verificaClafMaiorQueX([(IdEnc,_,_,_,_,_)]) :- nao(encEntregueAtraso(IdEnc)).
+verificaClafMaiorQueX([(IdEnc,Nota,_,_)]) :- 
+    encEntregueAtraso(IdEnc),
+    encomenda(IdEnc,_,_,_,Prazo,DataI,DataF),
+    estafetaPenalizacao(DataI,DataF,Prazo,P),
+    Nota =< P.
+verificaClafMaiorQueX([(IdEnc,_,_,_)]) :- nao(encEntregueAtraso(IdEnc)).
 verificaClafMaiorQueX([(IdEnc,Nota,_,_,_,_) | T]) :-
     (encEntregueAtraso(IdEnc) -> 
-        ((encomenda(IdEnc,_,_,_,Prazo,DataI,DataF),estafetaPenalizacao(DataI,DataF,Prazo,P), Nota =< P) -> verificaClafMaiorQueX(T); fail); 
+        ((encomenda(IdEnc,_,_,_,Prazo,DataI,DataF), estafetaPenalizacao(DataI,DataF,Prazo,P), Nota =< P) -> verificaClafMaiorQueX(T); fail); 
     verificaClafMaiorQueX(T)).
 
 % Verifica se um estafeta tem classificação 0 caso não tenha entregue uma encomenda
 verificaClafZero([]).
-verificaClafZero([(IdEnc,0,_,_,_,_)]) :- encNaoEntregue(IdEnc).
-verificaClafZero([(IdEnc,_,_,_,_,_)]) :- nao(encNaoEntregue(IdEnc)).
-verificaClafZero([(IdEnc,Nota,_,_,_,_) | T]) :-  
+verificaClafZero([(IdEnc,0,_,_)]) :- encNaoEntregue(IdEnc).
+verificaClafZero([(IdEnc,_,_,_)]) :- nao(encNaoEntregue(IdEnc)).
+verificaClafZero([(IdEnc,Nota,_,_) | T]) :-  
     (encNaoEntregue(IdEnc) -> (Nota == 0 -> verificaClafZero(T); fail); verificaClafZero(T)).
 
 %-----------------------------------------Exclusivamente sobre datas-----------------------------------------
@@ -147,14 +149,14 @@ encomendasDoEstafeta(IdEstaf,Lista) :-
 
 % Devolve a lista dos ids das encomendas a partir da lista de encomendas de um estafeta: [(IdEnc,Nota,Velocidade,Transporte,Rua,Freguesia)|T]
 encomendasDaLista([],[]).
-encomendasDaLista([(X,_,_,_,_,_)],[X]).
-encomendasDaLista([(X,_,_,_,_,_)|T],Lista) :-
+encomendasDaLista([(X,_,_,_)],[X]).
+encomendasDaLista([(X,_,_,_)|T],Lista) :-
 	encomendasDaLista(T,Lista0),
 	adiciona(X,Lista0,Lista).
 
 % Verifica se uma encomenda está associada a um determinado estafeta
-encomendaPertenceEstafeta([(IdEnc,_,_,_,_,_)|T],IdEnc).
-encomendaPertenceEstafeta([(X,_,_,_,_,_)|T],IdEnc) :- X \= IdEnc, encomendaPertenceEstafeta(T,IdEnc).
+encomendaPertenceEstafeta([(IdEnc,_,_,_)|T],IdEnc).
+encomendaPertenceEstafeta([(X,_,_,_)|T],IdEnc) :- X \= IdEnc, encomendaPertenceEstafeta(T,IdEnc).
 
 % Devolve a lista dos ids das encomendas entregues naquele intervalo de tempo
 contaEntregasIntervalo(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),ListaEntregasPeriodo,Contador) :-
@@ -179,7 +181,7 @@ encomendasPorBicicleta(IdEstaf,Conta) :-
 	verificaBicicleta(Lista,Conta).
 
 verificaBicicleta([],0).
-verificaBicicleta([(_,_,_,Transporte,_,_)|T],Conta) :-
+verificaBicicleta([(_,_,Transporte,_)|T],Conta) :-
     verificaBicicleta(T,Conta0),
     ((Transporte == 'Bicicleta' -> Conta is Conta0 + 1);
      Conta is Conta0).
@@ -251,15 +253,15 @@ transporteEncomenda(IdEnc,Transporte) :-
 	procuraTransporteEncomenda(IdEnc,L,Transporte).
 
 % Procura o transporte de uma encomenda numa lista de encomendas de um estafeta
-procuraTransporteEncomenda(IdEnc,[(IdEnc,_,_,Transporte,_,_)],Transporte).
-procuraTransporteEncomenda(IdEnc,[(IdEnc,_,_,Transporte,_,_) | T], Transporte).
-procuraTransporteEncomenda(IdEnc,[(_,_,_,_,_,_) | T], Transporte) :- procuraTransporteEncomenda(IdEnc,T,Transporte).
+procuraTransporteEncomenda(IdEnc,[(IdEnc,_,Transporte,_)],Transporte).
+procuraTransporteEncomenda(IdEnc,[(IdEnc,_,Transporte,_)|T],Transporte).
+procuraTransporteEncomenda(IdEnc,[(_,_,_,_)|T],Transporte) :- procuraTransporteEncomenda(IdEnc,T,Transporte).
 
 % Devolve o preço a ser cobrado conforme cada meio de transporte
 calculaPrecoPorTransporte(Transporte,P) :-
 	(Transporte == 'Bicicleta' -> P is 5;
-	  Transporte == 'Mota' -> P is 10;
-	  Transporte == 'Carro' -> P is 15).
+	 Transporte == 'Mota' -> P is 10;
+	 Transporte == 'Carro' -> P is 15).
 
 % Devolve a lista com os preços relativos a uma lista de encomendas
 precosListaEncomendas([],[]).
@@ -273,7 +275,7 @@ precosListaEncomendas([IdEnc|T],L) :-
 totalEncomendas(L,V) :- soma(L,V).
 
 % Devolve todas as encomendas entregues num determinado dia
-encomendasDia(A,M,D,L) :- solucoes(IdEnc, encomenda(IdEnc,_,_,_,_,_,data(A,M,D,_,_)), L).
+encomendasDia(A,M,D,L) :- solucoes(IdEnc,encomenda(IdEnc,_,_,_,_,_,data(A,M,D,_,_)),L).
 
 %--------------------------------------Auxiliares para Funcionalidade 5--------------------------------------
 
@@ -287,7 +289,7 @@ contaEntregasFreguesia(Freguesia,[IdEstaf|T],Contador) :-
 
 % Conta o número de entregas feitas nessa freguesia por um estafeta
 contaEntregasFreguesiaAux(_,[],0).
-contaEntregasFreguesiaAux(Freguesia,[(_,_,_,_,_,Freg)|T],Contador) :-
+contaEntregasFreguesiaAux(Freguesia,[(_,_,_,Freg)|T],Contador) :-
     (Freguesia == Freg, contaEntregasFreguesiaAux(Freguesia,T,Contador1), Contador is Contador1 + 1);
     (contaEntregasFreguesiaAux(Freguesia,T,Contador)).
 
@@ -304,8 +306,8 @@ freguesiasDoEstafeta(IdEstaf,ListaFreg) :-
     freguesiasDoEstafetaAux(ListaEncEstaf,ListaFreg).
 
 freguesiasDoEstafetaAux([],[]).
-freguesiasDoEstafetaAux([(_,_,_,_,_,Freguesia)],[Freguesia]).
-freguesiasDoEstafetaAux([(_,_,_,_,_,Freguesia)|T],ListaFreg) :-
+freguesiasDoEstafetaAux([(_,_,_,Freguesia)],[Freguesia]).
+freguesiasDoEstafetaAux([(_,_,_,Freguesia)|T],ListaFreg) :-
     freguesiasDoEstafetaAux(T,ListaAux),
     adiciona(Freguesia,ListaAux,ListaFreg).
 
@@ -318,7 +320,7 @@ classificacoesDoEstafeta(IdEstaf,L) :-
 
 % Devolve a lista das classificações a partir da lista de encomendas de um estafeta: [(IdEnc,Nota,Rua,Freguesia)|T]
 classificacoesDaLista([],[]).
-classificacoesDaLista([(_,C,_,_)], [C]).
+classificacoesDaLista([(_,C,_,_)],[C]).
 classificacoesDaLista([(_,C,_,_)|T],L) :-
 	classificacoesDaLista(T,L1),
 	adiciona(C,L1,L).    
@@ -340,12 +342,12 @@ contaPorTransporteIntervalo([IdEstaf|T],ListaEntregasPeriodo,data(AI,MI,DI,HI,Mi
 contaPorTransporte(_,[],0,0,0).
 contaPorTransporte(IdEstaf,[IdEnc|T],ContaCarro,ContaMota,ContaBicicleta) :-
     estafeta(IdEstaf,Lista),
-    nao(membro((IdEnc,A,B,C,D,E),Lista)),
+    nao(membro((IdEnc,A,B,C),Lista)),
     contaPorTransporte(IdEstaf,T,ContaCarro,ContaMota,ContaBicicleta).
 contaPorTransporte(IdEstaf,[IdEnc|T],ContaCarro,ContaMota,ContaBicicleta) :-
     estafeta(IdEstaf,Lista),
     encomendaPertenceEstafeta(Lista,IdEnc),
-    membro((IdEnc,A,B,Transporte,D,E),Lista),
+    membro((IdEnc,A,Transporte,D),Lista),
     ((Transporte == 'Carro', contaPorTransporte(IdEstaf,T,Contador0,ContaMota,ContaBicicleta), ContaCarro is Contador0 + 1);
      (Transporte == 'Mota', contaPorTransporte(IdEstaf,T,ContaCarro,Contador1,ContaBicicleta), ContaMota is Contador1 + 1);
      (Transporte == 'Bicicleta', contaPorTransporte(IdEstaf,T,ContaCarro,ContaMota,Contador2), ContaBicicleta is Contador2 + 1)).
@@ -383,15 +385,15 @@ pesoEncLista([IdEnc|R],L) :-
 
 % Adiciona a uma lista de pares o par com o id de estafeta e o peso
 adicionaParPesoEstafeta(IdEstaf,Peso,[],[(IdEstaf,Peso)]).
-adicionaParPesoEstafeta(IdEstaf,Peso,L, [(IdEstaf,Peso) |L]) :- nao(membroPar(IdEstaf,L)).
-adicionaParPesoEstafeta(IdEstaf,Peso, [(E,P) | T], L) :- 
+adicionaParPesoEstafeta(IdEstaf,Peso,L,[(IdEstaf,Peso)|L]) :- nao(membroPar(IdEstaf,L)).
+adicionaParPesoEstafeta(IdEstaf,Peso,[(E,P)|T],L) :- 
 	(IdEstaf == E -> NovoPeso is P + Peso, L = [(E,NovoPeso) | T]; adiciona((E,P),R1,R), adicionaParPesoEstafetaAux(IdEstaf,Peso,T,R,R,L)).
 
-adicionaParPesoEstafetaAux(IdEstaf,Peso, [(E,P) | T], R, R1, L) :- 
+adicionaParPesoEstafetaAux(IdEstaf,Peso,[(E,P)|T],R,R1,L) :- 
 	(IdEstaf == E -> NovoPeso is P + Peso, concatena([(E,NovoPeso) | T], R, L); concatena([(E,P)],R1,R2), adicionaParPesoEstafetaAux(IdEstaf,Peso,T,R2,R2,L)).
 
 % Devolve uma lista com todos os ids de estafetas existentes
-getIdsEstafetas(L) :- solucoes(IdEstaf,estafeta(IdEstaf,R),L).
+getIdsEstafetas(L) :- solucoes(IdEstaf,estafeta(IdEstaf,_),L).
 
 % Devolve a lista de pares com o estafeta e o respetivo peso transportado num dia
 listaPesoTotalDia([E],L1,L) :- 
@@ -406,7 +408,7 @@ listaPesoTotalDia([E | T],L1,L) :-
 
 % Devolve o peso total de uma lista de encomendas
 calculaPesoEncomendas([],0).
-calculaPesoEncomendas(L, P) :- 
+calculaPesoEncomendas(L,P) :- 
   	pesoEncLista(L,Pesos),
   	soma(Pesos,P). 
 
@@ -414,7 +416,7 @@ calculaPesoEncomendas(L, P) :-
 
 % Devolve o maior rácio entre encomendas não entregues/entregues com atraso e encomendas entregues existente entre todos os estafetas
 racioEstafetasAux([IdEstaf],L,Ratio) :- racioEstafeta(IdEstaf,L,Ratio).
-racioEstafetasAux([IdEstaf | T], L, MaxRatio) :-
+racioEstafetasAux([IdEstaf|T],L,MaxRatio) :-
     racioEstafeta(IdEstaf,L,Ratio),
     racioEstafetasAux(T,L,Ratio1),
     (Ratio > Ratio1 -> MaxRatio = Ratio; MaxRatio = Ratio1).
@@ -439,12 +441,12 @@ contaEncomendasEstafetaLista(IdEstaf,[IdEnc],1) :-
 contaEncomendasEstafetaLista(IdEstaf,[IdEnc],0) :-
     encomendasDoEstafeta(IdEstaf,R),
     nao(membro(IdEnc,R)).
-contaEncomendasEstafetaLista(IdEstaf,[IdEnc | T], Contador) :-
+contaEncomendasEstafetaLista(IdEstaf,[IdEnc|T],Contador) :-
     encomendasDoEstafeta(IdEstaf,R),
     membro(IdEnc,R),
     contaEncomendasEstafetaLista(IdEstaf,T,Contador1),
     Contador is Contador1+1.
-contaEncomendasEstafetaLista(IdEstaf,[IdEnc | T], Contador) :-
+contaEncomendasEstafetaLista(IdEstaf,[IdEnc|T],Contador) :-
     encomendasDoEstafeta(IdEstaf,R),
     nao(membro(IdEnc,R)),
     contaEncomendasEstafetaLista(IdEstaf,T,Contador).

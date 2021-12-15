@@ -8,7 +8,7 @@
 
 :- style_check(-singleton).
 
-% Funcionalidades
+%FUNCIONALIDADES
 		
 %---------------------------------------------Funcionalidade 1---------------------------------------------
 % Extensão do predicado estafetaMaisEcologico: Lista,Maximo,Id -> {V,F}
@@ -110,9 +110,9 @@ totalEntregasEstafetas(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Total) :-
 % Calcula o número de encomendas entregues e não entregues pela Green Distribution, num determinado período de tempo, e, ainda, o número de
 % encomendas nunca entregues.
 
-% Contador1: número de encomendas entregues naquele intervalo de tempo
-% Contador2: número de encomendas não entregues naquele intervalo de tempo
-% Contador3: número de encomendas nunca entregues
+%Contador1: número de encomendas entregues naquele intervalo de tempo
+%Contador2: número de encomendas não entregues naquele intervalo de tempo
+%Contador3: número de encomendas nunca entregues
 
 numEntregasNaoEntregas(data(AI,MI,DI,HI,MinI),data(AF,MF,DF,HF,MinF),Contador1,Contador2,Contador3) :-
     solucoes(IdEnc,encomenda(IdEnc,_,_,_,_,_,_),ListaTodasEnc),
@@ -153,7 +153,7 @@ clienteMaisEncomendas([IdCliente|T],Max,ListaIdMax) :-
 % não entregues/entregues com atraso e encomendas entregues
 
 estafetasMenosPontuais(L) :- 
-	getIdsEstafetas(Etfs),
+	getIdsEstafetas(Estafs),
     encomendasNaoEntreguesEAtrasadas(R),
-    racioEstafetasAux(Etfs,R,Ratio),
+    racioEstafetasAux(Estafs,R,Ratio),
     estafetasMaiorRacio(Ratio,R,L).

@@ -39,12 +39,17 @@ cliente(8).
 cliente(9).
 
 %---------------------------Estafeta---------------------------
-% Estafeta: #IdEstaf, [ (#IdEnc,Nota,Velocidade,Transporte,Rua,Freguesia) | T]
+% Estafeta: #IdEstaf, [ (#IdEnc,Nota,Transporte,Freguesia) | T]
 
-estafeta(1,[(792555468332,0,10,'Bicicleta','Rua da Arcela','Gualtar')]).
-estafeta(2,[(300145999366,0,10,'Bicicleta','Rua de São Victor-O-Velho','São Victor'),(100910101098,4.2,10,'Bicicleta','Rua das Mimosas','Gualtar'),(100000000001,4.7,10,'Bicicleta','Parque da Rodovia','São Victor')]).
-estafeta(3,[(123456789000,4.7,35,'Mota','Rua José Antunes Guimarães','Gualtar'),(169998372344,4.7,25,'Carro','Rua da Graciosa','Esporões')]).
-estafeta(4,[(512200534686,3.9,10,'Bicicleta','Av. Conde Dom Henriques','Maximinos'),(910928382779,4.3,35,'Mota','Av. São Pedro de Maximinos','Maximinos'),(113364968333,5.0,35,'Mota','Largo Senhora-A-Branca','São Victor'),(136666733413,5.0,35,'Mota','Largo do Bairro','Tadim'),(411188745632,4.3,25,'Carro','Ponte dos Falcões','Maximinos')]).
-estafeta(5,[(611111154895,2.8,10,'Bicicleta','Rua da Veiga','Dume'),(150393815151,4.8,25,'Carro','Rua de Santo André','São Vicente')]).
-estafeta(6,[(800000000234,4.9,25,'Carro','Rua 15 de maio','Gualtar'),(172123212430,4.9,25,'Carro','Rua da Boavista','Maximinos'),(142019203922,0,10,'Bicicleta','Rua da Arcela','Gualtar')]).
-estafeta(7,[(121203928222,2.9,10,'Bicicleta','Largo Carlos Amarante','Maximinos')]).
+estafeta(1,[(792555468332,0,'Bicicleta','Gualtar')]).
+estafeta(2,[(300145999366,0,'Bicicleta','São Victor'),(100910101098,4.2,'Bicicleta','Gualtar'),(100000000001,4.7,'Bicicleta','São Victor')]).
+estafeta(3,[(123456789000,4.7,'Mota','Gualtar'),(169998372344,4.7,'Carro','Esporões')]).
+estafeta(4,[(512200534686,3.9,'Bicicleta','Maximinos'),(910928382779,4.3,'Mota','Maximinos'),(113364968333,5.0,'Mota','São Victor'),(136666733413,5.0,'Mota','Tadim'),(411188745632,4.3,'Carro','Maximinos')]).
+estafeta(5,[(611111154895,2.8,'Bicicleta','Dume'),(150393815151,4.8,'Carro','São Vicente')]).
+estafeta(6,[(800000000234,4.9,'Carro','Gualtar'),(172123212430,4.9,'Carro','Maximinos'),(142019203922,0,'Bicicleta','Gualtar')]).
+estafeta(7,[(121203928222,2.9,'Bicicleta','Maximinos')]).
+
+%Bicicleta - 10 km/h
+%Moto - 35 km/h
+%Carro - 25 km/h
+
