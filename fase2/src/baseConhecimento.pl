@@ -48,3 +48,18 @@ estafeta(4,[(512200534686,3.9,'Bicicleta','Maximinos'),(910928382779,4.3,'Mota',
 estafeta(5,[(611111154895,2.8,'Bicicleta','Dume'),(150393815151,4.8,'Carro','São Vicente')]).
 estafeta(6,[(800000000234,4.9,'Carro','Gualtar'),(172123212430,4.9,'Carro','Maximinos'),(142019203922,0,'Bicicleta','Gualtar')]).
 estafeta(7,[(121203928222,2.9,'Bicicleta','Maximinos')]).
+
+%---------------------------Grafo------------------------------
+%termo-grafo: grafo([b,c,d,f,g,h,k],[e(b,c),e(b,g),e(b,h), ...])
+%clausula-aresta: aresta(a,b)
+
+g( grafo([greenDistribution, tadim, esporoes, maximinos, dume, saoVicente, saoVictor, gualtar],
+  [aresta(greenDistribution, tadim, 4.5),
+   aresta(greenDistribution, esporoes, 3.9),
+   aresta(greenDistribution, maximinos, 4.5),
+   aresta(maximinos, dume, 3.7),
+   aresta(maximinos, saoVicente, 3.9),
+   aresta(dume, saoVicente, 4.3),
+   aresta(saoVicentes, saoVictor, 2.15),
+   aresta(saoVictor, gualtar, 3.8)]
+ )).
