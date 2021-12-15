@@ -50,16 +50,16 @@ estafeta(6,[(800000000234,4.9,'Carro','Gualtar'),(172123212430,4.9,'Carro','Maxi
 estafeta(7,[(121203928222,2.9,'Bicicleta','Maximinos')]).
 
 %---------------------------Grafo------------------------------
-%termo-grafo: grafo([b,c,d,f,g,h,k],[e(b,c),e(b,g),e(b,h), ...])
-%clausula-aresta: aresta(a,b)
+% Termo-grafo: grafo([b,c,d,f,g,h,k],[e(b,c),e(b,g),e(b,h), ...])
+% Clausula-aresta: aresta(a,b)
 
-g( grafo([greenDistribution, tadim, esporoes, maximinos, dume, saoVicente, saoVictor, gualtar],
-  [aresta(greenDistribution, tadim, 4.5),
-   aresta(greenDistribution, esporoes, 3.9),
-   aresta(greenDistribution, maximinos, 4.5),
-   aresta(maximinos, dume, 3.7),
-   aresta(maximinos, saoVicente, 3.9),
-   aresta(dume, saoVicente, 4.3),
-   aresta(saoVicentes, saoVictor, 2.15),
-   aresta(saoVictor, gualtar, 3.8)]
+g(grafo(['Green Distribuition','Tadim','Esporões','Maximinos','Dume','São Vicente','São Victor','Gualtar'],
+  [aresta('Green Distribuition','Tadim',4.5),
+   aresta('Green Distribuition','Esporões',3.9),
+   aresta('Green Distribuition','Maximinos',4.5),
+   aresta('Maximinos','Dume',3.7),
+   aresta('Maximinos','São Vicente',3.9),
+   aresta('Dume','São Vicente',4.3),
+   aresta('São Vicente','São Victor',2.15),
+   aresta('São Victor','Gualtar',3.8)]
  )).
