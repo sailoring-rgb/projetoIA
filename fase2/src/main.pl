@@ -2,8 +2,8 @@
 
 :- consult('funcionalidades.pl').
 
-:- set_prolog_flag( discontiguous_warnings,off ).
-:- set_prolog_flag( single_var_warnings,off ).
+:- set_prolog_flag(discontiguous_warnings,off).
+:- set_prolog_flag(single_var_warnings,off).
 
 :- style_check(-singleton).
 

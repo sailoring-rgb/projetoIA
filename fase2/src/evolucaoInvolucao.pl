@@ -1,5 +1,5 @@
 :- consult('baseConhecimento.pl').
-:- consult('auxiliares.pl').
+:- consult('auxiliares1.pl').
 :- consult('invariantes.pl').
 
 :- op( 900,xfy,'::' ).

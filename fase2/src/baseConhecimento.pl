@@ -48,8 +48,3 @@ estafeta(4,[(512200534686,3.9,'Bicicleta','Maximinos'),(910928382779,4.3,'Mota',
 estafeta(5,[(611111154895,2.8,'Bicicleta','Dume'),(150393815151,4.8,'Carro','São Vicente')]).
 estafeta(6,[(800000000234,4.9,'Carro','Gualtar'),(172123212430,4.9,'Carro','Maximinos'),(142019203922,0,'Bicicleta','Gualtar')]).
 estafeta(7,[(121203928222,2.9,'Bicicleta','Maximinos')]).
-
-%Bicicleta - 10 km/h
-%Moto - 35 km/h
-%Carro - 25 km/h
-
