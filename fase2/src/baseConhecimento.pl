@@ -124,10 +124,18 @@ origem('Green Distribuition').
 goal('Green Distribuition').
 
 % PontoEntrega: #Destino da encomenda
-pontoEntrega('Tadim').
-pontoEntrega('Esporões').
-pontoEntrega('Maximinos').
-pontoEntrega('Dume').
-pontoEntrega('São Vicente').
-pontoEntrega('São Victor').
-pontoEntrega('Gualtar').
+%pontoEntrega('Tadim').
+%pontoEntrega('Esporões').
+%pontoEntrega('Maximinos').
+%pontoEntrega('Dume').
+%pontoEntrega('São Vicente').
+%pontoEntrega('São Victor').
+%pontoEntrega('Gualtar').
+%pontoEntrega('Priscos').
+%potnoEntrega('Cabreiros').
+%pontoEntrega('Figueiredo').
+%pontoentrega('Lamas').
+%pontoEntrega('Morreira').
+%pontoEntrega('Palmeira').
+%pontoEntrega('Tebosa').
+%pontoEntrega('Ruilhe').
