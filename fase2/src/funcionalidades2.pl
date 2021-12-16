@@ -3,8 +3,8 @@
 :- consult('invariantes.pl').
 :- consult('evolucaoInvolucao.pl').
 
-:- set_prolog_flag( discontiguous_warnings,off ).
-:- set_prolog_flag( single_var_warnings,off ).
+:- set_prolog_flag(discontiguous_warnings,off).
+:- set_prolog_flag(single_var_warnings,off).
 :- set_prolog_flag(global, 10 000 000 000).
 
 :- style_check(-singleton).
@@ -67,3 +67,30 @@ profundidadeLimitada(Grafo,Nodo,Historico,[ProxNodo|Caminho],DistanciaT,Limite) 
     Limite1 is Limite-1,
     profundidadeLimitada(Grafo,ProxNodo,[ProxNodo|Historico],Caminho,Distancia2,Limite1),
     DistanciaT is Distancia1 + Distancia2.
+
+%--------------------------------------Pesquisa Gulosa--------------------------------------
+
+resolveGulosa(Nodo,Caminho/Custo) :-
+    %estima(Nodo,Estima),
+    agulosa(Grafo,[[Nodo]/0/Estima],Invertido/Custo/_),
+    inverso(Invertido,Caminho).
+
+agulosa(Caminhos,Caminho) :-
+    obter_melhor(Caminhos,Caminho),
+    Caminho = [Nodo|_]/_/_,
+    goal(Nodo).
+agulosa(Caminhos,Solucao) :-
+    obter_melhor(Caminhos,MelhorCaminho),
+    seleciona(MelhorCaminho,Caminhos,OutrosCaminhos),
+    expande_gulosa(MelhorCaminho,Expandidos),
+    append(OutrosCaminhos,Expandidos,NovosCaminhos),
+    agulosa(NovosCaminhos,Solucao).
+
+obter_melhor([Caminho],Caminho) :- !.
+obter_melhor([Caminho1/Custo1/Estima1,_/Custo2/Estima2|Caminhos],MelhorCaminho) :-
+    Estima1 =< Estima2, !,
+    obter_melhor([Caminho1/Custo1/Estima1|Caminhos],MelhorCaminho).
+obter_melhor([_|Caminhos],MelhorCaminho) :-
+    obter_melhor(Caminhos,MelhorCaminho).
+
+expande_gulosa(Caminho,Expandidos) :- findall(NovoCaminho,adjacente(Caminho,NovoCaminho))

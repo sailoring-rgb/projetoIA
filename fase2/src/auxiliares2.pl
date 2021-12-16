@@ -40,6 +40,12 @@ tempoEntrega(IdEnc,TempoTotal) :-
 adjacente(X,Y,D,grafo(Es1,Es2)) :- member(aresta(X,Y,D),Es2).
 adjacente(X,Y,D,grafo(Es1,Es2)) :- member(aresta(Y,X,D),Es2).
 
+adjacenteV2([Nodo|Caminho]/Custo1/_,[ProxNodo,Nodo|Caminho]/Custo2/Estima,Grafo) :-
+    adjacente(Nodo,ProxNodo,PassoCusto,Grafo),
+	nao(membro(ProxNodo,Caminho)),
+	Custo2 is Custo1 + PassoCusto,
+	estima(ProxNodo,Est).
+
 inverso(Xs,Ys) :- inverso(Xs,[],Ys).
 
 inverso([],Xs,Xs).
