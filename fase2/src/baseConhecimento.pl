@@ -82,7 +82,7 @@ estafeta(9,[(122457456652,2.3,'Carro','Figueiredo')]).
 estafeta(10,[(001230054687,3.0,'Bicicleta','Priscos'),(758846125940,1.9,'Carro','Tebosa'),(214568744021,3.6,'Carro','Lamas')]).
 estafeta(11,[(115542001235,2.5,'Carro','Esporões'),(125489652311,4.1,'Bicicleta','Tadim')]).
 estafeta(12,[(012485569441,3.7,'Carro','Cabreiros')]).
-estafeta(13,[(122145875630,4.0,'Mota'),(124562335601,3.1,'Carro','Maximinos'),(458751021235,2.6,'Carro','Tebosa'),(124501236889,4.2,'Bicicleta','Figueiredo')]).
+estafeta(13,[(122145875630,4.0,'Mota','Figueiredo'),(124562335601,3.1,'Carro','Maximinos'),(458751021235,2.6,'Carro','Tebosa'),(124501236889,4.2,'Bicicleta','Figueiredo')]).
 estafeta(14,[(214501239987,3.3,'Carro','Ruilhe'),(023100045791,2.8,'Carro','São Vicente')]).
 estafeta(15,[(012450012994,3.4,'Carro','Priscos'),(124568790122,2.7,'Bicicleta','Morreira'),(154200113287,3.5,'Carro','Lamas')]).
 estafeta(16,[890125440127,4.3,'Carro','Palmeira']).
