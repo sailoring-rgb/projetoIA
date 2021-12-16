@@ -50,8 +50,8 @@ estafeta(6,[(800000000234,4.9,'Carro','Gualtar'),(172123212430,4.9,'Carro','Maxi
 estafeta(7,[(121203928222,2.9,'Bicicleta','Maximinos')]).
 
 %---------------------------Grafo------------------------------
-% Termo-grafo: grafo([b,c,d,f,g,h,k],[e(b,c),e(b,g),e(b,h), ...])
-% Clausula-aresta: aresta(a,b)
+% Termo-grafo: #grafo([b,c,d,f,g,h,k],[e(b,c),e(b,g),e(b,h), ...])
+% Aresta: #Inicio, Fim, Distância
 
 g(grafo(['Green Distribuition','Tadim','Esporões','Maximinos','Dume','São Vicente','São Victor','Gualtar'],
   [aresta('Green Distribuition','Tadim',4.5),
@@ -63,3 +63,12 @@ g(grafo(['Green Distribuition','Tadim','Esporões','Maximinos','Dume','São Vice
    aresta('São Vicente','São Victor',2.15),
    aresta('São Victor','Gualtar',3.8)]
  )).
+
+goal('Green Distribuition').
+goal('Tadim').
+goal('Esporões').
+goal('Maximinos').
+goal('Dume').
+goal('São Vicente').
+goal('São Victor').
+goal('Gualtar').
