@@ -96,7 +96,7 @@ estafeta(18,[(125004357899,4.3,'Mota','Morreira')]).
 g(grafo(['Green Distribuition','Tadim','Esporões','Maximinos','Dume','São Vicente','São Victor','Gualtar','Figueiredo','Lamas',
           'Morreira','Palmeira','Tebosa','Priscos','Ruilhe','Cabreiros'],
   [aresta('Green Distribuition','Priscos',4.9),
-   aresta('Green Distribuition','MAximinos',4.5),
+   aresta('Green Distribuition','Maximinos',4.5),
    aresta('Green Distribuition','Figueiredo',2.7),
    aresta('Priscos','Tebosa',2.5),
    aresta('Priscos','Ruilhe',2.6),
@@ -108,7 +108,7 @@ g(grafo(['Green Distribuition','Tadim','Esporões','Maximinos','Dume','São Vice
    aresta('Figueiredo','Esporões',3.4),
    aresta('Lamas','Esporões',2.8),
    aresta('Lamas','Morreira',2.9),
-   aresta('Esporões','Morreira',2.8)
+   aresta('Esporões','Morreira',2.8),
    aresta('Maximinos','Dume',3.7),
    aresta('Maximinos','São Vicente',3.9),
    aresta('Dume','São Vicente',4.3),

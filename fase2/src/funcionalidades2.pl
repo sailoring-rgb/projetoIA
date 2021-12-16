@@ -93,4 +93,4 @@ obter_melhor([Caminho1/Custo1/Estima1,_/Custo2/Estima2|Caminhos],MelhorCaminho) 
 obter_melhor([_|Caminhos],MelhorCaminho) :-
     obter_melhor(Caminhos,MelhorCaminho).
 
-expande_gulosa(Caminho,Expandidos) :- findall(NovoCaminho,adjacente(Caminho,NovoCaminho))
+expande_gulosa(Caminho,Expandidos) :- findall(NovoCaminho,adjacente(Caminho,NovoCaminho)).
