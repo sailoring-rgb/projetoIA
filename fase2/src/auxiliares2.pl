@@ -23,7 +23,6 @@ velocidadeEntrega(IdEnc,Velocidade) :-
     ((Transporte == 'Bicicleta' -> Velocidade is 10 - Peso * 0.7);
      (Transporte == 'Moto' -> Velocidade is 35 - Peso * 0.5);
      (Transporte == 'Carro' -> Velocidade is 25 - Peso * 0.1)).
-
 /*
 O método tempoEntrega está a bater mal porque existem dois caminhos desde a Green Distribuition até São Victor.
 FALTA, POR ISSO, IMPLEMENTAR O MÉTODO PARA CALCULAR O CAMINHO MAIS CURTO (TALVEZ PELO ALGORITMO A*).

@@ -64,11 +64,17 @@ g(grafo(['Green Distribuition','Tadim','Esporões','Maximinos','Dume','São Vice
    aresta('São Victor','Gualtar',3.8)]
  )).
 
+% Origem: #Estado inicial
+origem('Green Distribuition').
+
+% Goal: #Estado objetivo
 goal('Green Distribuition').
-goal('Tadim').
-goal('Esporões').
-goal('Maximinos').
-goal('Dume').
-goal('São Vicente').
-goal('São Victor').
-goal('Gualtar').
+
+% PontoEntrega: #Destino da encomenda
+pontoEntrega('Tadim').
+pontoEntrega('Esporões').
+pontoEntrega('Maximinos').
+pontoEntrega('Dume').
+pontoEntrega('São Vicente').
+pontoEntrega('São Victor').
+pontoEntrega('Gualtar').
