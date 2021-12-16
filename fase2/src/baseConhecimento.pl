@@ -86,7 +86,7 @@ estafeta(13,[(122145875630,4.0,'Mota'),(124562335601,3.1,'Carro','Maximinos'),(4
 estafeta(14,[(214501239987,3.3,'Carro','Ruilhe'),(023100045791,2.8,'Carro','São Vicente')]).
 estafeta(15,[(012450012994,3.4,'Carro','Priscos'),(124568790122,2.7,'Bicicleta','Morreira'),(154200113287,3.5,'Carro','Lamas')]).
 estafeta(16,[890125440127,4.3,'Carro','Palmeira']).
-estafeta(17,[(125400133654,3.8,'Mota','Cabreiros'),(124578512366,4.1,'Carro,'Palmeira')]).
+estafeta(17,[(125400133654,3.8,'Mota','Cabreiros'),(124578512366,4.1,'Carro','Palmeira')]).
 estafeta(18,[(125004357899,4.3,'Mota','Morreira')]).
 
 %---------------------------Grafo------------------------------
