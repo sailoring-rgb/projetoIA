@@ -3,15 +3,20 @@
 :- consult('invariantes.pl').
 :- consult('evolucaoInvolucao.pl').
 
-:- set_prolog_stack(global, limit(100000000000)).
+:- set_prolog_flag( discontiguous_warnings,off ).
+:- set_prolog_flag( single_var_warnings,off ).
+:- set_prolog_flag(global, 10 000 000 000).
+
+:- style_check(-singleton).
 
 %-------------------------------Pesquisa em Profundidade (DFS)-------------------------------
 
 /*
+                FUNCIONAL MAS TALVEZ FALTE:
 Se o estafeta realizar mais do que uma entrega num percurso,
 tem-se de ter em atenção o transporte que ele usa e a quantidade de peso que ele transporta.
 */
-resolve_DFS(Nodo,[Nodo|Caminho],Distancia) :-
+resolveDFS(Nodo,[Nodo|Caminho],Distancia) :-
     g(Grafo),
     profundidade(Grafo,Nodo,[Nodo],Caminho,Distancia).
 
@@ -19,14 +24,46 @@ profundidade(Grafo,Nodo,_,[],0) :- goal(Nodo).
 profundidade(Grafo,Nodo,Historico,[ProxNodo|Caminho],DistanciaT) :-
     adjacente(Nodo,ProxNodo,Distancia1,Grafo),
     nao(membro(ProxNodo,Historico)),
-    profundidade(ProxNodo,[ProxNodo|Historico],Caminho,Distancia2),
+    profundidade(Grafo,ProxNodo,[ProxNodo|Historico],Caminho,Distancia2),
     DistanciaT is Distancia1 + Distancia2.
 
-statistics_DFS() :-
-    statistics(global_stack, [G1,L1]),
-    time(resolve_DFS('Dume',_,D)),
-    statistics(global_stack, [G2,L2]),
-    Res is G2 - G1,
-    write("Memory: "), 
-    write(Res),write("\n"),
-	write("Custo: "),write(D).
+%---------------------------------Pesquisa em Largura (BFS)---------------------------------
+
+/*
+                FUNCIONAL MAS TALVEZ FALTE:
+Se o estafeta realizar mais do que uma entrega num percurso,
+tem-se de ter em atenção o transporte que ele usa e a quantidade de peso que ele transporta.
+*/
+resolveBFS(Nodo,Caminho,Distancia) :-
+    goal(NodoFinal),
+    g(Grafo),largura(Grafo,NodoFinal,[[Nodo]],Caminho,Distancia).
+
+largura(Grafo,NodoFinal,[[NodoFinal|T]|_],Caminho,0) :- reverse([NodoFinal|T],Caminho).
+largura(Grafo,NodoFinal,[Lista|Outros],Caminho,DistanciaT) :-
+    Lista = [A|_],
+    findall([X|Lista],(NodoFinal \== A, adjacente(A,X,_,Grafo),nao(membro(X,Lista))),Novos),
+    adjacente(A,X,Distancia1,Grafo),
+    concatena(Outros,Novos,Todos),
+    largura(Grafo,NodoFinal,Todos,Caminho,Distancia2),
+    DistanciaT is Distancia1 + Distancia2.
+
+%------------------------------Pesquisa em Profundidade Limitada------------------------------
+
+/*
+                FUNCIONAL MAS TALVEZ FALTE:
+Se o estafeta realizar mais do que uma entrega num percurso,
+tem-se de ter em atenção o transporte que ele usa e a quantidade de peso que ele transporta.
+*/
+% # Limite - Número limite de nós a procurar.
+resolveLimitada(Nodo,Caminho,Distancia,Limite) :-
+    g(Grafo),
+    profundidadeLimitada(Grafo,Nodo,[Nodo],Caminho,Distancia,Limite).
+
+profundidadeLimitada(Grafo,Nodo,_,[],0,_) :- goal(Nodo).
+profundidadeLimitada(Grafo,Nodo,Historico,[ProxNodo|Caminho],DistanciaT,Limite) :-
+    Limite > 0,
+    adjacente(Nodo,ProxNodo,Distancia1,Grafo),
+    nao(membro(ProxNodo,Historico)),
+    Limite1 is Limite-1,
+    profundidadeLimitada(Grafo,ProxNodo,[ProxNodo|Historico],Caminho,Distancia2,Limite1),
+    DistanciaT is Distancia1 + Distancia2.

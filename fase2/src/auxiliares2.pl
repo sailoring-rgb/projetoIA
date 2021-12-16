@@ -37,19 +37,6 @@ tempoEntrega(IdEnc,TempoTotal) :-
 
 %---------------------------------------------------Anexos---------------------------------------------------
 
-estafetaFezEncomenda(IdEstaf, IdEnc) :- 
-	encomendasDoEstafeta(IdEstaf,L),
-	membro(IdEnc,L).
-
-transporteEncomenda(IdEnc,Transporte) :-
-	estafetaEncCliente(IdEnc,IdEstaf),
-	estafeta(IdEstaf,L),
-	procuraTransporteEncomenda(IdEnc,L,Transporte).
-
-procuraTransporteEncomenda(IdEnc,[(IdEnc,_,Transporte,_)],Transporte).
-procuraTransporteEncomenda(IdEnc,[(IdEnc,_,Transporte,_)|T],Transporte).
-procuraTransporteEncomenda(IdEnc,[(_,_,_,_)|T],Transporte) :- procuraTransporteEncomenda(IdEnc,T,Transporte).
-
 adjacente(X,Y,D,grafo(Es1,Es2)) :- member(aresta(X,Y,D),Es2).
 adjacente(X,Y,D,grafo(Es1,Es2)) :- member(aresta(Y,X,D),Es2).
 
