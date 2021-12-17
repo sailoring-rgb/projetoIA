@@ -17,14 +17,13 @@ Se o estafeta realizar mais do que uma entrega num percurso,
 tem-se de ter em atenção o transporte que ele usa e a quantidade de peso que ele transporta.
 */
 resolveDFS(Nodo,[Nodo|Caminho],Distancia) :-
-    g(Grafo),
-    profundidade(Grafo,Nodo,[Nodo],Caminho,Distancia).
+    profundidade(Nodo,[Nodo],Caminho,Distancia).
 
-profundidade(Grafo,Nodo,_,[],0) :- goal(Nodo).
-profundidade(Grafo,Nodo,Historico,[ProxNodo|Caminho],DistanciaT) :-
-    adjacente(Nodo,ProxNodo,Distancia1,Grafo),
+profundidade(Nodo,_,[],0) :- goal(Nodo).
+profundidade(Nodo,Historico,[ProxNodo|Caminho],DistanciaT) :-
+    adjacente(Nodo,ProxNodo,Distancia1),
     nao(membro(ProxNodo,Historico)),
-    profundidade(Grafo,ProxNodo,[ProxNodo|Historico],Caminho,Distancia2),
+    profundidade(ProxNodo,[ProxNodo|Historico],Caminho,Distancia2),
     DistanciaT is Distancia1 + Distancia2.
 
 %---------------------------------Pesquisa em Largura (BFS)---------------------------------
@@ -36,15 +35,15 @@ tem-se de ter em atenção o transporte que ele usa e a quantidade de peso que e
 */
 resolveBFS(Nodo,Caminho,Distancia) :-
     goal(NodoFinal),
-    g(Grafo),largura(Grafo,NodoFinal,[[Nodo]],Caminho,Distancia).
+    largura(NodoFinal,[[Nodo]],Caminho,Distancia).
 
-largura(Grafo,NodoFinal,[[NodoFinal|T]|_],Caminho,0) :- reverse([NodoFinal|T],Caminho).
-largura(Grafo,NodoFinal,[Lista|Outros],Caminho,DistanciaT) :-
+largura(NodoFinal,[[NodoFinal|T]|_],Caminho,0) :- reverse([NodoFinal|T],Caminho).
+largura(NodoFinal,[Lista|Outros],Caminho,DistanciaT) :-
     Lista = [A|_],
-    findall([X|Lista],(NodoFinal \== A, adjacente(A,X,_,Grafo),nao(membro(X,Lista))),Novos),
-    adjacente(A,X,Distancia1,Grafo),
+    findall([X|Lista],(NodoFinal \== A, adjacente(A,X,_),nao(membro(X,Lista))),Novos),
+    adjacente(A,X,Distancia1),
     concatena(Outros,Novos,Todos),
-    largura(Grafo,NodoFinal,Todos,Caminho,Distancia2),
+    largura(NodoFinal,Todos,Caminho,Distancia2),
     DistanciaT is Distancia1 + Distancia2.
 
 %------------------------------Pesquisa em Profundidade Limitada------------------------------
@@ -56,16 +55,15 @@ tem-se de ter em atenção o transporte que ele usa e a quantidade de peso que e
 */
 % # Limite - Número limite de nós a procurar.
 resolveLimitada(Nodo,Caminho,Distancia,Limite) :-
-    g(Grafo),
-    profundidadeLimitada(Grafo,Nodo,[Nodo],Caminho,Distancia,Limite).
+    profundidadeLimitada(Nodo,[Nodo],Caminho,Distancia,Limite).
 
-profundidadeLimitada(Grafo,Nodo,_,[],0,_) :- goal(Nodo).
-profundidadeLimitada(Grafo,Nodo,Historico,[ProxNodo|Caminho],DistanciaT,Limite) :-
+profundidadeLimitada(Nodo,_,[],0,_) :- goal(Nodo).
+profundidadeLimitada(Nodo,Historico,[ProxNodo|Caminho],DistanciaT,Limite) :-
     Limite > 0,
-    adjacente(Nodo,ProxNodo,Distancia1,Grafo),
+    adjacente(Nodo,ProxNodo,Distancia1),
     nao(membro(ProxNodo,Historico)),
     Limite1 is Limite-1,
-    profundidadeLimitada(Grafo,ProxNodo,[ProxNodo|Historico],Caminho,Distancia2,Limite1),
+    profundidadeLimitada(ProxNodo,[ProxNodo|Historico],Caminho,Distancia2,Limite1),
     DistanciaT is Distancia1 + Distancia2.
 
 %--------------------------------------Pesquisa Gulosa--------------------------------------
