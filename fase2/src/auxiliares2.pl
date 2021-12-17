@@ -37,14 +37,17 @@ tempoEntrega(IdEnc,TempoTotal) :-
 
 %---------------------------------------------------Anexos---------------------------------------------------
 
-adjacente(X,Y,D,grafo(Es1,Es2)) :- member(aresta(X,Y,D),Es2).
-adjacente(X,Y,D,grafo(Es1,Es2)) :- member(aresta(Y,X,D),Es2).
+adjacente(Nodo,ProxNodo,C) :- aresta(Nodo,ProxNodo,C).
+adjacente(Nodo,ProxNodo,C) :- aresta(ProxNodo,Nodo,C).
+
+% adjacente(X,Y,D,grafo(Es1,Es2)) :- member(aresta(X,Y,D),Es2).
+% adjacente(X,Y,D,grafo(Es1,Es2)) :- member(aresta(Y,X,D),Es2).
 
 adjacenteV2([Nodo|Caminho]/Custo1/_,[ProxNodo,Nodo|Caminho]/Custo2/Estima) :-
-    adjacente(Nodo,ProxNodo,PassoCusto,Grafo),
-	nao(membro(ProxNodo,Caminho)),
+    adjacente(Nodo,ProxNodo,PassoCusto),
+	\+member(ProxNodo,Caminho),
 	Custo2 is Custo1 + PassoCusto,
-	estima(ProxNodo,Est).
+	estima(ProxNodo,Estima).
 
 obter_melhor([Caminho],Caminho) :- !.
 obter_melhor([Caminho1/Custo1/Estima1,_/Custo2/Estima2|Caminhos],MelhorCaminho) :-

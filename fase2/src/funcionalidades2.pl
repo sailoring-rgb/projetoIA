@@ -86,7 +86,7 @@ agulosa(Caminhos,Solucao) :-
     append(OutrosCaminhos,Expandidos,NovosCaminhos),
     agulosa(NovosCaminhos,Solucao).
 
-expande_gulosa(Caminho,Expandidos) :- findall(NovoCaminho,adjacenteV2(Caminho,NovoCaminho), ExpCaminhos).
+expande_gulosa(Caminho,Expandidos) :- findall(NovoCaminho,adjacenteV2(Caminho,NovoCaminho), Expandidos).
 
 %--------------------------------------Pesquisa A Estrela--------------------------------------
 
@@ -96,12 +96,12 @@ resolveAEstrela(Nodo, Caminho/Custo) :-
     inverso(InvCaminho, Caminho).
 
 aestrela(Caminhos, Caminho) :-
-    obtem_melhor(Caminhos, Caminho),
+    obter_melhor(Caminhos, Caminho),
     Caminho = [Nodo|_]/_/_,
     goal(Nodo).
 
 aestrela(Caminhos, SolucaoCaminho) :-
-    obtem_melhor(Caminhos, MelhorCaminho),
+    obter_melhor(Caminhos, MelhorCaminho),
     seleciona(MelhorCaminho, Caminhos, OutrosCaminhos),
     expande_aestrela(MelhorCaminho, ExpCaminhos),
     append(OutrosCaminhos, ExpCaminhos, NovoCaminhos),

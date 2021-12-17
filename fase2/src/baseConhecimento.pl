@@ -93,29 +93,29 @@ estafeta(18,[(125004357899,4.3,'Mota','Morreira')]).
 % Termo-grafo: #grafo([b,c,d,f,g,h,k],[e(b,c),e(b,g),e(b,h), ...])
 % Aresta: #Inicio, Fim, Distância
 
-g(grafo(['Green Distribuition','Tadim','Esporões','Maximinos','Dume','São Vicente','São Victor','Gualtar','Figueiredo','Lamas',
-          'Morreira','Palmeira','Tebosa','Priscos','Ruilhe','Cabreiros'],
-  [aresta('Green Distribuition','Priscos',4.9),
-   aresta('Green Distribuition','Maximinos',4.5),
-   aresta('Green Distribuition','Figueiredo',2.7),
-   aresta('Priscos','Tebosa',2.5),
-   aresta('Priscos','Ruilhe',2.6),
-   aresta('Priscos','Tadim',3.2),
-   aresta('Tebosa','Ruilhe',2.2),
-   aresta('Ruilhe','Tadim',2.1),
-   aresta('Tadim','Cabreiros',6.4),
-   aresta('Figueiredo','Lamas',1.3),
-   aresta('Figueiredo','Esporões',3.4),
-   aresta('Lamas','Esporões',2.8),
-   aresta('Lamas','Morreira',2.9),
-   aresta('Esporões','Morreira',2.8),
-   aresta('Maximinos','Dume',3.7),
-   aresta('Maximinos','São Vicente',3.9),
-   aresta('Dume','São Vicente',4.3),
-   aresta('Dume','Palmeira',4.8),
-   aresta('São Vicente','São Victor',2.15),
-   aresta('São Victor','Gualtar',3.8)]
- )).
+grafo(['Green Distribuition','Tadim','Esporões','Maximinos','Dume','São Vicente','São Victor','Gualtar','Figueiredo','Lamas',
+          'Morreira','Palmeira','Tebosa','Priscos','Ruilhe','Cabreiros']).
+
+aresta('Green Distribuition','Priscos',4.9).
+aresta('Green Distribuition','Maximinos',4.5).
+aresta('Green Distribuition','Figueiredo',2.7).
+aresta('Priscos','Tebosa',2.5).
+aresta('Priscos','Ruilhe',2.6).
+aresta('Priscos','Tadim',3.2).
+aresta('Tebosa','Ruilhe',2.2).
+aresta('Ruilhe','Tadim',2.1).
+aresta('Tadim','Cabreiros',6.4).
+aresta('Figueiredo','Lamas',1.3).
+aresta('Figueiredo','Esporões',3.4).
+aresta('Lamas','Esporões',2.8).
+aresta('Lamas','Morreira',2.9).
+aresta('Esporões','Morreira',2.8).
+aresta('Maximinos','Dume',3.7).
+aresta('Maximinos','São Vicente',3.9).
+aresta('Dume','São Vicente',4.3).
+aresta('Dume','Palmeira',4.8).
+aresta('São Vicente','São Victor',2.15).
+aresta('São Victor','Gualtar',3.8).
 
 % Origem: #Estado inicial
 origem('Green Distribuition').
