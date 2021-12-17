@@ -71,8 +71,8 @@ profundidadeLimitada(Grafo,Nodo,Historico,[ProxNodo|Caminho],DistanciaT,Limite) 
 %--------------------------------------Pesquisa Gulosa--------------------------------------
 
 resolveGulosa(Nodo,Caminho/Custo) :-
-    %estima(Nodo,Estima),
-    agulosa(Grafo,[[Nodo]/0/Estima],Invertido/Custo/_),
+    estima(Nodo,Estima),
+    agulosa([[Nodo]/0/Estima],Invertido/Custo/_),
     inverso(Invertido,Caminho).
 
 agulosa(Caminhos,Caminho) :-
@@ -86,11 +86,26 @@ agulosa(Caminhos,Solucao) :-
     append(OutrosCaminhos,Expandidos,NovosCaminhos),
     agulosa(NovosCaminhos,Solucao).
 
-obter_melhor([Caminho],Caminho) :- !.
-obter_melhor([Caminho1/Custo1/Estima1,_/Custo2/Estima2|Caminhos],MelhorCaminho) :-
-    Estima1 =< Estima2, !,
-    obter_melhor([Caminho1/Custo1/Estima1|Caminhos],MelhorCaminho).
-obter_melhor([_|Caminhos],MelhorCaminho) :-
-    obter_melhor(Caminhos,MelhorCaminho).
+expande_gulosa(Caminho,Expandidos) :- findall(NovoCaminho,adjacenteV2(Caminho,NovoCaminho), ExpCaminhos).
 
-expande_gulosa(Caminho,Expandidos) :- findall(NovoCaminho,adjacente(Caminho,NovoCaminho)).
+%--------------------------------------Pesquisa A Estrela--------------------------------------
+
+resolveAEstrela(Nodo, Caminho/Custo) :-
+    estima(Nodo, Estima),
+    aestrela([[Nodo]/0/Estima], InvCaminho/Custo/_),
+    inverso(InvCaminho, Caminho).
+
+aestrela(Caminhos, Caminho) :-
+    obtem_melhor(Caminhos, Caminho),
+    Caminho = [Nodo|_]/_/_,
+    goal(Nodo).
+
+aestrela(Caminhos, SolucaoCaminho) :-
+    obtem_melhor(Caminhos, MelhorCaminho),
+    seleciona(MelhorCaminho, Caminhos, OutrosCaminhos),
+    expande_aestrela(MelhorCaminho, ExpCaminhos),
+    append(OutrosCaminhos, ExpCaminhos, NovoCaminhos),
+    aestrela(NovoCaminhos, SolucaoCaminho). 
+
+expande_aestrela(Caminho, ExpCaminhos) :-
+    findall(NovoCaminho, adjacenteV2(Caminho,NovoCaminho), ExpCaminhos).

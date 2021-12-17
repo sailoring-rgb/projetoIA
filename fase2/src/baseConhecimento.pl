@@ -139,3 +139,21 @@ goal('Green Distribuition').
 %pontoEntrega('Palmeira').
 %pontoEntrega('Tebosa').
 %pontoEntrega('Ruilhe').
+
+% Estimativas
+estima('Green Distribuition', 0).
+estima('Figueiredo',2.7).
+estima('Priscos',4.5).
+estima('Maximinos', 4.5).
+estima('Dume',7.5).
+estima('Palmeira',9).
+estima('São Vicente',6.5).
+estima('São Victor', 8).
+estima('Gualtar',4).
+estima('Tebosa',6.7).
+estima('Ruilhe',7).
+estima('Tadim',6.2).
+estima('Cabreiros',11).
+estima('Lamas',2).
+estima('Morreira',5.7).
+estima('Esporões',5).
