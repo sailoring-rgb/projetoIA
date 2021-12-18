@@ -10,19 +10,19 @@
 :- style_check(-singleton).
 
 %------------------------------------Funcionalidade 1------------------------------------
-%Gerar os circuitos de entrega, caso existam, que cubram um determinado território.
+% Gerar os circuitos de entrega, caso existam, que cubram um determinado território. 
 
-/* ??????????????????????????????????????????????????????????????????????????????????? */
-territorio(Nodo,[Nodo|Caminho]):- 
-	profundidade(Nodo,[Nodo],Caminho,_).
-
+todosOsCaminhosTerritorio(Territorio,L) :- 
+    solucoes(Ponto,pontoEntrega(P),Pts),
+    todosOsCaminhosAux(Territorio,Pts,L).
+    
 %------------------------------------Funcionalidade 2------------------------------------
-%Identificar quais os circuitos com maior número de entregas.
+% Identificar quais os circuitos com maior número de entregas.
 
 /* ??????????????????????????????????????????????????????????????????????????????????? */
 
 %------------------------------------Funcionalidade 3------------------------------------
-%Comparar circuitos de entrega tendo em conta os indicadores de produtividade (distância e quantidade).
+% Comparar circuitos de entrega tendo em conta os indicadores de produtividade (distância e quantidade).
 
 % 1 - DFS
 % 2 - BFS
@@ -41,11 +41,34 @@ produtividade(Nodo,Distancia,Quantidade,4) :- resolveAEstrela(Nodo,Caminho/Dista
 											  calculaQuantidade(Caminho,Quantidade),!.
 
 %------------------------------------Funcionalidade 4------------------------------------
-%Escolher o circuito mais rápido (usando o critério da distância).
+% Escolher o circuito mais rápido (usando o critério da distância).
 
 /* ??????????????????????????????????????????????????????????????????????????????????? */
 
 %------------------------------------Funcionalidade 5------------------------------------
-%Escolher o circuito mais ecológico (usando critério de tempo).
+% Escolher o circuito mais ecológico (usando critério de tempo).
+
+aestrela_tempo(Caminhos, Caminho) :-
+    obtem_melhor_tempo(Caminhos, Caminho),
+    Caminho = [Nodo|_]/_/_,
+    goal(Nodo).
+
+aestrela_tempo(Caminhos, SolucaoCaminho) :-
+    obtem_melhor_tempo(Caminhos, MelhorCaminho),
+    seleciona(MelhorCaminho, Caminhos, OutrosCaminhos),
+    expande_aestrela_tempo(MelhorCaminho, ExpCaminhos),
+    append(OutrosCaminhos, ExpCaminhos, NovoCaminhos),
+        aestrela_tempo(NovoCaminhos, SolucaoCaminho).
+    
+obtem_melhor_tempo([Caminho], Caminho) :- !.
+obtem_melhor_tempo([Caminho1/Custo1/Est1,_/Custo2/Est2|Caminhos], MelhorCaminho) :-
+    Custo1 + Est1 =< Custo2 + Est2, !,
+    obtem_melhor_tempo([Caminho1/Custo1/Est1|Caminhos], MelhorCaminho). 
+obtem_melhor_tempo([_|Caminhos], MelhorCaminho) :- 
+    obtem_melhor_tempo(Caminhos, MelhorCaminho).
+    
+expande_aestrela_tempo(Caminho, ExpCaminhos) :-
+    findall(NovoCaminho, adjacente_tempo(Caminho,NovoCaminho), ExpCaminhos).
+
 
 /* USAR OS PREDICADOS tempoEntrega IMPLEMENTADOS EM AUXILIARES2.PL */

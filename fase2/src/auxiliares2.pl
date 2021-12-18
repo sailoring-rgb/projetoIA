@@ -172,13 +172,28 @@ tempoEntrega(IdEnc,TempoTotal,5) :-
     DistanciaTotal is Distancia*2,
     TempoTotal is DistanciaTotal / Velocidade.
 
+%--------------------------------------Auxiliares Funcionalidade 1--------------------------------------
+
+caminho(A,B,P) :- caminho1(A,[B],P).
+
+caminho1(A,[A|P1], [A|P1]).
+caminho1(A,[Y|P1],P) :-
+  adjacente(X,Y,_),
+  nao(membro(X,[Y|P1])), 
+  caminho1(A,[X,Y|P1],P).
+
+todosOsCaminhosAux(Territorio,[P],L) :- allCaminhosTerritorio('Green Distribuition',P,Territorio,L).
+todosOsCaminhosAux(Territorio,[P | T],L) :- 
+    allCaminhosTerritorio('Green Distribuition',P,Territorio,R),
+    todosOsCaminhosAux(Territorio,T,L1),
+    concatena(R,L1,L).
+
+allCaminhosTerritorio(A,B,T,L) :- findall(Caminho,(caminho(A,B,Caminho),membro(T,Caminho)),L).
+
 %---------------------------------------------------Anexos---------------------------------------------------
 
 adjacente(Nodo,ProxNodo,C) :- aresta(Nodo,ProxNodo,C).
 adjacente(Nodo,ProxNodo,C) :- aresta(ProxNodo,Nodo,C).
-
-% adjacente(X,Y,D,grafo(Es1,Es2)) :- member(aresta(X,Y,D),Es2).
-% adjacente(X,Y,D,grafo(Es1,Es2)) :- member(aresta(Y,X,D),Es2).
 
 adjacenteV2([Nodo|Caminho]/Custo1/_,[ProxNodo,Nodo|Caminho]/Custo2/Estima) :-
     adjacente(Nodo,ProxNodo,PassoCusto),
@@ -192,6 +207,12 @@ obter_melhor([Caminho1/Custo1/Estima1,_/Custo2/Estima2|Caminhos],MelhorCaminho) 
     obter_melhor([Caminho1/Custo1/Estima1|Caminhos],MelhorCaminho).
 obter_melhor([_|Caminhos],MelhorCaminho) :-
     obter_melhor(Caminhos,MelhorCaminho).
+
+adjacente_tempo([Nodo|Caminho]/Custo/_, [ProxNodo,Nodo|Caminho]/NovoCusto/EstimaTempo) :-
+    move(Nodo, ProxNodo, _, PassoTempo),
+    \+ member(ProxNodo, Caminho),
+    NovoCusto is Custo + PassoTempo,
+    estima(ProxNodo, _ , EstimaTempo).
 
 inverso(Xs,Ys) :- inverso(Xs,[],Ys).
 

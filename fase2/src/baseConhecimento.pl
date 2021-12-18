@@ -122,7 +122,6 @@ origem('Green Distribuition').
 % Goal: #Estado objetivo
 goal('Green Distribuition').
 
-/*
 % PontoEntrega: #Destino da encomenda
 pontoEntrega('Tadim').
 pontoEntrega('Esporões').
@@ -132,14 +131,13 @@ pontoEntrega('São Vicente').
 pontoEntrega('São Victor').
 pontoEntrega('Gualtar').
 pontoEntrega('Priscos').
-potnoEntrega('Cabreiros').
+pontoEntrega('Cabreiros').
 pontoEntrega('Figueiredo').
-pontoentrega('Lamas').
+pontoEntrega('Lamas').
 pontoEntrega('Morreira').
 pontoEntrega('Palmeira').
 pontoEntrega('Tebosa').
 pontoEntrega('Ruilhe').
-*/
 
 % Estimativas
 estima('Green Distribuition', 0).
