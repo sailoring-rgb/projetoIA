@@ -208,12 +208,6 @@ obter_melhor([Caminho1/Custo1/Estima1,_/Custo2/Estima2|Caminhos],MelhorCaminho) 
 obter_melhor([_|Caminhos],MelhorCaminho) :-
     obter_melhor(Caminhos,MelhorCaminho).
 
-adjacente_tempo([Nodo|Caminho]/Custo/_, [ProxNodo,Nodo|Caminho]/NovoCusto/EstimaTempo) :-
-    move(Nodo, ProxNodo, _, PassoTempo),
-    \+ member(ProxNodo, Caminho),
-    NovoCusto is Custo + PassoTempo,
-    estima(ProxNodo, _ , EstimaTempo).
-
 inverso(Xs,Ys) :- inverso(Xs,[],Ys).
 
 inverso([],Xs,Xs).
