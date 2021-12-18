@@ -9,101 +9,33 @@
 
 :- style_check(-singleton).
 
-%-------------------------------Pesquisa em Profundidade (DFS)-------------------------------
+%------------------------------------Funcionalidade 1------------------------------------
+%Gerar os circuitos de entrega, caso existam, que cubram um determinado território.
 
-/*
-                FUNCIONAL MAS TALVEZ FALTE:
-Se o estafeta realizar mais do que uma entrega num percurso,
-tem-se de ter em atenção o transporte que ele usa e a quantidade de peso que ele transporta.
-*/
-resolveDFS(Nodo,[Nodo|Caminho],Distancia) :-
-    profundidade(Nodo,[Nodo],Caminho,Distancia).
+/* ??????????????????????????????????????????????????????????????????????????????????? */
+territorio(Nodo,[Nodo|Caminho]):- 
+	profundidade(Nodo,[Nodo],Caminho,_).
 
-profundidade(Nodo,_,[],0) :- goal(Nodo).
-profundidade(Nodo,Historico,[ProxNodo|Caminho],DistanciaT) :-
-    adjacente(Nodo,ProxNodo,Distancia1),
-    nao(membro(ProxNodo,Historico)),
-    profundidade(ProxNodo,[ProxNodo|Historico],Caminho,Distancia2),
-    DistanciaT is Distancia1 + Distancia2.
+%------------------------------------Funcionalidade 2------------------------------------
+%Identificar quais os circuitos com maior número de entregas.
 
-%---------------------------------Pesquisa em Largura (BFS)---------------------------------
+/* ??????????????????????????????????????????????????????????????????????????????????? */
 
-/*
-                FUNCIONAL MAS TALVEZ FALTE:
-Se o estafeta realizar mais do que uma entrega num percurso,
-tem-se de ter em atenção o transporte que ele usa e a quantidade de peso que ele transporta.
-*/
-resolveBFS(Nodo,Caminho,Distancia) :-
-    goal(NodoFinal),
-    largura(NodoFinal,[[Nodo]],Caminho,Distancia).
+%------------------------------------Funcionalidade 3------------------------------------
+%Comparar circuitos de entrega tendo em conta os indicadores de produtividade (distância e quantidade).
 
-largura(NodoFinal,[[NodoFinal|T]|_],Caminho,0) :- reverse([NodoFinal|T],Caminho).
-largura(NodoFinal,[Lista|Outros],Caminho,DistanciaT) :-
-    Lista = [A|_],
-    findall([X|Lista],(NodoFinal \== A, adjacente(A,X,_),nao(membro(X,Lista))),Novos),
-    adjacente(A,X,Distancia1),
-    concatena(Outros,Novos,Todos),
-    largura(NodoFinal,Todos,Caminho,Distancia2),
-    DistanciaT is Distancia1 + Distancia2.
+% 1 - DFS
+% 2 - BFS
+% 3 - Gulosa
+% 4 - A*
 
-%------------------------------Pesquisa em Profundidade Limitada------------------------------
+/* FALTA O INDICADOR DE PRODUTIVIDADE - QUANTIDADE !!! */
+produtividade(Nodo,Distancia,Quantidade,1) :- resolveDFS(Nodo,[Nodo|Caminho],Distancia).
 
-/*
-                FUNCIONAL MAS TALVEZ FALTE:
-Se o estafeta realizar mais do que uma entrega num percurso,
-tem-se de ter em atenção o transporte que ele usa e a quantidade de peso que ele transporta.
-*/
-% # Limite - Número limite de nós a procurar.
-resolveLimitada(Nodo,Caminho,Distancia,Limite) :-
-    profundidadeLimitada(Nodo,[Nodo],Caminho,Distancia,Limite).
+produtividade(Nodo,Distancia,Quantidade,2) :- resolveBFS(Nodo,[Nodo|Caminho],Distancia).
 
-profundidadeLimitada(Nodo,_,[],0,_) :- goal(Nodo).
-profundidadeLimitada(Nodo,Historico,[ProxNodo|Caminho],DistanciaT,Limite) :-
-    Limite > 0,
-    adjacente(Nodo,ProxNodo,Distancia1),
-    nao(membro(ProxNodo,Historico)),
-    Limite1 is Limite-1,
-    profundidadeLimitada(ProxNodo,[ProxNodo|Historico],Caminho,Distancia2,Limite1),
-    DistanciaT is Distancia1 + Distancia2.
+produtividade(Nodo,Distancia,Quantidade,3) :- resolveGulosa(Nodo,Caminho/Distancia),
+											  calculaQuantidade(Caminho,Quantidade),!.
 
-%--------------------------------------Pesquisa Gulosa--------------------------------------
-
-resolveGulosa(Nodo,Caminho/Custo) :-
-    estima(Nodo,Estima),
-    agulosa([[Nodo]/0/Estima],Invertido/Custo/_),
-    inverso(Invertido,Caminho).
-
-agulosa(Caminhos,Caminho) :-
-    obter_melhor(Caminhos,Caminho),
-    Caminho = [Nodo|_]/_/_,
-    goal(Nodo).
-agulosa(Caminhos,Solucao) :-
-    obter_melhor(Caminhos,MelhorCaminho),
-    seleciona(MelhorCaminho,Caminhos,OutrosCaminhos),
-    expande_gulosa(MelhorCaminho,Expandidos),
-    append(OutrosCaminhos,Expandidos,NovosCaminhos),
-    agulosa(NovosCaminhos,Solucao).
-
-expande_gulosa(Caminho,Expandidos) :- findall(NovoCaminho,adjacenteV2(Caminho,NovoCaminho), Expandidos).
-
-%--------------------------------------Pesquisa A Estrela--------------------------------------
-
-resolveAEstrela(Nodo, Caminho/Custo) :-
-    estima(Nodo, Estima),
-    aestrela([[Nodo]/0/Estima], InvCaminho/Custo/_),
-    inverso(InvCaminho, Caminho).
-
-aestrela(Caminhos, Caminho) :-
-    obter_melhor(Caminhos, Caminho),
-    Caminho = [Nodo|_]/_/_,
-    goal(Nodo).
-
-aestrela(Caminhos, SolucaoCaminho) :-
-    obter_melhor(Caminhos, MelhorCaminho),
-    seleciona(MelhorCaminho, Caminhos, OutrosCaminhos),
-    expande_aestrela(MelhorCaminho, ExpCaminhos),
-    append(OutrosCaminhos, ExpCaminhos, NovoCaminhos),
-    aestrela(NovoCaminhos, SolucaoCaminho). 
-
-expande_aestrela(Caminho, ExpCaminhos) :-
-    findall(NovoCaminho, adjacenteV2(Caminho,NovoCaminho), ExpCaminhos).
+produtividade(Nodo,Distancia,Quantidade,4) :- resolveAEstrela(Nodo,Caminho/Distancia),
+											  calculaQuantidade(Caminho,Quantidade),!.
