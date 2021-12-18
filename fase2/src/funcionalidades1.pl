@@ -16,7 +16,7 @@
 
 estafetaMaisEcologico(Ids) :-
 	solucoes(IdEstaf,estafeta(IdEstaf,_),ListaEstaf),
-	estafetaMaisEcologico(ListaEstaf,Max,Ids).
+    estafetaMaisEcologico(ListaEstaf,Max,Ids).
 
 estafetaMaisEcologico([],0,[]).
 estafetaMaisEcologico([IdEstaf],Max,[IdEstaf]) :-

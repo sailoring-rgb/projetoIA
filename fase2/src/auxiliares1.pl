@@ -181,6 +181,7 @@ encomendasPorBicicleta(IdEstaf,Conta) :-
 	verificaBicicleta(Lista,Conta).
 
 verificaBicicleta([],0).
+verificaBicicleta([(_,_,'Bicicleta',_)],1).
 verificaBicicleta([(_,_,Transporte,_)|T],Conta) :-
     verificaBicicleta(T,Conta0),
     ((Transporte == 'Bicicleta' -> Conta is Conta0 + 1);
