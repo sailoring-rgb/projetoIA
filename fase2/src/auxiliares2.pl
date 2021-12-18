@@ -125,6 +125,11 @@ velocidadeEntrega(IdEnc,Velocidade) :-
      (Transporte == 'Mota' -> Velocidade is 35 - Peso * 0.5);
      (Transporte == 'Carro' -> Velocidade is 25 - Peso * 0.1)).
 
+/* NÃO FUNCIONAL */
+calculaQuantidade([],0).
+calculaQuantidade([X|Xs],Quantidade):- %getQtLixo('all',_,Q1,X),
+							           calculaQuantidade(Xs,Q2),
+							           Quantidade is Q1 + Q2.
 
 % Devolve o tempo de entrega de uma encomenda, consoante o tipo de pesquisa adotado:
 % # 1 - DFS

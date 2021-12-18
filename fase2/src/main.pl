@@ -1,6 +1,7 @@
 % MENU
 
-:- consult('funcionalidades.pl').
+:- consult('funcionalidades1.pl').
+:- consult('funcionalidades2.pl').
 
 :- set_prolog_flag(discontiguous_warnings,off).
 :- set_prolog_flag(single_var_warnings,off).
@@ -12,7 +13,21 @@
 main :-
     repeat,
     nl,
-    write('---------------------------------------------------------MENU----------------------------------------------------------'), nl,
+    write('-------------MENU-------------'), nl,
+    write('1. Funcionalidades - Fase 1'),nl,
+    write('2. Funcionalidades - Fase 2'),nl,
+    write('0. Sair'), nl,
+    write('------------------------------'), nl,nl,
+    write('Escolha um: '),nl,
+    read(X),
+    (X = 0 -> !, fail; true),
+    nl,
+    fase(X),fail.
+
+fase(1) :-
+    repeat,
+    nl,
+    write('---------------------------------------------------------FASE1----------------------------------------------------------'), nl,
     write('1. Consultar o estafeta que utilizou mais vezes um meio de transporte mais ecológico.'), nl,
     write('2. Consultar os estafetas que entregaram determinada(s) encomenda(s) a um determinado cliente.'), nl,
     write('3. Consultar os clientes servidos por um determinado estafeta.'), nl,
@@ -23,18 +38,20 @@ main :-
     write('8. Consultar o número total de entregas pelos estafetas, num determinado intervalo de tempo.'), nl,
     write('9. Calcular o número de encomendas entregues e não entregues pela Green Distribution, num determinado período de tempo.'), nl,
     write('10. Calcular o peso total transportado por estafeta num determinado dia.'), nl,
-    write('11. Consultar o cliente que fez mais encomendas.'), nl,
+    write('11. Consultar o cliente que fez mais encomendas.'),nl,
     write('12. Consultar os estefetas menos pontuais a fazer as suas entregas.'),nl,
     write('0. Sair'), nl,
     write('-----------------------------------------------------------------------------------------------------------------------'), nl,nl,
     write('Escolha um: '),nl,
-    read(X),
-    (X = 0 -> !, fail; true),
+    read(Y),
+    (Y = 0 -> !, fail; true),
     nl,
-    funcionalidade(X),fail.
+    funcionalidade(Y),fail.
 
 
-% # Funcionalidades
+%----------------------------------------------------------------FASE1----------------------------------------------------------------
+
+% # FUNCIONALIDADES DA FASE 1 
 
 funcionalidade(1) :-
     estafetaMaisEcologico(IDs),
@@ -133,3 +150,52 @@ funcionalidade(11) :-
 funcionalidade(12) :-
     estafetasMenosPontuais(L),
     write('IDs dos estafetas menos pontuais: '),write(L),!,nl.
+
+
+%----------------------------------------------------------------FASE2----------------------------------------------------------------
+
+% # 1 - DFS
+% # 2 - BFS
+% # 3 - DFS Limitada
+% # 4 - Gulosa
+% # 5 - A*
+
+obterEstatisticas(1,Caminho,Distancia) :-
+    statistics(global_stack,[M1,L1]),
+    time(resolveDFS('São Victor',Caminho,Distancia)),
+    statistics(global_stack,[M2,L2]),
+    Mem is M2 - M1,
+    write("Memória usada: "),write(Mem),nl,
+	write("Custo: "),write(Distancia).
+
+obterEstatisticas(2,Caminho,Distancia) :-
+    statistics(global_stack,[M1,L1]),
+    time(resolveBFS('São Victor',Caminho,Distancia)),
+    statistics(global_stack,[M2,L2]),
+    Mem is M2 - M1,
+    write("Memória usada: "),write(Mem),nl,
+	write("Custo: "),write(Distancia).
+
+obterEstatisticas(3,Caminho,Distancia) :-
+    statistics(global_stack, [M1,L1]),
+    time(resolveLimitada('São Victor',Caminho,Distancia,5)),
+    statistics(global_stack, [M2,L2]),
+    Mem is M2 - M1,
+    write("Memória usada: "),write(Mem),nl,
+	write("Custo: "),write(Distancia).
+
+obterEstatisticas(4,C,Distancia) :-
+    statistics(global_stack, [M1,L1]),
+    time(resolveGulosa('São Victor',C/Distancia)),
+    statistics(global_stack, [M2,L2]),
+    Mem is M2 - M1,
+    write("Memória usada: "),write(Mem),nl,
+	write("Custo: "),write(Distancia).
+
+obterEstatisticas(5,C,Distancia) :-
+    statistics(global_stack, [M1,L1]),
+    time(resolveAEstrela('São Victor',C/Distancia)),
+    statistics(global_stack, [M2,L2]),
+    Mem is M2 - M1,
+    write("Memória usada: "),write(Mem),nl,
+	write("Custo: "),write(Distancia).

@@ -29,7 +29,7 @@ territorio(Nodo,[Nodo|Caminho]):-
 % 3 - Gulosa
 % 4 - A*
 
-/* FALTA O INDICADOR DE PRODUTIVIDADE - QUANTIDADE !!! */
+/* FALTA O INDICADOR DE PRODUTIVIDADE - QUANTIDADE !!! POR ISSO, AINDA NÃO FUNCIONAL */
 produtividade(Nodo,Distancia,Quantidade,1) :- resolveDFS(Nodo,[Nodo|Caminho],Distancia).
 
 produtividade(Nodo,Distancia,Quantidade,2) :- resolveBFS(Nodo,[Nodo|Caminho],Distancia).
@@ -39,3 +39,13 @@ produtividade(Nodo,Distancia,Quantidade,3) :- resolveGulosa(Nodo,Caminho/Distanc
 
 produtividade(Nodo,Distancia,Quantidade,4) :- resolveAEstrela(Nodo,Caminho/Distancia),
 											  calculaQuantidade(Caminho,Quantidade),!.
+
+%------------------------------------Funcionalidade 4------------------------------------
+%Escolher o circuito mais rápido (usando o critério da distância).
+
+/* ??????????????????????????????????????????????????????????????????????????????????? */
+
+%------------------------------------Funcionalidade 5------------------------------------
+%Escolher o circuito mais ecológico (usando critério de tempo).
+
+/* USAR OS PREDICADOS tempoEntrega IMPLEMENTADOS EM AUXILIARES2.PL */
