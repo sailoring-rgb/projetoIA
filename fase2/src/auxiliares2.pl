@@ -13,6 +13,7 @@ destinoEncomenda(IdEnc,Destino) :-
     estafeta(IdEstaf,Lista),
     membro((IdEnc,A,B,Destino),Lista).
 
+
 % Devolve a velocidade a que uma encomenda foi entregue
 % # Bicicleta - 10 km/h
 % # Moto - 35 km/h
@@ -23,16 +24,47 @@ velocidadeEntrega(IdEnc,Velocidade) :-
     ((Transporte == 'Bicicleta' -> Velocidade is 10 - Peso * 0.7);
      (Transporte == 'Moto' -> Velocidade is 35 - Peso * 0.5);
      (Transporte == 'Carro' -> Velocidade is 25 - Peso * 0.1)).
-/*
-O método tempoEntrega está a bater mal porque existem dois caminhos desde a Green Distribuition até São Victor.
-FALTA, POR ISSO, IMPLEMENTAR O MÉTODO PARA CALCULAR O CAMINHO MAIS CURTO (TALVEZ PELO ALGORITMO A*).
-Nesse método, tem de ser devolvido não só o caminho mais curto, como a distância do caminho mais curto.
-*/
-% Devolve o tempo de entrega de uma encomenda
-tempoEntrega(IdEnc,TempoTotal) :-
+
+
+% Devolve o tempo de entrega de uma encomenda, consoante o tipo de pesquisa adotado:
+% # 1 - DFS
+% # 2 - BFS
+% # 3 - DFS Limitada
+% # 4 - Gulosa
+% # 5 - A*
+tempoEntrega(IdEnc,TempoTotal,1) :-
     destinoEncomenda(IdEnc,Destino),
-    melhorCaminho(greenDistribuition,Destino,Caminho,DistanciaTotal),
+    resolveDFS(Destino,[Destino|Caminho],Distancia),
     velocidadeEntrega(IdEnc,Velocidade),
+    DistanciaTotal is Distancia*2,
+    TempoTotal is DistanciaTotal / Velocidade.
+
+tempoEntrega(IdEnc,TempoTotal,2) :-
+    destinoEncomenda(IdEnc,Destino),
+    resolveBFS(Destino,Caminho,Distancia),
+    velocidadeEntrega(IdEnc,Velocidade),
+    DistanciaTotal is Distancia*2,
+    TempoTotal is DistanciaTotal / Velocidade.
+
+tempoEntrega(IdEnc,TempoTotal,3) :-
+    destinoEncomenda(IdEnc,Destino),
+    resolveLimitada(Destino,Caminho,Distancia,5),
+    velocidadeEntrega(IdEnc,Velocidade),
+    DistanciaTotal is Distancia*2,
+    TempoTotal is DistanciaTotal / Velocidade.
+
+tempoEntrega(IdEnc,TempoTotal,4) :-
+    destinoEncomenda(IdEnc,Destino),
+    resolveGulosa(Destino,Caminho/Distancia),
+    velocidadeEntrega(IdEnc,Velocidade),
+    DistanciaTotal is Distancia*2,
+    TempoTotal is DistanciaTotal / Velocidade.
+
+tempoEntrega(IdEnc,TempoTotal,5) :-
+    destinoEncomenda(IdEnc,Destino),
+    resolveAEstrela(Nodo,Caminho/Distancia),
+    velocidadeEntrega(IdEnc,Velocidade),
+    DistanciaTotal is Distancia*2,
     TempoTotal is DistanciaTotal / Velocidade.
 
 %---------------------------------------------------Anexos---------------------------------------------------
