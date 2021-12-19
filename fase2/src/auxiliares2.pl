@@ -168,6 +168,32 @@ todosOsCaminhosAux(Territorio,[P | T],L) :-
 
 allCaminhosTerritorio(A,B,T,L) :- findall(Caminho,(caminho(A,B,Caminho),membro(T,Caminho)),L).
 
+%--------------------------------------Auxiliares Funcionalidade 2--------------------------------------
+
+circuitosMaiorNumEntregasAux([C],MaxE,L) :- numEntregasCircuito(C,NumE), (NumE == MaxE -> adiciona(C,L1,L) ; L = []).
+circuitosMaiorNumEntregasAux([C | T],MaxE,L) :- 
+    numEntregasCircuito(C,NumE),
+    circuitosMaiorNumEntregasAux(T,MaxE,L1),
+    (NumE == MaxE -> inverso(C,CAux),
+    apagaCabeca(CAux,CV),
+    append(C,CV,Circuito),adiciona(Circuito,L1,L) ; L = L1).
+
+maiorNumEntregasCircuito([C],Max) :- numEntregasCircuito(C,Max).
+maiorNumEntregasCircuito([C | T],Max) :-
+    numEntregasCircuito(C,NumE),
+    maiorNumEntregasCircuito(T,Max1),
+    (NumE > Max1 -> Max is NumE; Max is Max1).
+
+numEntregasCircuito([],0).
+numEntregasCircuito([Freg],N) :- findall(IdEstaf, estafeta(IdEstaf,_), Ets), contaEntregasFreguesia(Freg,Ets,N).
+numEntregasCircuito([Freg | T],N) :- 
+    findall(IdEstaf, estafeta(IdEstaf,_), Ets),
+    contaEntregasFreguesia(Freg,Ets,Num),
+    numEntregasCircuito(T,N1),
+    N is Num + N1.
+
+allCaminhos(A,L) :- findall(Caminho,(caminho(A,B,Caminho), A\=B),L).
+
 %---------------------------------------------------Anexos---------------------------------------------------
 
 adjacente(Nodo,ProxNodo,C) :- aresta(Nodo,ProxNodo,C).
