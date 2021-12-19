@@ -1,7 +1,5 @@
-:- consult('baseConhecimento.pl').
+:- consult('baseConhecimento2.pl').
 :- consult('auxiliares2.pl').
-:- consult('invariantes.pl').
-:- consult('evolucaoInvolucao.pl').
 
 :- set_prolog_flag(discontiguous_warnings,off).
 :- set_prolog_flag(single_var_warnings,off).

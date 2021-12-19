@@ -78,81 +78,12 @@ estafeta(5,[(611111154895,2.8,'Bicicleta','Dume'),(150393815151,4.8,'Carro','Sã
 estafeta(6,[(800000000234,4.9,'Carro','Gualtar'),(172123212430,4.9,'Carro','Maximinos'),(142019203922,0,'Bicicleta','Gualtar')]).
 estafeta(7,[(121203928222,2.9,'Bicicleta','Maximinos')]).
 estafeta(8,[(154268745963,4.5,'Carro','Lamas'),(774951266458,1.2,'Mota','Figueiredo')]).
-estafeta(9,[(122457456652,2.3,'Carro','Figueiredo')]).
+estafeta(9,[(122457456652,2.3,'Carro','Gualtar')]).
 estafeta(10,[(901230054687,3.0,'Bicicleta','Priscos'),(758846125940,3.9,'Bicicleta','Tebosa'),(214568744021,3.6,'Bicicleta','Lamas'),(125004357899,4.3,'Mota','Morreira')]).
 estafeta(11,[(115542001235,2.5,'Carro','Esporões'),(125489652311,4.1,'Bicicleta','Tadim')]).
 estafeta(12,[(812485569441,3.7,'Carro','Cabreiros')]).
-estafeta(13,[(122145875630,4.0,'Mota','Figueiredo'),(124562335601,3.1,'Carro','Maximinos'),(458751021235,2.6,'Bicicleta','Tebosa'),(124501236889,4.2,'Bicicleta','Figueiredo')]).
+estafeta(13,[(122145875630,4.0,'Mota','São Victor'),(124562335601,3.1,'Carro','Maximinos'),(458751021235,2.6,'Bicicleta','Tebosa'),(124501236889,4.2,'Bicicleta','Figueiredo')]).
 estafeta(14,[(214501239987,3.3,'Carro','Ruilhe'),(723100045791,2.8,'Carro','São Vicente')]).
-estafeta(15,[(312450012994,3.4,'Carro','Priscos'),(124568790122,2.7,'Bicicleta','Morreira'),(154200113287,3.5,'Carro','Lamas')]).
+estafeta(15,[(312450012994,3.4,'Carro','Priscos'),(124568790122,2.7,'Bicicleta','São Victor'),(154200113287,3.5,'Carro','Lamas')]).
 estafeta(16,[(890125440127,4.3,'Carro','Palmeira')]).
-estafeta(17,[(125400133654,3.8,'Mota','Cabreiros'),(124578512366,4.1,'Carro','Palmeira')]).
-
-%---------------------------Grafo------------------------------
-% Termo-grafo: #grafo([b,c,d,f,g,h,k],[e(b,c),e(b,g),e(b,h), ...])
-% Aresta: #Inicio, Fim, Distância
-
-grafo(['Green Distribuition','Tadim','Esporões','Maximinos','Dume','São Vicente','São Victor','Gualtar','Figueiredo','Lamas',
-          'Morreira','Palmeira','Tebosa','Priscos','Ruilhe','Cabreiros']).
-
-aresta('Green Distribuition','Priscos',4.9).
-aresta('Green Distribuition','Maximinos',4.5).
-aresta('Green Distribuition','Figueiredo',2.7).
-aresta('Priscos','Tebosa',2.5).
-aresta('Priscos','Ruilhe',2.6).
-aresta('Priscos','Tadim',3.2).
-aresta('Tebosa','Ruilhe',2.2).
-aresta('Ruilhe','Tadim',2.1).
-aresta('Tadim','Cabreiros',6.4).
-aresta('Figueiredo','Lamas',1.3).
-aresta('Figueiredo','Esporões',3.4).
-aresta('Lamas','Esporões',2.8).
-aresta('Lamas','Morreira',2.9).
-aresta('Esporões','Morreira',2.8).
-aresta('Maximinos','Dume',3.7).
-aresta('Maximinos','São Vicente',3.9).
-aresta('Dume','São Vicente',4.3).
-aresta('Dume','Palmeira',4.8).
-aresta('São Vicente','São Victor',2.15).
-aresta('São Victor','Gualtar',3.8).
-
-% Origem: #Estado inicial
-origem('Green Distribuition').
-
-% Goal: #Estado objetivo
-goal('Green Distribuition').
-
-% PontoEntrega: #Destino da encomenda
-pontoEntrega('Tadim').
-pontoEntrega('Esporões').
-pontoEntrega('Maximinos').
-pontoEntrega('Dume').
-pontoEntrega('São Vicente').
-pontoEntrega('São Victor').
-pontoEntrega('Gualtar').
-pontoEntrega('Priscos').
-pontoEntrega('Cabreiros').
-pontoEntrega('Figueiredo').
-pontoEntrega('Lamas').
-pontoEntrega('Morreira').
-pontoEntrega('Palmeira').
-pontoEntrega('Tebosa').
-pontoEntrega('Ruilhe').
-
-% Estimativas
-estima('Green Distribuition', 0).
-estima('Figueiredo',2.7).
-estima('Priscos',4.5).
-estima('Maximinos', 4.5).
-estima('Dume',7.5).
-estima('Palmeira',9).
-estima('São Vicente',6.5).
-estima('São Victor', 8).
-estima('Gualtar',4).
-estima('Tebosa',6.7).
-estima('Ruilhe',7).
-estima('Tadim',6.2).
-estima('Cabreiros',11).
-estima('Lamas',2).
-estima('Morreira',5.7).
-estima('Esporões',5).
+estafeta(17,[(125400133654,3.8,'Mota','Cabreiros'),(124578512366,4.1,'Carro','São Victor')]).

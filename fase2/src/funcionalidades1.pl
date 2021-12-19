@@ -1,4 +1,3 @@
-:- consult('baseConhecimento.pl').
 :- consult('auxiliares1.pl').
 :- consult('invariantes.pl').
 :- consult('evolucaoInvolucao.pl').
