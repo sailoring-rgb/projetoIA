@@ -156,48 +156,43 @@ distanciaCircuito([Freg,NextFreg | T],D) :-
     adjacente(Freg,NextFreg,Dist),
     distanciaCircuito([NextFreg | T],D1),
     D is (Dist + D1)*2.
-
+/*
 % Devolve o tempo de entrega de uma encomenda, consoante o tipo de pesquisa adotado:
 % # 1 - DFS
 % # 2 - BFS
 % # 3 - DFS Limitada
 % # 4 - Gulosa
 % # 5 - A*
-tempoEntrega(IdEnc,TempoTotal,1) :-
+tempoEntrega(IdEnc,Tempo,1) :-
     destinoEncomenda(IdEnc,Destino),
     resolveDFS(Destino,[Destino|Caminho],Distancia),
     velocidadeEntrega(IdEnc,Velocidade),
-    DistanciaTotal is Distancia*2,
-    TempoTotal is DistanciaTotal / Velocidade.
+    Tempo is Distancia/Velocidade.
 
-tempoEntrega(IdEnc,TempoTotal,2) :-
+tempoEntrega(IdEnc,Tempo,2) :-
     destinoEncomenda(IdEnc,Destino),
     resolveBFS(Destino,Caminho,Distancia),
     velocidadeEntrega(IdEnc,Velocidade),
-    DistanciaTotal is Distancia*2,
-    TempoTotal is DistanciaTotal / Velocidade.
+    Tempo is Distancia/Velocidade.
 
-tempoEntrega(IdEnc,TempoTotal,3) :-
+tempoEntrega(IdEnc,Tempo,3) :-
     destinoEncomenda(IdEnc,Destino),
     resolveLimitada(Destino,Caminho,Distancia,5),
     velocidadeEntrega(IdEnc,Velocidade),
-    DistanciaTotal is Distancia*2,
-    TempoTotal is DistanciaTotal / Velocidade.
+    Tempo is Distancia/Velocidade.
 
-tempoEntrega(IdEnc,TempoTotal,4) :-
+tempoEntrega(IdEnc,Tempo,4) :-
     destinoEncomenda(IdEnc,Destino),
     resolveGulosa(Destino,Caminho/Distancia),
     velocidadeEntrega(IdEnc,Velocidade),
-    DistanciaTotal is Distancia*2,
-    TempoTotal is DistanciaTotal / Velocidade.
+    Tempo is Distancia/Velocidade.
 
-tempoEntrega(IdEnc,TempoTotal,5) :-
+tempoEntrega(IdEnc,Tempo,5) :-
     destinoEncomenda(IdEnc,Destino),
     resolveAEstrela(Destino,Caminho/Distancia),
     velocidadeEntrega(IdEnc,Velocidade),
-    DistanciaTotal is Distancia*2,
-    TempoTotal is DistanciaTotal / Velocidade.
-    
+    Tempo is Distancia/Velocidade.
+*/
 %--------------------------------------Auxiliares Funcionalidade 1--------------------------------------
 
 caminho(A,B,P) :- caminho1(A,B,[B],P).
