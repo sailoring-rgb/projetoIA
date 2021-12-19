@@ -13,8 +13,13 @@
 Se o estafeta realizar mais do que uma entrega num percurso,
 tem-se de ter em atenção o transporte que ele usa e a quantidade de peso que ele transporta.
 */
-resolveDFS(Nodo,[Nodo|Caminho],Distancia) :-
-    profundidade(Nodo,[Nodo],Caminho,Distancia).
+% # Caminho: Green Distribuition -> Ponto de Entrega -> Green Distribuition
+% # Distância: Custo do Circuito Inteiro.
+resolveDFS(Nodo,Caminho,Distancia) :-
+    profundidade(Nodo,[Nodo],CaminhoVolta,Dist),
+    inverso(CaminhoVolta,CaminhoIda),
+    append(CaminhoIda,[Nodo|CaminhoVolta],Caminho),
+    Distancia is Dist*2.
 
 profundidade(Nodo,_,[],0) :- goal(Nodo).
 profundidade(Nodo,Historico,[ProxNodo|Caminho],DistanciaT) :-
@@ -30,11 +35,17 @@ profundidade(Nodo,Historico,[ProxNodo|Caminho],DistanciaT) :-
 Se o estafeta realizar mais do que uma entrega num percurso,
 tem-se de ter em atenção o transporte que ele usa e a quantidade de peso que ele transporta.
 */
+% # Caminho: Green Distribuition -> Ponto de Entrega -> Green Distribuition
+% # Distância: Custo do Circuito Inteiro.
 resolveBFS(Nodo,Caminho,Distancia) :-
     goal(NodoFinal),
-    largura(NodoFinal,[[Nodo]],Caminho,Distancia).
+    largura(NodoFinal,[[Nodo]],CaminhoAux,Dist),
+    apagaCabeca(CaminhoAux,CaminhoVolta),
+    inverso(CaminhoVolta,CaminhoIda),
+    append(CaminhoIda,[Nodo|CaminhoVolta],Caminho),
+    Distancia is Dist*2.
 
-largura(NodoFinal,[[NodoFinal|T]|_],Caminho,0) :- reverse([NodoFinal|T],Caminho).
+largura(NodoFinal,[[NodoFinal|T]|_],Caminho,0) :- inverso([NodoFinal|T],Caminho).
 largura(NodoFinal,[Lista|Outros],Caminho,DistanciaT) :-
     Lista = [A|_],
     findall([X|Lista],(NodoFinal \== A, adjacente(A,X,_),nao(membro(X,Lista))),Novos),
@@ -50,9 +61,15 @@ largura(NodoFinal,[Lista|Outros],Caminho,DistanciaT) :-
 Se o estafeta realizar mais do que uma entrega num percurso,
 tem-se de ter em atenção o transporte que ele usa e a quantidade de peso que ele transporta.
 */
+% # Caminho: Green Distribuition -> Ponto de Entrega -> Green Distribuition
+% # Distância: Custo do Circuito Inteiro.
 % # Limite - Número limite de nós a procurar.
 resolveLimitada(Nodo,Caminho,Distancia,Limite) :-
-    profundidadeLimitada(Nodo,[Nodo],Caminho,Distancia,Limite).
+    profundidadeLimitada(Nodo,[Nodo],CaminhoAux,Dist,Limite),
+    apagaCabeca(CaminhoAux,CaminhoVolta),
+    inverso(CaminhoVolta,CaminhoIda),
+    append(CaminhoIda,[Nodo|CaminhoVolta],Caminho),
+    Distancia is Dist*2.
 
 profundidadeLimitada(Nodo,_,[],0,_) :- goal(Nodo).
 profundidadeLimitada(Nodo,Historico,[ProxNodo|Caminho],DistanciaT,Limite) :-
@@ -65,10 +82,15 @@ profundidadeLimitada(Nodo,Historico,[ProxNodo|Caminho],DistanciaT,Limite) :-
 
 %--------------------------------------Pesquisa Gulosa--------------------------------------
 
+% # Caminho: Green Distribuition -> Ponto de Entrega -> Green Distribuition
+% # Custo: Custo do Circuito Inteiro.
 resolveGulosa(Nodo,Caminho/Custo) :-
     estima(Nodo,Estima),
-    agulosa([[Nodo]/0/Estima],Invertido/Custo/_),
-    inverso(Invertido,Caminho).
+    agulosa([[Nodo]/0/Estima],CaminhoIda/CustoIda/_),
+    inverso(CaminhoIda,CaminhoAux),
+    apagaCabeca(CaminhoAux,CaminhoVolta),
+    append(CaminhoIda,CaminhoVolta,Caminho),
+    Custo is CustoIda*2.
 
 agulosa(Caminhos,Caminho) :-
     obter_melhor(Caminhos,Caminho),
@@ -85,10 +107,15 @@ expande_gulosa(Caminho,Expandidos) :- findall(NovoCaminho,adjacenteV2(Caminho,No
 
 %------------------------------------Pesquisa A Estrela------------------------------------
 
+% # Caminho: Green Distribuition -> Ponto de Entrega -> Green Distribuition
+% # Custo: Custo do Circuito Inteiro.
 resolveAEstrela(Nodo,Caminho/Custo) :-
     estima(Nodo,Estima),
-    aestrela([[Nodo]/0/Estima],InvCaminho/Custo/_),
-    inverso(InvCaminho,Caminho).
+    aestrela([[Nodo]/0/Estima],CaminhoIda/CustoIda/_),
+    inverso(CaminhoIda,CaminhoAux),
+    apagaCabeca(CaminhoAux,CaminhoVolta),
+    append(CaminhoIda,CaminhoVolta,Caminho),
+    Custo is CustoIda*2.
 
 aestrela(Caminhos,Caminho) :-
     obter_melhor(Caminhos,Caminho),
@@ -209,9 +236,12 @@ obter_melhor([_|Caminhos],MelhorCaminho) :-
     obter_melhor(Caminhos,MelhorCaminho).
 
 inverso(Xs,Ys) :- inverso(Xs,[],Ys).
-
 inverso([],Xs,Xs).
 inverso([X|Xs],Ys,Zs) :- inverso(Xs,[X|Ys],Zs).
 
 seleciona(E,[E|Xs],Xs).
 seleciona(E,[X|Xs],[X|Ys]) :- seleciona(E,Xs,Ys).
+
+apagaCabeca([],[]).
+apagaCabeca([X],[]).
+apagaCabeca([H|T],T).

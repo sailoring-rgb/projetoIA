@@ -162,7 +162,7 @@ funcionalidade(12) :-
 
 obterEstatisticas(1,Caminho,Distancia) :-
     statistics(global_stack,[M1,L1]),
-    time(resolveDFS('São Victor',Caminho,Distancia)),
+    time(resolveDFS('Lamas',Caminho,Distancia)),
     statistics(global_stack,[M2,L2]),
     Mem is M2 - M1,
     write("Memória usada: "),write(Mem),nl,
@@ -170,7 +170,7 @@ obterEstatisticas(1,Caminho,Distancia) :-
 
 obterEstatisticas(2,Caminho,Distancia) :-
     statistics(global_stack,[M1,L1]),
-    time(resolveBFS('São Victor',Caminho,Distancia)),
+    time(resolveBFS('Lamas',Caminho,Distancia)),
     statistics(global_stack,[M2,L2]),
     Mem is M2 - M1,
     write("Memória usada: "),write(Mem),nl,
@@ -178,7 +178,7 @@ obterEstatisticas(2,Caminho,Distancia) :-
 
 obterEstatisticas(3,Caminho,Distancia) :-
     statistics(global_stack, [M1,L1]),
-    time(resolveLimitada('São Victor',Caminho,Distancia,5)),
+    time(resolveLimitada('Lamas',Caminho,Distancia,5)),
     statistics(global_stack, [M2,L2]),
     Mem is M2 - M1,
     write("Memória usada: "),write(Mem),nl,
@@ -186,7 +186,7 @@ obterEstatisticas(3,Caminho,Distancia) :-
 
 obterEstatisticas(4,C,Distancia) :-
     statistics(global_stack, [M1,L1]),
-    time(resolveGulosa('São Victor',C/Distancia)),
+    time(resolveGulosa('Lamas',C/Distancia)),
     statistics(global_stack, [M2,L2]),
     Mem is M2 - M1,
     write("Memória usada: "),write(Mem),nl,
@@ -194,7 +194,7 @@ obterEstatisticas(4,C,Distancia) :-
 
 obterEstatisticas(5,C,Distancia) :-
     statistics(global_stack, [M1,L1]),
-    time(resolveAEstrela('São Victor',C/Distancia)),
+    time(resolveAEstrela('Lamas',C/Distancia)),
     statistics(global_stack, [M2,L2]),
     Mem is M2 - M1,
     write("Memória usada: "),write(Mem),nl,
