@@ -150,6 +150,13 @@ encomendasEstafFreg2(PontoEntrega,[(IdEnc,_,_,Freg)|T],Lista) :-
      adiciona(IdEnc,Lista0,Lista));
      encomendasEstafFreg2(PontoEntrega,T,Lista)).
 
+distanciaCircuito([Freg],0).
+distanciaCircuito([Freg,NextFreg],D) :- adjacente(Freg,NextFreg,D). 
+distanciaCircuito([Freg,NextFreg | T],D) :-  
+    adjacente(Freg,NextFreg,Dist),
+    distanciaCircuito([NextFreg | T],D1),
+    D is (Dist + D1)*2.
+
 %--------------------------------------Auxiliares Funcionalidade 1--------------------------------------
 
 caminho(A,B,P) :- caminho1(A,B,[B],P).
@@ -182,7 +189,7 @@ maiorNumEntregasCircuito([C],Max) :- numEntregasCircuito(C,Max).
 maiorNumEntregasCircuito([C | T],Max) :-
     numEntregasCircuito(C,NumE),
     maiorNumEntregasCircuito(T,Max1),
-    (NumE > Max1 -> Max is NumE; Max is Max1).
+    (NumE > Max1 -> Max = NumE; Max = Max1).
 
 numEntregasCircuito([],0).
 numEntregasCircuito([Freg],N) :- findall(IdEstaf, estafeta(IdEstaf,_), Ets), contaEntregasFreguesia(Freg,Ets,N).
@@ -193,6 +200,22 @@ numEntregasCircuito([Freg | T],N) :-
     N is Num + N1.
 
 allCaminhos(A,L) :- findall(Caminho,(caminho(A,B,Caminho), A\=B),L).
+
+
+%--------------------------------------Auxiliares Funcionalidade 4--------------------------------------
+
+circuitoMaisRapidoAux([C],_,Circuito) :- inverso(C,CAux), apagaCabeca(CAux,CV), append(C,CV,Circuito).
+circuitoMaisRapidoAux([C | T],D,Circuito) :- 
+    distanciaCircuito(C,Dist),
+    circuitoMaisRapidoAux(T,D,C1),
+    (Dist == D -> Circuito = C; Circuito = C1).
+
+distanciaCircuitoMaisRapido([C],D) :- distanciaCircuito(C,D).
+distanciaCircuitoMaisRapido([C | T], D) :- 
+    distanciaCircuito(C,Dist),
+    distanciaCircuitoMaisRapido(T,D1),
+    (Dist < D1 -> D = Dist; D = D1).
+
 
 %---------------------------------------------------Anexos---------------------------------------------------
 

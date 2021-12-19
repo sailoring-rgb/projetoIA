@@ -54,7 +54,14 @@ produtividade(Nodo,Distancia,Quantidade,5) :- resolveAEstrela(Nodo,Caminho/Dista
 %----------------------------------------Funcionalidade 4----------------------------------------
 % Escolher o circuito mais rápido (usando o critério da distância).
 
-
+circuitoMaisRapido(C) :-
+    allCaminhos('Green Distribuition',L), % se for em geral
+    %todosOsCaminhosTerritorio('Territorio',L) % se for de um determinado território
+    distanciaCircuitoMaisRapido(L,D),
+    circuitoMaisRapidoAux(L,D,C1),
+    inverso(C1,CAux),
+    apagaCabeca(CAux,CV),
+    append(C1,CV,C).
 
 %----------------------------------------Funcionalidade 5----------------------------------------
 % Escolher o circuito mais ecológico (usando critério de tempo).
