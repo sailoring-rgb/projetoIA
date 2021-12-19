@@ -156,11 +156,10 @@ funcionalidade(12) :-
 
 % # 1 - DFS
 % # 2 - BFS
-% # 3 - DFS Limitada
+% # 3 - Limitada em Profundidade
 % # 4 - Gulosa
 % # 5 - A*
-
-obterEstatisticas(1,Caminho,Distancia) :-
+obterEstatisticas(1) :-
     statistics(global_stack,[M1,L1]),
     time(resolveDFS('Lamas',Caminho,Distancia)),
     statistics(global_stack,[M2,L2]),
@@ -168,7 +167,7 @@ obterEstatisticas(1,Caminho,Distancia) :-
     write("Memória usada: "),write(Mem),nl,
 	write("Custo: "),write(Distancia).
 
-obterEstatisticas(2,Caminho,Distancia) :-
+obterEstatisticas(2) :-
     statistics(global_stack,[M1,L1]),
     time(resolveBFS('Lamas',Caminho,Distancia)),
     statistics(global_stack,[M2,L2]),
@@ -176,7 +175,7 @@ obterEstatisticas(2,Caminho,Distancia) :-
     write("Memória usada: "),write(Mem),nl,
 	write("Custo: "),write(Distancia).
 
-obterEstatisticas(3,Caminho,Distancia) :-
+obterEstatisticas(3) :-
     statistics(global_stack, [M1,L1]),
     time(resolveLimitada('Lamas',Caminho,Distancia,5)),
     statistics(global_stack, [M2,L2]),
@@ -184,7 +183,7 @@ obterEstatisticas(3,Caminho,Distancia) :-
     write("Memória usada: "),write(Mem),nl,
 	write("Custo: "),write(Distancia).
 
-obterEstatisticas(4,C,Distancia) :-
+obterEstatisticas(4) :-
     statistics(global_stack, [M1,L1]),
     time(resolveGulosa('Lamas',C/Distancia)),
     statistics(global_stack, [M2,L2]),
@@ -192,7 +191,7 @@ obterEstatisticas(4,C,Distancia) :-
     write("Memória usada: "),write(Mem),nl,
 	write("Custo: "),write(Distancia).
 
-obterEstatisticas(5,C,Distancia) :-
+obterEstatisticas(5) :-
     statistics(global_stack, [M1,L1]),
     time(resolveAEstrela('Lamas',C/Distancia)),
     statistics(global_stack, [M2,L2]),

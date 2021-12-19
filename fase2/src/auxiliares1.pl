@@ -149,10 +149,10 @@ encomendasDoEstafeta(IdEstaf,Lista) :-
 
 % Devolve a lista dos ids das encomendas a partir da lista de encomendas de um estafeta: [(IdEnc,Nota,Velocidade,Transporte,Rua,Freguesia)|T]
 encomendasDaLista([],[]).
-encomendasDaLista([(X,_,_,_)],[X]).
-encomendasDaLista([(X,_,_,_)|T],Lista) :-
+encomendasDaLista([(X,A,B,C)],[(X,A,B,C)]).
+encomendasDaLista([(X,A,B,C)|T],Lista) :-
 	encomendasDaLista(T,Lista0),
-	adiciona(X,Lista0,Lista).
+	adiciona((X,A,B,C),Lista0,Lista).
 
 % Verifica se uma encomenda está associada a um determinado estafeta
 encomendaPertenceEstafeta([(IdEnc,_,_,_)|T],IdEnc).
@@ -195,13 +195,13 @@ estafetaEncCliente(IdEnc,IdEstaf) :- estafetaFezEncomenda(IdEstaf,IdEnc).
 % Indica se um dado estafeta entregou determinada encomenda
 estafetaFezEncomenda(IdEstaf, IdEnc) :- 
 	encomendasDoEstafeta(IdEstaf,L),
-	membro(IdEnc,L).
+	membro((IdEnc,A,B,C),L).
 
 %--------------------------------------Auxiliares para Funcionalidade 3--------------------------------------
 
 % Devolve a lista dos ids dos clientes que estão associados aos ids das encomendas
 listaClientesDasEnc([],[]).
-listaClientesDasEnc([IdEnc|T],Lista) :-
+listaClientesDasEnc([(IdEnc,_,_,_)|T],Lista) :-
     clienteDaEncomenda(IdEnc,IdCliente),
     listaClientesDasEnc(T,Lista1),
     adiciona(IdCliente,Lista1,Lista).
@@ -438,18 +438,18 @@ estafetasMaiorRacio(Ratio,R,L) :-
 contaEncomendasEstafetaLista(IdEstaf,[],0).
 contaEncomendasEstafetaLista(IdEstaf,[IdEnc],1) :-
     encomendasDoEstafeta(IdEstaf,R),
-    membro(IdEnc,R).
+    membro((IdEnc,A,B,C),R).
 contaEncomendasEstafetaLista(IdEstaf,[IdEnc],0) :-
     encomendasDoEstafeta(IdEstaf,R),
-    nao(membro(IdEnc,R)).
+    nao(membro((IdEnc,A,B,C),R)).
 contaEncomendasEstafetaLista(IdEstaf,[IdEnc|T],Contador) :-
     encomendasDoEstafeta(IdEstaf,R),
-    membro(IdEnc,R),
+    membro((IdEnc,A,B,C),R),
     contaEncomendasEstafetaLista(IdEstaf,T,Contador1),
     Contador is Contador1+1.
 contaEncomendasEstafetaLista(IdEstaf,[IdEnc|T],Contador) :-
     encomendasDoEstafeta(IdEstaf,R),
-    nao(membro(IdEnc,R)),
+    nao(membro((IdEnc,A,B,C),R)),
     contaEncomendasEstafetaLista(IdEstaf,T,Contador).
 
 % Devolve uma lista com as encomendas não entregues e entregues com atraso

@@ -9,43 +9,51 @@
 
 :- style_check(-singleton).
 
-%------------------------------------Funcionalidade 1------------------------------------
+/*
+%---------------------------------------Circuito de Entrega--------------------------------------
+
+circuito(PontoEntrega,Distancia,Quantidade,Tempo,5) :-
+    resolveAEstrela(PontoEntrega,Caminho/Distancia),
+    velocidadeEntrega(IdEnc,Velocidade),
+    Tempo is Distancia/Velocidade.
+*/
+%----------------------------------------Funcionalidade 1----------------------------------------
 % Gerar os circuitos de entrega, caso existam, que cubram um determinado território. 
 
 todosOsCaminhosTerritorio(Territorio,L) :- 
-    solucoes(Ponto,pontoEntrega(P),Pts),
+    solucoes(Ponto,pontoEntrega(Ponto),Pts),
     todosOsCaminhosAux(Territorio,Pts,L).
 
-%------------------------------------Funcionalidade 2------------------------------------
+%----------------------------------------Funcionalidade 2----------------------------------------
 % Identificar quais os circuitos com maior número de entregas.
 
 /* ??????????????????????????????????????????????????????????????????????????????????? */
 
-%------------------------------------Funcionalidade 3------------------------------------
+%----------------------------------------Funcionalidade 3----------------------------------------
 % Comparar circuitos de entrega tendo em conta os indicadores de produtividade (distância e quantidade).
 
-% 1 - DFS
-% 2 - BFS
-% 3 - Gulosa
-% 4 - A*
-
+% # 1 - DFS
+% # 2 - BFS
+% # 3 - Limitada em Profundidade
+% # 4 - Gulosa
+% # 5 - A*
 /* FALTA O INDICADOR DE PRODUTIVIDADE - QUANTIDADE !!! POR ISSO, AINDA NÃO FUNCIONAL */
 produtividade(Nodo,Distancia,Quantidade,1) :- resolveDFS(Nodo,[Nodo|Caminho],Distancia).
 
 produtividade(Nodo,Distancia,Quantidade,2) :- resolveBFS(Nodo,[Nodo|Caminho],Distancia).
 
-produtividade(Nodo,Distancia,Quantidade,3) :- resolveGulosa(Nodo,Caminho/Distancia),
+produtividade(Nodo,Distancia,Quantidade,4) :- resolveGulosa(Nodo,Caminho/Distancia),
 											  calculaQuantidade(Caminho,Quantidade),!.
 
-produtividade(Nodo,Distancia,Quantidade,4) :- resolveAEstrela(Nodo,Caminho/Distancia),
+produtividade(Nodo,Distancia,Quantidade,5) :- resolveAEstrela(Nodo,Caminho/Distancia),
 											  calculaQuantidade(Caminho,Quantidade),!.
 
-%------------------------------------Funcionalidade 4------------------------------------
+%----------------------------------------Funcionalidade 4----------------------------------------
 % Escolher o circuito mais rápido (usando o critério da distância).
 
-/* ??????????????????????????????????????????????????????????????????????????????????? */
 
-%------------------------------------Funcionalidade 5------------------------------------
+
+%----------------------------------------Funcionalidade 5----------------------------------------
 % Escolher o circuito mais ecológico (usando critério de tempo).
 
 /* USAR OS PREDICADOS tempoEntrega IMPLEMENTADOS EM AUXILIARES2.PL */

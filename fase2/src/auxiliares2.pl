@@ -8,11 +8,6 @@
 
 %-------------------------------Pesquisa em Profundidade (DFS)-------------------------------
 
-/*
-                FUNCIONAL MAS TALVEZ FALTE:
-Se o estafeta realizar mais do que uma entrega num percurso,
-tem-se de ter em atenção o transporte que ele usa e a quantidade de peso que ele transporta.
-*/
 % # Caminho: Green Distribuition -> Ponto de Entrega -> Green Distribuition
 % # Distância: Custo do Circuito Inteiro.
 resolveDFS(Nodo,Caminho,Distancia) :-
@@ -30,11 +25,6 @@ profundidade(Nodo,Historico,[ProxNodo|Caminho],DistanciaT) :-
 
 %---------------------------------Pesquisa em Largura (BFS)---------------------------------
 
-/*
-                FUNCIONAL MAS TALVEZ FALTE:
-Se o estafeta realizar mais do que uma entrega num percurso,
-tem-se de ter em atenção o transporte que ele usa e a quantidade de peso que ele transporta.
-*/
 % # Caminho: Green Distribuition -> Ponto de Entrega -> Green Distribuition
 % # Distância: Custo do Circuito Inteiro.
 resolveBFS(Nodo,Caminho,Distancia) :-
@@ -56,11 +46,6 @@ largura(NodoFinal,[Lista|Outros],Caminho,DistanciaT) :-
 
 %------------------------------Pesquisa em Profundidade Limitada------------------------------
 
-/*
-                FUNCIONAL MAS TALVEZ FALTE:
-Se o estafeta realizar mais do que uma entrega num percurso,
-tem-se de ter em atenção o transporte que ele usa e a quantidade de peso que ele transporta.
-*/
 % # Caminho: Green Distribuition -> Ponto de Entrega -> Green Distribuition
 % # Distância: Custo do Circuito Inteiro.
 % # Limite - Número limite de nós a procurar.
@@ -132,14 +117,14 @@ aestrela(Caminhos,SolucaoCaminho) :-
 expande_aestrela(Caminho,ExpCaminhos) :-
     findall(NovoCaminho,adjacenteV2(Caminho,NovoCaminho),ExpCaminhos).
 
-%--------------------------------------Auxiliares Para o Caminho--------------------------------------
-
+%--------------------------------------Auxiliares Para o Circuito--------------------------------------
+/*
 % Devolve o destino da encomenda, ou seja, a freguesia onde a mesma é entregue
 destinoEncomenda(IdEnc,Destino) :-
     estafetaFezEncomenda(IdEstaf,IdEnc),
     estafeta(IdEstaf,Lista),
     membro((IdEnc,A,B,Destino),Lista).
-
+*/
 
 % Devolve a velocidade a que uma encomenda foi entregue
 % # Bicicleta - 10 km/h
@@ -152,62 +137,28 @@ velocidadeEntrega(IdEnc,Velocidade) :-
      (Transporte == 'Mota' -> Velocidade is 35 - Peso * 0.5);
      (Transporte == 'Carro' -> Velocidade is 25 - Peso * 0.1)).
 
-/* NÃO FUNCIONAL */
-calculaQuantidade([],0).
-calculaQuantidade([X|Xs],Quantidade):- %getQtLixo('all',_,Q1,X),
-							           calculaQuantidade(Xs,Q2),
-							           Quantidade is Q1 + Q2.
+% Devolve as encomendas de um determinado estafeta, com aquele ponto de entrega
+encomendasEstafFreg(IdEstaf,PontoEntrega,Lista) :-
+    encomendasDoEstafeta(IdEstaf,ListaEnc),
+    encomendasEstafFreg2(PontoEntrega,ListaEnc,Lista).
 
-% Devolve o tempo de entrega de uma encomenda, consoante o tipo de pesquisa adotado:
-% # 1 - DFS
-% # 2 - BFS
-% # 3 - DFS Limitada
-% # 4 - Gulosa
-% # 5 - A*
-tempoEntrega(IdEnc,TempoTotal,1) :-
-    destinoEncomenda(IdEnc,Destino),
-    resolveDFS(Destino,[Destino|Caminho],Distancia),
-    velocidadeEntrega(IdEnc,Velocidade),
-    DistanciaTotal is Distancia*2,
-    TempoTotal is DistanciaTotal / Velocidade.
-
-tempoEntrega(IdEnc,TempoTotal,2) :-
-    destinoEncomenda(IdEnc,Destino),
-    resolveBFS(Destino,Caminho,Distancia),
-    velocidadeEntrega(IdEnc,Velocidade),
-    DistanciaTotal is Distancia*2,
-    TempoTotal is DistanciaTotal / Velocidade.
-
-tempoEntrega(IdEnc,TempoTotal,3) :-
-    destinoEncomenda(IdEnc,Destino),
-    resolveLimitada(Destino,Caminho,Distancia,5),
-    velocidadeEntrega(IdEnc,Velocidade),
-    DistanciaTotal is Distancia*2,
-    TempoTotal is DistanciaTotal / Velocidade.
-
-tempoEntrega(IdEnc,TempoTotal,4) :-
-    destinoEncomenda(IdEnc,Destino),
-    resolveGulosa(Destino,Caminho/Distancia),
-    velocidadeEntrega(IdEnc,Velocidade),
-    DistanciaTotal is Distancia*2,
-    TempoTotal is DistanciaTotal / Velocidade.
-
-tempoEntrega(IdEnc,TempoTotal,5) :-
-    destinoEncomenda(IdEnc,Destino),
-    resolveAEstrela(Destino,Caminho/Distancia),
-    velocidadeEntrega(IdEnc,Velocidade),
-    DistanciaTotal is Distancia*2,
-    TempoTotal is DistanciaTotal / Velocidade.
+encomendasEstafFreg2(_,[],[]).
+encomendasEstafFreg2(PontoEntrega,[(IdEnc,_,_,Freg)],[IdEnc]) :- PontoEntrega == Freg.
+encomendasEstafFreg2(PontoEntrega,[(IdEnc,_,_,Freg)|T],Lista) :-
+    ((PontoEntrega == Freg,
+     encomendasEstafFreg2(PontoEntrega,T,Lista0),
+     adiciona(IdEnc,Lista0,Lista));
+     encomendasEstafFreg2(PontoEntrega,T,Lista)).
 
 %--------------------------------------Auxiliares Funcionalidade 1--------------------------------------
 
-caminho(A,B,P) :- caminho1(A,[B],P).
+caminho(A,B,P) :- caminho1(A,B,[B],P).
 
-caminho1(A,[A|P1], [A|P1]).
-caminho1(A,[Y|P1],P) :-
-  adjacente(X,Y,_),
-  nao(membro(X,[Y|P1])), 
-  caminho1(A,[X,Y|P1],P).
+caminho1(A,A,[A|P1],[A|P1]).
+caminho1(A,B,Hist,P) :-
+    adjacente(X,B,_),
+    nao(membro(X,Hist)), 
+    caminho1(A,X,[X|Hist],P).
 
 todosOsCaminhosAux(Territorio,[P],L) :- allCaminhosTerritorio('Green Distribuition',P,Territorio,L).
 todosOsCaminhosAux(Territorio,[P | T],L) :- 
