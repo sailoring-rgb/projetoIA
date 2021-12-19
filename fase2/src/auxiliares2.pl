@@ -204,7 +204,7 @@ allCaminhos(A,L) :- findall(Caminho,(caminho(A,B,Caminho), A\=B),L).
 
 %--------------------------------------Auxiliares Funcionalidade 4--------------------------------------
 
-circuitoMaisRapidoAux([C],_,Circuito) :- inverso(C,CAux), apagaCabeca(CAux,CV), append(C,CV,Circuito).
+circuitoMaisRapidoAux([C],_,C).
 circuitoMaisRapidoAux([C | T],D,Circuito) :- 
     distanciaCircuito(C,Dist),
     circuitoMaisRapidoAux(T,D,C1),
