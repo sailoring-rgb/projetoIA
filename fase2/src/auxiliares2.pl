@@ -226,11 +226,11 @@ circuitoMaisRapidoAux([C|T],Min,Circuito) :-
 
 %--------------------------------------Auxiliares Funcionalidade 5--------------------------------------
 
-circuitoMaisEficiente([],0,_).
-circuitoMaisEficiente([C],T,C) :- tempoCircuito(C,T).
-circuitoMaisEficiente([C|T],Min,Circuito) :-
+circuitoMaisEficienteAux([],0,_).
+circuitoMaisEficienteAux([C],T,C) :- tempoCircuito(C,T).
+circuitoMaisEficienteAux([C|T],Min,Circuito) :-
     tempoCircuito(C,T1),
-    circuitoMaisEficiente(T,T2,C1),
+    circuitoMaisEficienteAux(T,T2,C1),
     ((T1 < T2 -> Min = T1, Circuito = C);
      Min = T2, Circuito = C1).
 

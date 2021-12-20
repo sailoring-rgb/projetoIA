@@ -51,7 +51,6 @@ produtividade(Nodo,Distancia,Quantidade,5) :-
 circuitoMaisRapido(C) :-
     allCaminhos('Green Distribuition',L), % se for em geral
     %todosOsCaminhosTerritorio('Territorio',L) % se for de um determinado território
-    %distanciaCircuitoMaisRapido(L,D),
     circuitoMaisRapidoAux(L,D,C1),
     inverso(C1,CAux),
     apagaCabeca(CAux,CV),
@@ -63,8 +62,7 @@ circuitoMaisRapido(C) :-
 circuitoMaisEficiente(C) :-
     allCaminhos('Green Distribuition',L), % se for em geral
     %todosOsCaminhosTerritorio('Territorio',L) % se for de um determinado território
-    %tempoCircuitoMaisEficiente(L,T),
-    circuitoMaisEficiente(L,T,C1),
+    circuitoMaisEficienteAux(L,T,C1),
     inverso(C1,CAux),
     apagaCabeca(CAux,CV),
     append(C1,CV,C).
