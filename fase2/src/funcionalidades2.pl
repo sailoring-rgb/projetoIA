@@ -38,16 +38,20 @@ circuitosMaiorNumEntregas(L) :-
 % # 3 - Limitada em Profundidade
 % # 4 - Gulosa
 % # 5 - A*
-/* FALTA O INDICADOR DE PRODUTIVIDADE - QUANTIDADE !!! POR ISSO, AINDA NÃO FUNCIONAL */
-produtividade(Nodo,Distancia,Quantidade,1) :- resolveDFS(Nodo,[Nodo|Caminho],Distancia).
+produtividade(Nodo,Distancia,Quantidade,1) :-
+    resolveDFS(Nodo,Caminho,Distancia,Quantidade).
 
-produtividade(Nodo,Distancia,Quantidade,2) :- resolveBFS(Nodo,[Nodo|Caminho],Distancia).
+produtividade(Nodo,Distancia,Quantidade,2) :- 
+    resolveBFS(Nodo,Caminho,Distancia,Quantidade).
 
-produtividade(Nodo,Distancia,Quantidade,4) :- resolveGulosa(Nodo,Caminho/Distancia),
-											  calculaQuantidade(Caminho,Quantidade),!.
+produtividade(Nodo,Distancia,Quantidade,3) :- 
+    resolveLimitada(Nodo,Caminho,Distancia,Quantidade,5).
 
-produtividade(Nodo,Distancia,Quantidade,5) :- resolveAEstrela(Nodo,Caminho/Distancia),
-											  calculaQuantidade(Caminho,Quantidade),!.
+produtividade(Nodo,Distancia,Quantidade,4) :-
+    resolveGulosa(Nodo,Caminho/Distancia,Quantidade).
+
+produtividade(Nodo,Distancia,Quantidade,5) :-
+    resolveAEstrela(Nodo,Caminho/Distancia,Quantidade).
 
 %----------------------------------------Funcionalidade 4----------------------------------------
 % Escolher o circuito mais rápido (usando o critério da distância).

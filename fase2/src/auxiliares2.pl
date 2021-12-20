@@ -10,8 +10,9 @@
 
 % # Caminho: Green Distribuition -> Ponto de Entrega -> Green Distribuition
 % # Distância: Custo do Circuito Inteiro.
-resolveDFS(Nodo,Caminho,Distancia) :-
+resolveDFS(Nodo,Caminho,Distancia,Quantidade) :-
     profundidade(Nodo,[Nodo],CaminhoVolta,Dist),
+    numEntregasCircuito([Nodo|CaminhoVolta],Quantidade),
     inverso(CaminhoVolta,CaminhoIda),
     append(CaminhoIda,[Nodo|CaminhoVolta],Caminho),
     Distancia is Dist*2.
@@ -27,9 +28,10 @@ profundidade(Nodo,Historico,[ProxNodo|Caminho],DistanciaT) :-
 
 % # Caminho: Green Distribuition -> Ponto de Entrega -> Green Distribuition
 % # Distância: Custo do Circuito Inteiro.
-resolveBFS(Nodo,Caminho,Distancia) :-
+resolveBFS(Nodo,Caminho,Distancia,Quantidade) :-
     goal(NodoFinal),
     largura(NodoFinal,[[Nodo]],CaminhoAux,Dist),
+    numEntregasCircuito(CaminhoAux,Quantidade),
     apagaCabeca(CaminhoAux,CaminhoVolta),
     inverso(CaminhoVolta,CaminhoIda),
     append(CaminhoIda,[Nodo|CaminhoVolta],Caminho),
@@ -49,8 +51,9 @@ largura(NodoFinal,[Lista|Outros],Caminho,DistanciaT) :-
 % # Caminho: Green Distribuition -> Ponto de Entrega -> Green Distribuition
 % # Distância: Custo do Circuito Inteiro.
 % # Limite - Número limite de nós a procurar.
-resolveLimitada(Nodo,Caminho,Distancia,Limite) :-
+resolveLimitada(Nodo,Caminho,Distancia,Quantidade,Limite) :-
     profundidadeLimitada(Nodo,[Nodo],CaminhoAux,Dist,Limite),
+    numEntregasCircuito(CaminhoAux,Quantidade),
     apagaCabeca(CaminhoAux,CaminhoVolta),
     inverso(CaminhoVolta,CaminhoIda),
     append(CaminhoIda,[Nodo|CaminhoVolta],Caminho),
@@ -69,9 +72,10 @@ profundidadeLimitada(Nodo,Historico,[ProxNodo|Caminho],DistanciaT,Limite) :-
 
 % # Caminho: Green Distribuition -> Ponto de Entrega -> Green Distribuition
 % # Custo: Custo do Circuito Inteiro.
-resolveGulosa(Nodo,Caminho/Custo) :-
+resolveGulosa(Nodo,Caminho/Custo,Quantidade) :-
     estima(Nodo,Estima),
     agulosa([[Nodo]/0/Estima],CaminhoIda/CustoIda/_),
+    numEntregasCircuito(CaminhoIda,Quantidade),
     inverso(CaminhoIda,CaminhoAux),
     apagaCabeca(CaminhoAux,CaminhoVolta),
     append(CaminhoIda,CaminhoVolta,Caminho),
@@ -94,9 +98,10 @@ expande_gulosa(Caminho,Expandidos) :- findall(NovoCaminho,adjacenteV2(Caminho,No
 
 % # Caminho: Green Distribuition -> Ponto de Entrega -> Green Distribuition
 % # Custo: Custo do Circuito Inteiro.
-resolveAEstrela(Nodo,Caminho/Custo) :-
+resolveAEstrela(Nodo,Caminho/Custo,Quantidade) :-
     estima(Nodo,Estima),
     aestrela([[Nodo]/0/Estima],CaminhoIda/CustoIda/_),
+    numEntregasCircuito(CaminhoIda,Quantidade),
     inverso(CaminhoIda,CaminhoAux),
     apagaCabeca(CaminhoAux,CaminhoVolta),
     append(CaminhoIda,CaminhoVolta,Caminho),
