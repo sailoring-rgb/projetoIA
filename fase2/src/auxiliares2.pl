@@ -12,7 +12,7 @@
 % # Distância: Custo do Circuito Inteiro.
 resolveDFS(Nodo,Caminho,Distancia,Quantidade) :-
     profundidade(Nodo,[Nodo],CaminhoVolta,Dist),
-    numEntregasCircuito([Nodo|CaminhoVolta],Quantidade),
+    numEntregasCircuito([Nodo|CaminhoVolta],_,Quantidade),
     inverso(CaminhoVolta,CaminhoIda),
     append(CaminhoIda,[Nodo|CaminhoVolta],Caminho),
     Distancia is Dist*2.
@@ -31,7 +31,7 @@ profundidade(Nodo,Historico,[ProxNodo|Caminho],DistanciaT) :-
 resolveBFS(Nodo,Caminho,Distancia,Quantidade) :-
     goal(NodoFinal),
     largura(NodoFinal,[[Nodo]],CaminhoAux,Dist),
-    numEntregasCircuito(CaminhoAux,Quantidade),
+    numEntregasCircuito(CaminhoAux,_,Quantidade),
     apagaCabeca(CaminhoAux,CaminhoVolta),
     inverso(CaminhoVolta,CaminhoIda),
     append(CaminhoIda,[Nodo|CaminhoVolta],Caminho),
@@ -53,7 +53,7 @@ largura(NodoFinal,[Lista|Outros],Caminho,DistanciaT) :-
 % # Limite - Número limite de nós a procurar.
 resolveLimitada(Nodo,Caminho,Distancia,Quantidade,Limite) :-
     profundidadeLimitada(Nodo,[Nodo],CaminhoAux,Dist,Limite),
-    numEntregasCircuito(CaminhoAux,Quantidade),
+    numEntregasCircuito(CaminhoAux,_,Quantidade),
     apagaCabeca(CaminhoAux,CaminhoVolta),
     inverso(CaminhoVolta,CaminhoIda),
     append(CaminhoIda,[Nodo|CaminhoVolta],Caminho),
@@ -75,7 +75,7 @@ profundidadeLimitada(Nodo,Historico,[ProxNodo|Caminho],DistanciaT,Limite) :-
 resolveGulosa(Nodo,Caminho/Custo,Quantidade) :-
     estima(Nodo,Estima),
     agulosa([[Nodo]/0/Estima],CaminhoIda/CustoIda/_),
-    numEntregasCircuito(CaminhoIda,Quantidade),
+    numEntregasCircuito(CaminhoIda,_,Quantidade),
     inverso(CaminhoIda,CaminhoAux),
     apagaCabeca(CaminhoAux,CaminhoVolta),
     append(CaminhoIda,CaminhoVolta,Caminho),
@@ -101,7 +101,7 @@ expande_gulosa(Caminho,Expandidos) :- findall(NovoCaminho,adjacenteV2(Caminho,No
 resolveAEstrela(Nodo,Caminho/Custo,Quantidade) :-
     estima(Nodo,Estima),
     aestrela([[Nodo]/0/Estima],CaminhoIda/CustoIda/_),
-    numEntregasCircuito(CaminhoIda,Quantidade),
+    numEntregasCircuito(CaminhoIda,_,Quantidade),
     inverso(CaminhoIda,CaminhoAux),
     apagaCabeca(CaminhoAux,CaminhoVolta),
     append(CaminhoIda,CaminhoVolta,Caminho),
@@ -123,21 +123,18 @@ expande_aestrela(Caminho,ExpCaminhos) :-
     findall(NovoCaminho,adjacenteV2(Caminho,NovoCaminho),ExpCaminhos).
 
 %--------------------------------------Auxiliares Para o Circuito--------------------------------------
-/*
-% Devolve o destino da encomenda, ou seja, a freguesia onde a mesma é entregue
-destinoEncomenda(IdEnc,Destino) :-
-    estafetaFezEncomenda(IdEstaf,IdEnc),
-    estafeta(IdEstaf,Lista),
-    membro((IdEnc,A,B,Destino),Lista).
-*/
+
+meioDeTransporteUsado(C,PesoTotal,Transporte) :-
+    numEntregasCircuito(C,PesoTotal,_),
+    ((PesoTotal =< 5 -> Transporte = 'Bicicleta');
+     (PesoTotal > 5, PesoTotal =< 20 -> Transporte = 'Mota');
+     (PesoTotal > 20, PesoTotal =< 100 -> Transporte = 'Carro')).
 
 % Devolve a velocidade a que uma encomenda foi entregue
 % # Bicicleta - 10 km/h
 % # Moto - 35 km/h
 % # Carro - 25 km/h
-velocidadeEntrega(IdEnc,Velocidade) :-
-    encomenda(IdEnc,_,Peso,_,_,_,_),
-    transporteEncomenda(IdEnc,Transporte),
+velocidadeEntrega(Transporte,Peso,Velocidade) :-
     ((Transporte == 'Bicicleta' -> Velocidade is 10 - Peso * 0.7);
      (Transporte == 'Mota' -> Velocidade is 35 - Peso * 0.5);
      (Transporte == 'Carro' -> Velocidade is 25 - Peso * 0.1)).
@@ -161,43 +158,28 @@ distanciaCircuito([Freg,NextFreg | T],D) :-
     adjacente(Freg,NextFreg,Dist),
     distanciaCircuito([NextFreg | T],D1),
     D is (Dist + D1)*2.
-/*
-% Devolve o tempo de entrega de uma encomenda, consoante o tipo de pesquisa adotado:
-% # 1 - DFS
-% # 2 - BFS
-% # 3 - DFS Limitada
-% # 4 - Gulosa
-% # 5 - A*
-tempoEntrega(IdEnc,Tempo,1) :-
-    destinoEncomenda(IdEnc,Destino),
-    resolveDFS(Destino,[Destino|Caminho],Distancia),
-    velocidadeEntrega(IdEnc,Velocidade),
-    Tempo is Distancia/Velocidade.
 
-tempoEntrega(IdEnc,Tempo,2) :-
-    destinoEncomenda(IdEnc,Destino),
-    resolveBFS(Destino,Caminho,Distancia),
-    velocidadeEntrega(IdEnc,Velocidade),
-    Tempo is Distancia/Velocidade.
+tempoCircuito(C,T) :- 
+    distanciaCircuito(C,Distancia),
+    meioDeTransporteUsado(C,PesoTotal,Transporte),
+    velocidadeEntrega(Transporte,PesoTotal,Velocidade),
+    T is Distancia/Velocidade.
+    
+numEntregasCircuito([],0,0).
+numEntregasCircuito([Freg],PesoTotal,N) :-
+    findall((IdEnc,Peso),encomenda(IdEnc,_,Peso,_,Freg),L),
+    somaPesos(L,PesoTotal),
+    comprimento(L,N).
+numEntregasCircuito([Freg|T],PesoTotal,N) :-
+    findall((IdEnc,Peso),encomenda(IdEnc,_,Peso,_,Freg),L),
+    somaPesos(L,PesoTotal1),
+    comprimento(L,N1),
+    numEntregasCircuito(T,PesoTotal2,N2),
+    PesoTotal is PesoTotal1 + PesoTotal2,
+    N is N1 + N2.
 
-tempoEntrega(IdEnc,Tempo,3) :-
-    destinoEncomenda(IdEnc,Destino),
-    resolveLimitada(Destino,Caminho,Distancia,5),
-    velocidadeEntrega(IdEnc,Velocidade),
-    Tempo is Distancia/Velocidade.
+allCaminhos(A,L) :- findall(Caminho,(caminho(A,B,Caminho),A\=B),L).
 
-tempoEntrega(IdEnc,Tempo,4) :-
-    destinoEncomenda(IdEnc,Destino),
-    resolveGulosa(Destino,Caminho/Distancia),
-    velocidadeEntrega(IdEnc,Velocidade),
-    Tempo is Distancia/Velocidade.
-
-tempoEntrega(IdEnc,Tempo,5) :-
-    destinoEncomenda(IdEnc,Destino),
-    resolveAEstrela(Destino,Caminho/Distancia),
-    velocidadeEntrega(IdEnc,Velocidade),
-    Tempo is Distancia/Velocidade.
-*/
 %--------------------------------------Auxiliares Funcionalidade 1--------------------------------------
 
 caminho(A,B,P) :- caminho1(A,B,[B],P).
@@ -218,45 +200,39 @@ allCaminhosTerritorio(A,B,T,L) :- findall(Caminho,(caminho(A,B,Caminho),membro(T
 
 %--------------------------------------Auxiliares Funcionalidade 2--------------------------------------
 
-circuitosMaiorNumEntregasAux([C],MaxE,L) :- numEntregasCircuito(C,NumE), (NumE == MaxE -> adiciona(C,L1,L) ; L = []).
+circuitosMaiorNumEntregasAux([C],MaxE,L) :- numEntregasCircuito(C,_,NumE), (NumE == MaxE -> adiciona(C,L1,L) ; L = []).
 circuitosMaiorNumEntregasAux([C | T],MaxE,L) :- 
-    numEntregasCircuito(C,NumE),
+    numEntregasCircuito(C,_,NumE),
     circuitosMaiorNumEntregasAux(T,MaxE,L1),
     (NumE == MaxE -> inverso(C,CAux),
     apagaCabeca(CAux,CV),
     append(C,CV,Circuito),adiciona(Circuito,L1,L) ; L = L1).
 
-maiorNumEntregasCircuito([C],Max) :- numEntregasCircuito(C,Max).
+maiorNumEntregasCircuito([C],Max) :- numEntregasCircuito(C,_,Max).
 maiorNumEntregasCircuito([C|T],Max) :-
-    numEntregasCircuito(C,NumE),
+    numEntregasCircuito(C,_,NumE),
     maiorNumEntregasCircuito(T,Max1),
     (NumE > Max1 -> Max = NumE; Max = Max1).
 
-numEntregasCircuito([],0).
-numEntregasCircuito([Freg],N) :-
-    findall(IdEnc,encomenda(IdEnc,_,_,_,Freg),L),
-    comprimento(L,N).
-numEntregasCircuito([Freg|T],N) :-
-    findall(IdEnc,encomenda(IdEnc,_,_,_,Freg),L),
-    length(L,N1),
-    numEntregasCircuito(T,N2),
-    N is N1 + N2.
-
-allCaminhos(A,L) :- findall(Caminho,(caminho(A,B,Caminho),A\=B),L).
-
 %--------------------------------------Auxiliares Funcionalidade 4--------------------------------------
 
-circuitoMaisRapidoAux([C],_,C).
-circuitoMaisRapidoAux([C | T],D,Circuito) :- 
-    distanciaCircuito(C,Dist),
-    circuitoMaisRapidoAux(T,D,C1),
-    (Dist == D -> Circuito = C; Circuito = C1).
+circuitoMaisRapidoAux([],0,_).
+circuitoMaisRapidoAux([C],D,C) :- distanciaCircuito(C,D).
+circuitoMaisRapidoAux([C|T],Min,Circuito) :- 
+    distanciaCircuito(C,Dist1),
+    circuitoMaisRapidoAux(T,Dist2,C1),
+    ((Dist1 < Dist2 -> Min = Dist1, Circuito = C);
+     Min = Dist2, Circuito = C1).
 
-distanciaCircuitoMaisRapido([C],D) :- distanciaCircuito(C,D).
-distanciaCircuitoMaisRapido([C | T], D) :- 
-    distanciaCircuito(C,Dist),
-    distanciaCircuitoMaisRapido(T,D1),
-    (Dist < D1 -> D = Dist; D = D1).
+%--------------------------------------Auxiliares Funcionalidade 5--------------------------------------
+
+circuitoMaisEficiente([],0,_).
+circuitoMaisEficiente([C],T,C) :- tempoCircuito(C,T).
+circuitoMaisEficiente([C|T],Min,Circuito) :-
+    tempoCircuito(C,T1),
+    circuitoMaisEficiente(T,T2,C1),
+    ((T1 < T2 -> Min = T1, Circuito = C);
+     Min = T2, Circuito = C1).
 
 %---------------------------------------------------Anexos---------------------------------------------------
 
@@ -275,6 +251,10 @@ obter_melhor([Caminho1/Custo1/Estima1,_/Custo2/Estima2|Caminhos],MelhorCaminho) 
     obter_melhor([Caminho1/Custo1/Estima1|Caminhos],MelhorCaminho).
 obter_melhor([_|Caminhos],MelhorCaminho) :-
     obter_melhor(Caminhos,MelhorCaminho).
+
+somaPesos([],0).
+somaPesos([(_,P)],P).
+somaPesos([(_,P)|T],N) :- somaPesos(T,N1), N is P + N1.
 
 inverso(Xs,Ys) :- inverso(Xs,[],Ys).
 inverso([],Xs,Xs).

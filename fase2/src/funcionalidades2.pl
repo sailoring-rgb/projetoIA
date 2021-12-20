@@ -7,14 +7,6 @@
 
 :- style_check(-singleton).
 
-/*
-%---------------------------------------Circuito de Entrega--------------------------------------
-
-circuito(PontoEntrega,Distancia,Quantidade,Tempo,5) :-
-    resolveAEstrela(PontoEntrega,Caminho/Distancia),
-    velocidadeEntrega(IdEnc,Velocidade),
-    Tempo is Distancia/Velocidade.
-*/
 %----------------------------------------Funcionalidade 1----------------------------------------
 % Gerar os circuitos de entrega, caso existam, que cubram um determinado território. 
 
@@ -59,7 +51,7 @@ produtividade(Nodo,Distancia,Quantidade,5) :-
 circuitoMaisRapido(C) :-
     allCaminhos('Green Distribuition',L), % se for em geral
     %todosOsCaminhosTerritorio('Territorio',L) % se for de um determinado território
-    distanciaCircuitoMaisRapido(L,D),
+    %distanciaCircuitoMaisRapido(L,D),
     circuitoMaisRapidoAux(L,D,C1),
     inverso(C1,CAux),
     apagaCabeca(CAux,CV),
@@ -68,4 +60,11 @@ circuitoMaisRapido(C) :-
 %----------------------------------------Funcionalidade 5----------------------------------------
 % Escolher o circuito mais ecológico (usando critério de tempo).
 
-/* USAR OS PREDICADOS tempoEntrega IMPLEMENTADOS EM AUXILIARES2.PL */
+circuitoMaisEficiente(C) :-
+    allCaminhos('Green Distribuition',L), % se for em geral
+    %todosOsCaminhosTerritorio('Territorio',L) % se for de um determinado território
+    %tempoCircuitoMaisEficiente(L,T),
+    circuitoMaisEficiente(L,T,C1),
+    inverso(C1,CAux),
+    apagaCabeca(CAux,CV),
+    append(C1,CV,C).

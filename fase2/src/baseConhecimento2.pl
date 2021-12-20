@@ -14,9 +14,9 @@ encomenda(123456789000,3,16,15,'Gualtar').
 encomenda(300145999366,2,5,30,'São Victor').
 encomenda(411188745632,4,30,25,'Maximinos').
 encomenda(512200534686,4,1,25,'Maximinos').
-encomenda(611111154895,5,70,40,'Dume').
+encomenda(611111154895,5,50,40,'Dume').
 encomenda(792555468332,1,4,10,'Gualtar').
-encomenda(800000000234,6,97,52,'Gualtar').
+encomenda(800000000234,6,25,52,'Gualtar').
 encomenda(910928382779,4,8,10,'Maximinos').
 encomenda(100910101098,2,4,17,'Gualtar').
 encomenda(113364968333,4,18,67,'São Victor').
@@ -24,29 +24,29 @@ encomenda(121203928222,7,10,28,'Maximinos').
 encomenda(136666733413,4,20,41,'Tadim').
 encomenda(142019203922,6,7,21,'Gualtar').
 encomenda(150393815151,5,30,77,'São Vicente'). 
-encomenda(169998372344,3,87,87,'Esporões').
+encomenda(169998372344,3,50,87,'Esporões').
 encomenda(172123212430,6,9,18,'Maximinos').
 encomenda(154268745963,8,33,12,'Lamas').
 encomenda(774951266458,8,10,13,'Figueiredo').
-encomenda(122457456652,9,72,40,'Figueiredo').
+encomenda(122457456652,9,42,40,'Figueiredo').
 encomenda(901230054687,10,4,5,'Priscos').
 encomenda(758846125940,10,6,21,'Tebosa').
 encomenda(214568744021,10,3,20,'Lamas').
-encomenda(115542001235,11,61,35,'Esporões').
+encomenda(115542001235,11,11,35,'Esporões').
 encomenda(125489652311,11,8,5,'Tadim').
 encomenda(812485569441,12,46,52,'Cabreiros').
 encomenda(122145875630,13,15,12,'Figueiredo').
-encomenda(124562335601,13,85,54,'Maximinos').
+encomenda(124562335601,13,20,54,'Maximinos').
 encomenda(458751021235,13,8,10,'Tebosa').
 encomenda(124501236889,13,3,4,'Gualtar').
 encomenda(214501239987,14,26,9,'Ruilhe').
-encomenda(723100045791,14,45,36,'São Victor').
-encomenda(312450012994,15,76,81,'São Victor').
+encomenda(723100045791,14,40,36,'São Victor').
+encomenda(312450012994,15,26,81,'São Victor').
 encomenda(124568790122,15,8,24,'Morreira').
 encomenda(154200113287,15,32,17,'Lamas').
-encomenda(890125440127,16,47,30,'Palmeira').
+encomenda(890125440127,16,17,30,'Palmeira').
 encomenda(125400133654,17,15,41,'Cabreiros').
-encomenda(124578512366,17,84,95,'Palmeira').
+encomenda(124578512366,17,50,95,'Palmeira').
 encomenda(125004357899,10,16,24,'São Victor').
 
 %-----------------------------Grafo--------------------------------
