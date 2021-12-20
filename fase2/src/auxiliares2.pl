@@ -1,4 +1,5 @@
 :- consult('baseConhecimento2.pl').
+:- consult('auxiliares1.pl').
 
 :- set_prolog_flag( discontiguous_warnings,off ).
 :- set_prolog_flag( single_var_warnings,off ).
@@ -203,7 +204,7 @@ caminho1(A,B,Hist,P) :-
     caminho1(A,X,[X|Hist],P).
 
 todosOsCaminhosAux(Territorio,[P],L) :- allCaminhosTerritorio('Green Distribuition',P,Territorio,L).
-todosOsCaminhosAux(Territorio,[P | T],L) :- 
+todosOsCaminhosAux(Territorio,[P|T],L) :- 
     allCaminhosTerritorio('Green Distribuition',P,Territorio,R),
     todosOsCaminhosAux(Territorio,T,L1),
     concatena(R,L1,L).
@@ -221,21 +222,22 @@ circuitosMaiorNumEntregasAux([C | T],MaxE,L) :-
     append(C,CV,Circuito),adiciona(Circuito,L1,L) ; L = L1).
 
 maiorNumEntregasCircuito([C],Max) :- numEntregasCircuito(C,Max).
-maiorNumEntregasCircuito([C | T],Max) :-
+maiorNumEntregasCircuito([C|T],Max) :-
     numEntregasCircuito(C,NumE),
     maiorNumEntregasCircuito(T,Max1),
     (NumE > Max1 -> Max = NumE; Max = Max1).
 
 numEntregasCircuito([],0).
-numEntregasCircuito([Freg],N) :- findall(IdEstaf, estafeta(IdEstaf,_), Ets), contaEntregasFreguesia(Freg,Ets,N).
-numEntregasCircuito([Freg | T],N) :- 
-    findall(IdEstaf, estafeta(IdEstaf,_), Ets),
-    contaEntregasFreguesia(Freg,Ets,Num),
-    numEntregasCircuito(T,N1),
-    N is Num + N1.
+numEntregasCircuito([Freg],N) :-
+    findall(IdEnc,encomenda(IdEnc,_,_,_,Freg),L),
+    comprimento(L,N).
+numEntregasCircuito([Freg|T],N) :-
+    findall(IdEnc,encomenda(IdEnc,_,_,_,Freg),L),
+    length(L,N1),
+    numEntregasCircuito(T,N2),
+    N is N1 + N2.
 
-allCaminhos(A,L) :- findall(Caminho,(caminho(A,B,Caminho), A\=B),L).
-
+allCaminhos(A,L) :- findall(Caminho,(caminho(A,B,Caminho),A\=B),L).
 
 %--------------------------------------Auxiliares Funcionalidade 4--------------------------------------
 
@@ -250,7 +252,6 @@ distanciaCircuitoMaisRapido([C | T], D) :-
     distanciaCircuito(C,Dist),
     distanciaCircuitoMaisRapido(T,D1),
     (Dist < D1 -> D = Dist; D = D1).
-
 
 %---------------------------------------------------Anexos---------------------------------------------------
 
