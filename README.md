@@ -1,6 +1,6 @@
 # IA
 
-Projeto de Inteligência Artificial
+Projeto de Inteligência Artificial 21/22
 
 ## Autores:
 
