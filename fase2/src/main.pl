@@ -27,37 +27,54 @@ main :-
 fase(1) :-
     repeat,
     nl,
-    write('---------------------------------------------------------FASE1----------------------------------------------------------'), nl,
-    write('1. Consultar o estafeta que utilizou mais vezes um meio de transporte mais ecológico.'), nl,
-    write('2. Consultar os estafetas que entregaram determinada(s) encomenda(s) a um determinado cliente.'), nl,
-    write('3. Consultar os clientes servidos por um determinado estafeta.'), nl,
-    write('4. Calcular o valor faturado pela Green Distribution num determinado dia.'), nl,
-    write('5. Consultar quais as zonas (e.g., rua ou freguesia) com maior volume de entregas por parte da Green Distribution.'), nl,
-    write('6. Calcular a classificação média de satisfação de cliente para um determinado estafeta.'), nl,
-    write('7. Consultar o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo.'), nl,
-    write('8. Consultar o número total de entregas pelos estafetas, num determinado intervalo de tempo.'), nl,
-    write('9. Calcular o número de encomendas entregues e não entregues pela Green Distribution, num determinado período de tempo.'), nl,
-    write('10. Calcular o peso total transportado por estafeta num determinado dia.'), nl,
+    write('---------------------------------------------------------FASE1----------------------------------------------------------'),nl,
+    write('1. Consultar o estafeta que utilizou mais vezes um meio de transporte mais ecológico.'),nl,
+    write('2. Consultar os estafetas que entregaram determinada(s) encomenda(s) a um determinado cliente.'),nl,
+    write('3. Consultar os clientes servidos por um determinado estafeta.'),nl,
+    write('4. Calcular o valor faturado pela Green Distribution num determinado dia.'),nl,
+    write('5. Consultar quais as zonas (e.g., rua ou freguesia) com maior volume de entregas por parte da Green Distribution.'),nl,
+    write('6. Calcular a classificação média de satisfação de cliente para um determinado estafeta.'),nl,
+    write('7. Consultar o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo.'),nl,
+    write('8. Consultar o número total de entregas pelos estafetas, num determinado intervalo de tempo.'),nl,
+    write('9. Calcular o número de encomendas entregues e não entregues pela Green Distribution, num determinado período de tempo.'),nl,
+    write('10. Calcular o peso total transportado por estafeta num determinado dia.'),nl,
     write('11. Consultar o cliente que fez mais encomendas.'),nl,
     write('12. Consultar os estefetas menos pontuais a fazer as suas entregas.'),nl,
-    write('0. Sair'), nl,
-    write('-----------------------------------------------------------------------------------------------------------------------'), nl,nl,
+    write('0. Sair'),nl,
+    write('-----------------------------------------------------------------------------------------------------------------------'),nl,nl,
     write('Escolha um: '),nl,
     read(Y),
     (Y = 0 -> !, fail; true),
     nl,
-    funcionalidade(Y),fail.
+    funcionalidade1(Y),fail.
 
+fase(2) :-
+    repeat,
+    nl,
+    write('---------------------------------------------------------FASE2----------------------------------------------------------'),nl,
+    write('1. Gerar os circuitos de entrega, caso existam, que cubram um determinado território.'),nl,
+    write('2. Representar os diversos pontos de entrega (freguesias) disponíveis em forma de grafo.'),nl,
+    write('3. Identificar quais os circuitos com maior número de entregas (por volume e peso).'),nl,
+    write('4. Comparar circuitos de entrega tendo em conta os indicadores de produtividade.'),nl,
+    write('5. Escolher o circuito mais rápido (usando o critério da distância).'),nl,
+    write('6. Escolher o circuito mais ecológico (usando um critério de tempo).'),nl,
+    write('0. Sair'),nl,
+    write('-----------------------------------------------------------------------------------------------------------------------'),nl,nl,
+    write('Escolha um: '),nl,
+    read(Z),
+    (Z = 0 -> !, fail; true),
+    nl,
+    funcionalidade2(Z),fail.
 
 %----------------------------------------------------------------FASE1----------------------------------------------------------------
 
 % # FUNCIONALIDADES DA FASE 1 
 
-funcionalidade(1) :-
+funcionalidade1(1) :-
     estafetaMaisEcologico(IDs),
     write('ID(s) do(s) estafeta(s) mais ecológicos: '),write(IDs),!,nl.
 
-funcionalidade(2) :-
+funcionalidade1(2) :-
     write('Indique os IDs de encomendas, separados por vírgulas: '),!,nl,
     read(Input),
     format(atom(A), "~w", Input),
@@ -66,13 +83,13 @@ funcionalidade(2) :-
     estafetasEncomendasCliente(L,R),nl,
     write('ID(s) do(s) estafeta(s) que entregaram as referidas encomendas: '),write(R),!,nl.
 
-funcionalidade(3) :-
+funcionalidade1(3) :-
     write('Indique o ID do estafeta: '),!,nl,
     read(ID),
     clientesPorEstafeta(ID,L),nl,
     write('ID(s) do(s) cliente(s) servidos pelo estafeta '),write(ID),write(': '),write(L),!,nl.
 
-funcionalidade(4) :-
+funcionalidade1(4) :-
     write('Indique uma data no formato - data(Ano,Mês,Dia): '),!,nl,
     read(Input),nl,
     ((dataValida(Input),
@@ -81,17 +98,17 @@ funcionalidade(4) :-
     write('Valor faturado em '),write(D),write('/'),write(M),write('/'),write(A),write(': '),write(V),write('€'),nl);
     (nao(dataValida(Input)),write('A data que inseriu não é válida.'),nl)),!.
 
-funcionalidade(5) :-
+funcionalidade1(5) :-
     freguesiasMaisFrequentes(L),
     write('Zona(s) com maior volume de entregas: '),write(L),!,nl.
 
-funcionalidade(6) :-
+funcionalidade1(6) :-
     write('Indique o ID do estafeta: '),!,nl,
     read(ID),
     mediaSatisfacaoEstafeta(ID,V),nl,
     write('Classificação média de satisfação de cliente: '),write(V),!,nl.
     
-funcionalidade(7) :-
+funcionalidade1(7) :-
     write('Indique a data inicial no formato - data(Ano,Mês,Dia,Horas,Minutos): '),!,nl,
     read(Input1),
         ((nao(dataTimeValida(Input1)),nl,write('A data que inseriu não é válida.'),nl);
@@ -105,7 +122,7 @@ funcionalidade(7) :-
             write('Número total de entregas transportadas de mota: '),write(V2),nl,
             write('Número total de entregas transportadas de bicicleta: '),write(V3),nl)),!.
 
-funcionalidade(8) :-
+funcionalidade1(8) :-
     write('Indique a data inicial no formato - data(Ano,Mês,Dia,Horas,Minutos): '),!,nl,
     read(Input1),
         ((nao(dataTimeValida(Input1)) -> nl,write('A data que inseriu não é válida.'),nl);
@@ -117,7 +134,7 @@ funcionalidade(8) :-
             totalEntregasEstafetas(data(A1,M1,D1,H1,Min1),data(A2,M2,D2,H2,Min2),L),nl,
             write('Número total de entregas pelos estafetas: '),write(L),nl)),!.
 
-funcionalidade(9) :-
+funcionalidade1(9) :-
     write('Indique a data inicial no formato - data(Ano,Mês,Dia,Horas,Minutos): '),!,nl,
     read(Input1),
         ((nao(dataTimeValida(Input1)) -> nl,write('A data que inseriu não é válida.'),nl);
@@ -131,7 +148,7 @@ funcionalidade(9) :-
             write('Número total de encomendas não entregues naquele período de tempo: '),write(V2),nl,
             write('Número total de encomendas nunca entregues: '),write(V3),nl)),!.
 
-funcionalidade(10) :-
+funcionalidade1(10) :-
     write('Indique uma data no formato - data(Ano,Mês,Dia): '),!,nl,
     read(Input),nl,
     ((dataValida(Input),
@@ -143,58 +160,49 @@ funcionalidade(10) :-
 
 % EXTRA Funcionalidades
 
-funcionalidade(11) :-
+funcionalidade1(11) :-
     clienteMaisEncomendas(IDs),
     write('ID(s) do(s) cliente(s) com mais encomendas: '), write(IDs),!,nl.
 
-funcionalidade(12) :-
+funcionalidade1(12) :-
     estafetasMenosPontuais(L),
     write('IDs dos estafetas menos pontuais: '),write(L),!,nl.
 
 
 %----------------------------------------------------------------FASE2----------------------------------------------------------------
 
-% # 1 - DFS
-% # 2 - BFS
-% # 3 - Limitada em Profundidade
-% # 4 - Gulosa
-% # 5 - A*
-obterEstatisticas(1) :-
-    statistics(global_stack,[M1,L1]),
-    time(resolveDFS('Lamas',Caminho,Distancia)),
-    statistics(global_stack,[M2,L2]),
-    Mem is M2 - M1,
-    write("Memória usada: "),write(Mem),nl,
-	write("Custo: "),write(Distancia).
+funcionalidade2(1) :-
+    write('Indique o território a consultar: '),!,nl,
+    read(Input),nl,
+    ((pontoEntrega(Input) -> todosOsCaminhosTerritorio(Input,L),write(L),!,nl);
+     (nao(pontoEntrega(Input)) -> write('Não existem informações sobre este território.'),!,nl)).
 
-obterEstatisticas(2) :-
-    statistics(global_stack,[M1,L1]),
-    time(resolveBFS('Lamas',Caminho,Distancia)),
-    statistics(global_stack,[M2,L2]),
-    Mem is M2 - M1,
-    write("Memória usada: "),write(Mem),nl,
-	write("Custo: "),write(Distancia).
+funcionalidade2(2) :-
+    write('Representação dos pontos de entrega em forma de grafo:'),nl,nl,g(G),write(G),!,nl.
 
-obterEstatisticas(3) :-
-    statistics(global_stack, [M1,L1]),
-    time(resolveLimitada('Lamas',Caminho,Distancia,5)),
-    statistics(global_stack, [M2,L2]),
-    Mem is M2 - M1,
-    write("Memória usada: "),write(Mem),nl,
-	write("Custo: "),write(Distancia).
+funcionalidade2(3) :-
+    circuitosMaiorNumEntregas(L),
+    write('Circuito(s) com maior número de entregas: '),nl,nl,write(L),!,nl.
 
-obterEstatisticas(4) :-
-    statistics(global_stack, [M1,L1]),
-    time(resolveGulosa('Lamas',C/Distancia)),
-    statistics(global_stack, [M2,L2]),
-    Mem is M2 - M1,
-    write("Memória usada: "),write(Mem),nl,
-	write("Custo: "),write(Distancia).
+funcionalidade2(4) :-
+    write('Indique o território a consultar: '),!,nl,
+    read(Input),nl,
+    write('Profundidade (DFS):'),!,nl,produtividade(Input,D1,Q1,1),
+        write('*** Distância: '),write(D1),!,nl,
+        write('*** Quantidade: '),write(Q1),!,nl,nl,
+    write('Largura (BFS):'),!,nl,produtividade(Input,D2,Q2,2),
+        write('*** Distância: '),write(D2),!,nl,
+        write('*** Quantidade: '),write(Q2),!,nl,nl,
+    write('Limitada em Profundidade:'),!,nl,produtividade(Input,D3,Q3,3),
+        write('*** Distância: '),write(D3),!,nl,
+        write('*** Quantidade: '),write(Q3),!,nl,nl,
+    write('Gulosa (Greedy):'),!,nl,produtividade(Input,D4,Q4,4),
+        write('*** Distância: '),write(D4),!,nl,
+        write('*** Quantidade: '),write(Q4),!,nl,nl,
+    write('A Estrela (A*):'),!,nl,produtividade(Input,D5,Q5,5),
+        write('*** Distância: '),write(D5),!,nl,
+        write('*** Quantidade: '),write(Q5),!,nl,nl.
 
-obterEstatisticas(5) :-
-    statistics(global_stack, [M1,L1]),
-    time(resolveAEstrela('Lamas',C/Distancia)),
-    statistics(global_stack, [M2,L2]),
-    Mem is M2 - M1,
-    write("Memória usada: "),write(Mem),nl,
-	write("Custo: "),write(Distancia).
+%funcionalidade2(5) :-
+
+%funcionalidade2(6) :-

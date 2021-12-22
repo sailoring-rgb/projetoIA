@@ -19,7 +19,7 @@ resolveDFS(Nodo,Caminho,Distancia,Quantidade) :-
 
 profundidade(Nodo,_,[],0) :- goal(Nodo).
 profundidade(Nodo,Historico,[ProxNodo|Caminho],DistanciaT) :-
-    adjacente(Nodo,ProxNodo,Distancia1),
+    g(G),adjacente(Nodo,ProxNodo,Distancia1,G),
     nao(membro(ProxNodo,Historico)),
     profundidade(ProxNodo,[ProxNodo|Historico],Caminho,Distancia2),
     DistanciaT is Distancia1 + Distancia2.
@@ -39,9 +39,9 @@ resolveBFS(Nodo,Caminho,Distancia,Quantidade) :-
 
 largura(NodoFinal,[[NodoFinal|T]|_],Caminho,0) :- inverso([NodoFinal|T],Caminho).
 largura(NodoFinal,[Lista|Outros],Caminho,DistanciaT) :-
-    Lista = [A|_],
-    findall([X|Lista],(NodoFinal \== A, adjacente(A,X,_),nao(membro(X,Lista))),Novos),
-    adjacente(A,X,Distancia1),
+    g(G),Lista = [A|_],
+    findall([X|Lista],(NodoFinal \== A, adjacente(A,X,_,G),nao(membro(X,Lista))),Novos),
+    adjacente(A,X,Distancia1,G),
     concatena(Outros,Novos,Todos),
     largura(NodoFinal,Todos,Caminho,Distancia2),
     DistanciaT is Distancia1 + Distancia2.
@@ -61,8 +61,8 @@ resolveLimitada(Nodo,Caminho,Distancia,Quantidade,Limite) :-
 
 profundidadeLimitada(Nodo,_,[],0,_) :- goal(Nodo).
 profundidadeLimitada(Nodo,Historico,[ProxNodo|Caminho],DistanciaT,Limite) :-
-    Limite > 0,
-    adjacente(Nodo,ProxNodo,Distancia1),
+    Limite > 0,g(G),
+    adjacente(Nodo,ProxNodo,Distancia1,G),
     nao(membro(ProxNodo,Historico)),
     Limite1 is Limite-1,
     profundidadeLimitada(ProxNodo,[ProxNodo|Historico],Caminho,Distancia2,Limite1),
@@ -139,24 +139,11 @@ velocidadeEntrega(Transporte,Peso,Velocidade) :-
      (Transporte == 'Mota' -> Velocidade is 35 - Peso * 0.5);
      (Transporte == 'Carro' -> Velocidade is 25 - Peso * 0.1)).
 
-% Devolve as encomendas de um determinado estafeta, com aquele ponto de entrega
-encomendasEstafFreg(IdEstaf,PontoEntrega,Lista) :-
-    encomendasDoEstafeta(IdEstaf,ListaEnc),
-    encomendasEstafFreg2(PontoEntrega,ListaEnc,Lista).
-
-encomendasEstafFreg2(_,[],[]).
-encomendasEstafFreg2(PontoEntrega,[(IdEnc,_,_,Freg)],[IdEnc]) :- PontoEntrega == Freg.
-encomendasEstafFreg2(PontoEntrega,[(IdEnc,_,_,Freg)|T],Lista) :-
-    ((PontoEntrega == Freg,
-     encomendasEstafFreg2(PontoEntrega,T,Lista0),
-     adiciona(IdEnc,Lista0,Lista));
-     encomendasEstafFreg2(PontoEntrega,T,Lista)).
-
 distanciaCircuito([Freg],0).
-distanciaCircuito([Freg,NextFreg],D) :- adjacente(Freg,NextFreg,D). 
-distanciaCircuito([Freg,NextFreg | T],D) :-  
-    adjacente(Freg,NextFreg,Dist),
-    distanciaCircuito([NextFreg | T],D1),
+distanciaCircuito([Freg,NextFreg],D) :- g(G),adjacente(Freg,NextFreg,D,G). 
+distanciaCircuito([Freg,NextFreg|T],D) :-
+    g(G),adjacente(Freg,NextFreg,Dist,G),
+    distanciaCircuito([NextFreg|T],D1),
     D is (Dist + D1)*2.
 
 tempoCircuito(C,T) :- 
@@ -182,13 +169,13 @@ allCaminhos(A,L) :- findall(Caminho,(caminho(A,B,Caminho),A\=B),L).
 
 %--------------------------------------Auxiliares Funcionalidade 1--------------------------------------
 
-caminho(A,B,P) :- caminho1(A,B,[B],P).
+caminho(A,B,P) :- g(G),caminho1(G,A,B,[B],P).
 
-caminho1(A,A,[A|P1],[A|P1]).
-caminho1(A,B,Hist,P) :-
-    adjacente(X,B,_),
+caminho1(G,A,A,[A|P1],[A|P1]).
+caminho1(G,A,B,Hist,P) :-
+    adjacente(X,B,_,G),
     nao(membro(X,Hist)), 
-    caminho1(A,X,[X|Hist],P).
+    caminho1(G,A,X,[X|Hist],P).
 
 todosOsCaminhosAux(Territorio,[P],L) :- allCaminhosTerritorio('Green Distribuition',P,Territorio,L).
 todosOsCaminhosAux(Territorio,[P|T],L) :- 
@@ -201,7 +188,7 @@ allCaminhosTerritorio(A,B,T,L) :- findall(Caminho,(caminho(A,B,Caminho),membro(T
 %--------------------------------------Auxiliares Funcionalidade 2--------------------------------------
 
 circuitosMaiorNumEntregasAux([C],MaxE,L) :- numEntregasCircuito(C,_,NumE), (NumE == MaxE -> adiciona(C,L1,L) ; L = []).
-circuitosMaiorNumEntregasAux([C | T],MaxE,L) :- 
+circuitosMaiorNumEntregasAux([C|T],MaxE,L) :- 
     numEntregasCircuito(C,_,NumE),
     circuitosMaiorNumEntregasAux(T,MaxE,L1),
     (NumE == MaxE -> inverso(C,CAux),
@@ -236,12 +223,12 @@ circuitoMaisEficienteAux([C|T],Min,Circuito) :-
 
 %---------------------------------------------------Anexos---------------------------------------------------
 
-adjacente(Nodo,ProxNodo,C) :- aresta(Nodo,ProxNodo,C).
-adjacente(Nodo,ProxNodo,C) :- aresta(ProxNodo,Nodo,C).
+adjacente(Nodo,ProxNodo,C,grafo(_,Es)) :- membro(aresta(Nodo,ProxNodo,C),Es).
+adjacente(Nodo,ProxNodo,C,grafo(_,Es)) :- membro(aresta(ProxNodo,Nodo,C),Es).
 
 adjacenteV2([Nodo|Caminho]/Custo1/_,[ProxNodo,Nodo|Caminho]/Custo2/Estima) :-
-    adjacente(Nodo,ProxNodo,PassoCusto),
-	\+member(ProxNodo,Caminho),
+    g(G),adjacente(Nodo,ProxNodo,PassoCusto,G),
+	nao(membro(ProxNodo,Caminho)),
 	Custo2 is Custo1 + PassoCusto,
 	estima(ProxNodo,Estima).
 
