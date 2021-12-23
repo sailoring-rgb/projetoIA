@@ -7,6 +7,30 @@
 
 :- style_check(-singleton).
 
+%-------------------------------------------Pesquisa---------------------------------------------
+% Executa um dos algoritmos de pesquisa, dependendo do valor recebido.
+
+% # 1 - DFS
+% # 2 - BFS
+% # 3 - Limitada em Profundidade
+% # 4 - Gulosa
+% # 5 - A*
+
+estrategiaProcura(Nodo,Caminho,Distancia,Quantidade,1) :-
+    resolveDFS(Nodo,Caminho,Distancia,Quantidade).
+
+estrategiaProcura(Nodo,Caminho,Distancia,Quantidade,2) :-
+    resolveBFS(Nodo,Caminho,Distancia,Quantidade).
+
+estrategiaProcura(Nodo,Caminho,Distancia,Quantidade,3) :-
+    resolveLimitada(Nodo,Caminho,Distancia,Quantidade,5).
+
+estrategiaProcura(Nodo,Caminho,Distancia,Quantidade,4) :-
+    resolveGulosa(Nodo,Caminho/Distancia,Quantidade).
+
+estrategiaProcura(Nodo,Caminho,Distancia,Quantidade,5) :-
+    resolveAEstrela(Nodo,Caminho/Distancia,Quantidade).
+
 %----------------------------------------Funcionalidade 1----------------------------------------
 % Gerar os circuitos de entrega, caso existam, que cubram um determinado território. 
 
@@ -30,6 +54,7 @@ circuitosMaiorNumEntregas(L) :-
 % # 3 - Limitada em Profundidade
 % # 4 - Gulosa
 % # 5 - A*
+
 produtividade(Nodo,Distancia,Quantidade,1) :-
     resolveDFS(Nodo,Caminho,Distancia,Quantidade).
 
@@ -48,13 +73,10 @@ produtividade(Nodo,Distancia,Quantidade,5) :-
 %----------------------------------------Funcionalidade 4----------------------------------------
 % Escolher o circuito mais rápido (usando o critério da distância).
 
-circuitoMaisRapido(C) :-
-    allCaminhos('Green Distribuition',L), % se for em geral
-    %todosOsCaminhosTerritorio('Territorio',L) % se for de um determinado território
-    circuitoMaisRapidoAux(L,D,C1),
-    inverso(C1,CAux),
-    apagaCabeca(CAux,CV),
-    append(C1,CV,C).
+circuitoMaisRapido(IdEnc,Alg,C) :-
+    encomenda(IdEnc,_,_,_,Territorio),
+    estrategiaProcura(Territorio,C,Distancia,_,Alg).
+    %circuitoMaisRapidoAux(L,D,C1)
 
 %----------------------------------------Funcionalidade 5----------------------------------------
 % Escolher o circuito mais ecológico (usando critério de tempo).

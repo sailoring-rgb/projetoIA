@@ -56,7 +56,7 @@ fase(2) :-
     write('2. Representar os diversos pontos de entrega (freguesias) disponíveis em forma de grafo.'),nl,
     write('3. Identificar quais os circuitos com maior número de entregas (por volume e peso).'),nl,
     write('4. Comparar circuitos de entrega tendo em conta os indicadores de produtividade.'),nl,
-    write('5. Escolher o circuito mais rápido (usando o critério da distância).'),nl,
+    write('5. Escolher o circuito mais rápido para entregar uma dada encomenda, utilizado um dado algoritmo de pesquisa.'),nl,
     write('6. Escolher o circuito mais ecológico (usando um critério de tempo).'),nl,
     write('0. Sair'),nl,
     write('-----------------------------------------------------------------------------------------------------------------------'),nl,nl,
@@ -162,7 +162,7 @@ funcionalidade1(10) :-
 
 funcionalidade1(11) :-
     clienteMaisEncomendas(IDs),
-    write('ID(s) do(s) cliente(s) com mais encomendas: '), write(IDs),!,nl.
+    write('ID(s) do(s) cliente(s) com mais encomendas: '),write(IDs),!,nl.
 
 funcionalidade1(12) :-
     estafetasMenosPontuais(L),
@@ -172,7 +172,7 @@ funcionalidade1(12) :-
 %----------------------------------------------------------------FASE2----------------------------------------------------------------
 
 funcionalidade2(1) :-
-    write('Indique o território a consultar: '),!,nl,
+    write('Indique o território a consultar: '),nl,
     read(Input),nl,
     ((pontoEntrega(Input) -> todosOsCaminhosTerritorio(Input,L),write(L),!,nl);
      (nao(pontoEntrega(Input)) -> write('Não existem informações sobre este território.'),!,nl)).
@@ -185,24 +185,37 @@ funcionalidade2(3) :-
     write('Circuito(s) com maior número de entregas: '),nl,nl,write(L),!,nl.
 
 funcionalidade2(4) :-
-    write('Indique o território a consultar: '),!,nl,
+    write('Indique o território a consultar: '),nl,
     read(Input),nl,
-    write('Profundidade (DFS):'),!,nl,produtividade(Input,D1,Q1,1),
+    write('Profundidade (DFS):'),nl,produtividade(Input,D1,Q1,1),
         write('*** Distância: '),write(D1),!,nl,
         write('*** Quantidade: '),write(Q1),!,nl,nl,
-    write('Largura (BFS):'),!,nl,produtividade(Input,D2,Q2,2),
+    write('Largura (BFS):'),nl,produtividade(Input,D2,Q2,2),
         write('*** Distância: '),write(D2),!,nl,
         write('*** Quantidade: '),write(Q2),!,nl,nl,
-    write('Limitada em Profundidade:'),!,nl,produtividade(Input,D3,Q3,3),
+    write('Limitada em Profundidade:'),nl,produtividade(Input,D3,Q3,3),
         write('*** Distância: '),write(D3),!,nl,
         write('*** Quantidade: '),write(Q3),!,nl,nl,
-    write('Gulosa (Greedy):'),!,nl,produtividade(Input,D4,Q4,4),
+    write('Gulosa (Greedy):'),nl,produtividade(Input,D4,Q4,4),
         write('*** Distância: '),write(D4),!,nl,
         write('*** Quantidade: '),write(Q4),!,nl,nl,
-    write('A Estrela (A*):'),!,nl,produtividade(Input,D5,Q5,5),
+    write('A Estrela (A*):'),nl,produtividade(Input,D5,Q5,5),
         write('*** Distância: '),write(D5),!,nl,
         write('*** Quantidade: '),write(Q5),!,nl,nl.
 
-%funcionalidade2(5) :-
+funcionalidade2(5) :-
+    write('Indique o ID da encomenda: '),nl,
+    read(Input1),nl,nl,
+    write('---------Algoritmos de Pesquisa---------'),nl,
+    write('1. Profundidade (DFS)'),nl,
+    write('2. Largura (BFS)'),nl,
+    write('3. Limitada em Profundidade'),nl,
+    write('4. Gulosa (Greedy)'),nl,
+    write('5. A Estrela (A*)'),nl,
+    write('----------------------------------------'),nl,nl,
+    write('Escolha um: '),nl,
+    read(Input2),
+    circuitoMaisRapido(Input1,Input2,C),nl,
+    write('Caminho mais rápido (critério distância): '),write(C),!,nl.
 
 %funcionalidade2(6) :-
