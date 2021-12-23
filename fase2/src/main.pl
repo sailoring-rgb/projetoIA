@@ -205,7 +205,7 @@ funcionalidade2(4) :-
 
 funcionalidade2(5) :-
     write('Indique o ID da encomenda: '),nl,
-    read(Input1),nl,nl,
+    read(Input1),nl,
     write('---------Algoritmos de Pesquisa---------'),nl,
     write('1. Profundidade (DFS)'),nl,
     write('2. Largura (BFS)'),nl,
