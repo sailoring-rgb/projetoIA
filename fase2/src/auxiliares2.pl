@@ -125,7 +125,7 @@ expande_aestrela(Caminho,ExpCaminhos) :-
 %--------------------------------------Auxiliares Para o Circuito--------------------------------------
 
 meioDeTransporteUsado(C,PesoTotal,Transporte) :-
-    numEntregasCircuito(C,PesoTotal,_),
+    %numEntregasCircuito(C,PesoTotal,_),
     ((PesoTotal =< 5 -> Transporte = 'Bicicleta');
      (PesoTotal > 5, PesoTotal =< 20 -> Transporte = 'Mota');
      (PesoTotal > 20, PesoTotal =< 100 -> Transporte = 'Carro')).

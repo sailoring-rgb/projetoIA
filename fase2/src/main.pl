@@ -218,4 +218,17 @@ funcionalidade2(5) :-
     circuitoMaisRapido(Input1,Input2,C),nl,
     write('Caminho mais rápido (critério distância): '),write(C),!,nl.
 
-%funcionalidade2(6) :-
+funcionalidade2(6) :-
+    write('Indique o ID da encomenda: '),nl,
+    read(Input1),nl,
+    write('---------Algoritmos de Pesquisa---------'),nl,
+    write('1. Profundidade (DFS)'),nl,
+    write('2. Largura (BFS)'),nl,
+    write('3. Limitada em Profundidade'),nl,
+    write('4. Gulosa (Greedy)'),nl,
+    write('5. A Estrela (A*)'),nl,
+    write('----------------------------------------'),nl,nl,
+    write('Escolha um: '),nl,
+    read(Input2),
+    circuitoMaisEficiente(Input1,Input2,C),nl,
+    write('Caminho mais eficiente (critério tempo): '),write(C),!,nl.
