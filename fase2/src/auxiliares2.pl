@@ -124,13 +124,14 @@ expande_aestrela(Caminho,ExpCaminhos) :-
 
 %--------------------------------------Auxiliares Para o Circuito--------------------------------------
 
+% Devolve o meio de transporte mais adequado a uma entrega, tendo em conta o peso da(s) encomenda(s)
 meioDeTransporteUsado(C,PesoTotal,Transporte) :-
     %numEntregasCircuito(C,PesoTotal,_),
     ((PesoTotal =< 5 -> Transporte = 'Bicicleta');
      (PesoTotal > 5, PesoTotal =< 20 -> Transporte = 'Mota');
      (PesoTotal > 20, PesoTotal =< 100 -> Transporte = 'Carro')).
 
-% Devolve a velocidade a que uma encomenda foi entregue
+% Devolve a velocidade a que uma encomenda foi entregue, consoante o seu transporte e o seu peso
 % # Bicicleta - 10 km/h
 % # Moto - 35 km/h
 % # Carro - 25 km/h
@@ -139,6 +140,7 @@ velocidadeEntrega(Transporte,Peso,Velocidade) :-
      (Transporte == 'Mota' -> Velocidade is 35 - Peso * 0.5);
      (Transporte == 'Carro' -> Velocidade is 25 - Peso * 0.1)).
 
+% Devolve a distância de um circuito
 distanciaCircuito([Freg],0).
 distanciaCircuito([Freg,NextFreg],D) :- g(G),adjacente(Freg,NextFreg,D,G). 
 distanciaCircuito([Freg,NextFreg|T],D) :-
@@ -146,12 +148,14 @@ distanciaCircuito([Freg,NextFreg|T],D) :-
     distanciaCircuito([NextFreg|T],D1),
     D is (Dist + D1)*2.
 
+% Devolve o tempo de um circuito, consoante a distância do circuito e a velocidade a que foi entregue
 tempoCircuito(C,T) :- 
     distanciaCircuito(C,Distancia),
     meioDeTransporteUsado(C,PesoTotal,Transporte),
     velocidadeEntrega(Transporte,PesoTotal,Velocidade),
     T is Distancia/Velocidade.
-    
+
+% Devolve o número total de entregas feitas num circuito, juntamente com o peso total carregado
 numEntregasCircuito([],0,0).
 numEntregasCircuito([Freg],PesoTotal,N) :-
     findall((IdEnc,Peso),encomenda(IdEnc,_,Peso,_,Freg),L),
@@ -165,10 +169,12 @@ numEntregasCircuito([Freg|T],PesoTotal,N) :-
     PesoTotal is PesoTotal1 + PesoTotal2,
     N is N1 + N2.
 
+% Devolve todos os caminhos possíveis do sistema
 allCaminhos(A,L) :- findall(Caminho,(caminho(A,B,Caminho),A\=B),L).
 
 %--------------------------------------Auxiliares Funcionalidade 1--------------------------------------
 
+% Devolve o caminho acíclico P do nó A ao nó B 
 caminho(A,B,P) :- g(G),caminho1(G,A,B,[B],P).
 
 caminho1(G,A,A,[A|P1],[A|P1]).
@@ -177,6 +183,7 @@ caminho1(G,A,B,Hist,P) :-
     nao(membro(X,Hist)), 
     caminho1(G,A,X,[X|Hist],P).
 
+% Devolve todos os caminhos possíveis para chegar a um território
 todosOsCaminhosAux(Territorio,[P],L) :- allCaminhosTerritorio('Green Distribuition',P,Territorio,L).
 todosOsCaminhosAux(Territorio,[P|T],L) :- 
     allCaminhosTerritorio('Green Distribuition',P,Territorio,R),
@@ -187,6 +194,7 @@ allCaminhosTerritorio(A,B,T,L) :- findall(Caminho,(caminho(A,B,Caminho),membro(T
 
 %--------------------------------------Auxiliares Funcionalidade 2--------------------------------------
 
+% Devolve os circuitos com maior número de entregas associadas
 circuitosMaiorNumEntregasAux([C],MaxE,L) :- numEntregasCircuito(C,_,NumE), (NumE == MaxE -> adiciona(C,L1,L) ; L = []).
 circuitosMaiorNumEntregasAux([C|T],MaxE,L) :- 
     numEntregasCircuito(C,_,NumE),
@@ -195,6 +203,7 @@ circuitosMaiorNumEntregasAux([C|T],MaxE,L) :-
     apagaCabeca(CAux,CV),
     append(C,CV,Circuito),adiciona(Circuito,L1,L) ; L = L1).
 
+% Devolve o valor maximo de entregas feitas num dos circuitos
 maiorNumEntregasCircuito([C],Max) :- numEntregasCircuito(C,_,Max).
 maiorNumEntregasCircuito([C|T],Max) :-
     numEntregasCircuito(C,_,NumE),
@@ -203,6 +212,7 @@ maiorNumEntregasCircuito([C|T],Max) :-
 
 %--------------------------------------Auxiliares Funcionalidade 4--------------------------------------
 
+% Devolve o circuito mais rápido de acordo com o critério distância 
 circuitoMaisRapidoAux([],0,_).
 circuitoMaisRapidoAux([C],D,C) :- distanciaCircuito(C,D).
 circuitoMaisRapidoAux([C|T],Min,Circuito) :- 
@@ -213,6 +223,7 @@ circuitoMaisRapidoAux([C|T],Min,Circuito) :-
 
 %--------------------------------------Auxiliares Funcionalidade 5--------------------------------------
 
+% Devolve o circuito mais eficiente de acordo com o critério tempo 
 circuitoMaisEficienteAux([],0,_).
 circuitoMaisEficienteAux([C],T,C) :- tempoCircuito(C,T).
 circuitoMaisEficienteAux([C|T],Min,Circuito) :-

@@ -97,6 +97,7 @@ circuitoMaisEficiente(C) :-
 % # 3 - Limitada em Profundidade
 % # 4 - Gulosa
 % # 5 - A*
+
 obterEstatisticas(1) :-
     statistics(global_stack,[M1,L1]),
     time(resolveDFS('Lamas',Caminho,Distancia)),
