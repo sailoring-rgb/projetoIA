@@ -16,6 +16,13 @@ resolveDFS(Nodo,Caminho,Distancia) :-
     append(CaminhoIda,[Nodo|CaminhoVolta],Caminho),
     Distancia is Dist*2.
 
+resolveDFSTempo(IdEnc,Caminho,Tempo) :-
+    encomenda(IdEnc,_,_,_,Nodo),
+    profundidade(Nodo,[Nodo],CaminhoVolta,Dist),
+    inverso(CaminhoVolta,CaminhoIda),
+    append(CaminhoIda,[Nodo|CaminhoVolta],Caminho),
+    tempoEntregaEncomenda(IdEnc,Dist,Tempo).
+
 profundidade(Nodo,_,[],0) :- goal(Nodo).
 profundidade(Nodo,Historico,[ProxNodo|Caminho],DistanciaT) :-
     g(G),adjacente(Nodo,ProxNodo,Distancia1,G),
@@ -34,6 +41,15 @@ resolveBFS(Nodo,Caminho,Distancia) :-
     inverso(CaminhoVolta,CaminhoIda),
     append(CaminhoIda,[Nodo|CaminhoVolta],Caminho),
     Distancia is Dist*2.
+
+resolveBFSTempo(IdEnc,Caminho,Tempo) :-
+    encomenda(IdEnc,_,_,_,Nodo),
+    goal(NodoFinal),
+    largura(NodoFinal,[[Nodo]],CaminhoAux,Dist),
+    apagaCabeca(CaminhoAux,CaminhoVolta),
+    inverso(CaminhoVolta,CaminhoIda),
+    append(CaminhoIda,[Nodo|CaminhoVolta],Caminho),
+    tempoEntregaEncomenda(IdEnc,Dist,Tempo).
 
 largura(NodoFinal,[[NodoFinal|T]|_],Caminho,0) :- inverso([NodoFinal|T],Caminho).
 largura(NodoFinal,[Lista|Outros],Caminho,DistanciaT) :-
@@ -55,6 +71,14 @@ resolveLimitada(Nodo,Caminho,Distancia,Limite) :-
     inverso(CaminhoVolta,CaminhoIda),
     append(CaminhoIda,[Nodo|CaminhoVolta],Caminho),
     Distancia is Dist*2.
+
+resolveLimitadaTempo(IdEnc,Caminho,Tempo,Limite) :-
+    encomenda(IdEnc,_,_,_,Nodo),
+    profundidadeLimitada(Nodo,[Nodo],CaminhoAux,Dist,Limite),
+    apagaCabeca(CaminhoAux,CaminhoVolta),
+    inverso(CaminhoVolta,CaminhoIda),
+    append(CaminhoIda,[Nodo|CaminhoVolta],Caminho),
+    tempoEntregaEncomenda(IdEnc,Dist,Tempo).
 
 profundidadeLimitada(Nodo,_,[],0,_) :- goal(Nodo).
 profundidadeLimitada(Nodo,Historico,[ProxNodo|Caminho],DistanciaT,Limite) :-
@@ -90,6 +114,29 @@ agulosa(Caminhos,Solucao) :-
 
 expande_gulosa(Caminho,Expandidos) :- findall(NovoCaminho,adjacenteV2(Caminho,NovoCaminho), Expandidos).
 
+resolveGulosaTempo(IdEnc,Caminho/Custo) :-
+    encomenda(IdEnc,_,_,_,Nodo),
+    estimaTempoEnc(IdEnc,Nodo,Estima),
+    velocidadeEncomenda(IdEnc,V),
+    agulosa_tempo(V,[[Nodo]/0/Estima],CaminhoIda/CustoIda/_),
+    inverso(CaminhoIda,CaminhoAux),
+    apagaCabeca(CaminhoAux,CaminhoVolta),
+    append(CaminhoIda,CaminhoVolta,Caminho),
+    Custo is CustoIda*2.
+
+agulosa_tempo(_,Caminhos,Caminho) :-
+    obter_melhor(Caminhos,Caminho),
+    Caminho = [Nodo|_]/_/_,
+    goal(Nodo).
+agulosa_tempo(V,Caminhos,Solucao) :-
+    obter_melhor(Caminhos,MelhorCaminho),
+    seleciona(MelhorCaminho,Caminhos,OutrosCaminhos),
+    expande_gulosa_tempo(V,MelhorCaminho,Expandidos),
+    append(OutrosCaminhos,Expandidos,NovosCaminhos),
+    agulosa_tempo(V,NovosCaminhos,Solucao).
+
+expande_gulosa_tempo(V,Caminho,Expandidos) :- findall(NovoCaminho,adjacenteV3(V,Caminho,NovoCaminho),Expandidos).
+
 %------------------------------------Pesquisa A Estrela------------------------------------
 
 % # Caminho: Green Distribuition -> Ponto de Entrega -> Green Distribuition
@@ -106,7 +153,6 @@ aestrela(Caminhos,Caminho) :-
     obter_melhor(Caminhos,Caminho),
     Caminho = [Nodo|_]/_/_,
     goal(Nodo).
-
 aestrela(Caminhos,SolucaoCaminho) :-
     obter_melhor(Caminhos,MelhorCaminho),
     seleciona(MelhorCaminho,Caminhos,OutrosCaminhos),
@@ -117,16 +163,40 @@ aestrela(Caminhos,SolucaoCaminho) :-
 expande_aestrela(Caminho,ExpCaminhos) :-
     findall(NovoCaminho,adjacenteV2(Caminho,NovoCaminho),ExpCaminhos).
 
+resolveAEstrelaTempo(IdEnc,Caminho/Custo) :-
+    encomenda(IdEnc,_,_,_,Nodo),
+    estimaTempoEnc(IdEnc,Nodo,Estima),
+    velocidadeEncomenda(IdEnc,V),
+    aestrela_tempo(V,[[Nodo]/0/Estima],CaminhoIda/CustoIda/_),
+    inverso(CaminhoIda,CaminhoAux),
+    apagaCabeca(CaminhoAux,CaminhoVolta),
+    append(CaminhoIda,CaminhoVolta,Caminho),
+    Custo is CustoIda*2.
+
+aestrela_tempo(_,Caminhos,Caminho) :-
+    obter_melhor(Caminhos,Caminho),
+    Caminho = [Nodo|_]/_/_,
+    goal(Nodo).
+aestrela_tempo(V,Caminhos,SolucaoCaminho) :-
+    obter_melhor(Caminhos,MelhorCaminho),
+    seleciona(MelhorCaminho,Caminhos,OutrosCaminhos),
+    expande_aestrela_tempo(V,MelhorCaminho,ExpCaminhos),
+    append(OutrosCaminhos,ExpCaminhos,NovoCaminhos),
+    aestrela_tempo(V,NovoCaminhos,SolucaoCaminho). 
+
+expande_aestrela_tempo(V,Caminho,ExpCaminhos) :-
+    findall(NovoCaminho,adjacenteV3(V,Caminho,NovoCaminho),ExpCaminhos).
+
 %--------------------------------------Auxiliares Para o Circuito--------------------------------------
 
 % Devolve o meio de transporte mais adequado a uma entrega, tendo em conta o peso da(s) encomenda(s)
-meioDeTransporteUsado(C,PesoTotal,Transporte) :-
-    numEntregasCircuito(C,PesoTotal,_),
+meioDeTransporteUsado(PesoTotal,Transporte) :-
+    %numEntregasCircuito(C,PesoTotal,_),
     ((PesoTotal =< 5 -> Transporte = 'Bicicleta');
      (PesoTotal > 5, PesoTotal =< 20 -> Transporte = 'Mota');
      (PesoTotal > 20, PesoTotal =< 100 -> Transporte = 'Carro')).
 
-% Devolve a velocidade a que uma encomenda foi entregue, consoante o seu transporte e o seu peso
+% Devolve a velocidade de uma entrega, consoante o seu transporte e o seu peso
 % # Bicicleta - 10 km/h
 % # Moto - 35 km/h
 % # Carro - 25 km/h
@@ -143,11 +213,22 @@ distanciaCircuito([Freg,NextFreg|T],D) :-
     distanciaCircuito([NextFreg|T],D1),
     D is (Dist + D1)*2.
 
-% Devolve o tempo de um circuito, consoante a distância do circuito e a velocidade a que foi entregue
-tempoCircuito(C,D,T) :- 
-    meioDeTransporteUsado(C,PesoTotal,Transporte),
-    velocidadeEntrega(Transporte,PesoTotal,Velocidade),
+% Devolve o tempo de entrega de uma encomenda, consoante a distância do circuito e a velocidade a que foi entregue
+tempoEntregaEncomenda(IdEnc,D,T) :-
+    velocidadeEncomenda(IdEnc,Velocidade),
     T is D/Velocidade.
+
+% Devolve a velocidade a que uma encomenda poderá ser entregue, consoante o transporte e o peso
+velocidadeEncomenda(IdEnc,Velocidade) :-
+    encomenda(IdEnc,_,Peso,_,_),
+    meioDeTransporteUsado(Peso,Transporte),
+    velocidadeEntrega(Transporte,Peso,Velocidade).
+
+% Devolve o tempo de um circuito, consoante a distância do circuito e a velocidade a que foi entregue
+%tempoCircuito(C,D,T) :- 
+    %meioDeTransporteUsado(C,PesoTotal,Transporte),
+    %velocidadeEntrega(Transporte,PesoTotal,Velocidade),
+    % T is D/Velocidade.
 
 % Devolve o número total de entregas feitas num circuito, juntamente com o peso total carregado
 numEntregasCircuito([],0,0).
@@ -237,12 +318,24 @@ adjacenteV2([Nodo|Caminho]/Custo1/_,[ProxNodo,Nodo|Caminho]/Custo2/Estima) :-
 	Custo2 is Custo1 + PassoCusto,
 	estima(ProxNodo,Estima).
 
+adjacenteV3(V,[Nodo|Caminho]/Custo1/_,[ProxNodo,Nodo|Caminho]/Custo2/Estima) :-
+    g(G),adjacente(Nodo,ProxNodo,Dist,G),
+    PassoTempo is Dist/V,
+    nao(membro(ProxNodo,Caminho)),
+    Custo2 is Custo1 + PassoTempo,
+    estima(ProxNodo,EstimaDist),
+    Estima is EstimaDist/V.
+
 obter_melhor([Caminho],Caminho) :- !.
 obter_melhor([Caminho1/Custo1/Estima1,_/Custo2/Estima2|Caminhos],MelhorCaminho) :-
     Estima1 =< Estima2, !,
     obter_melhor([Caminho1/Custo1/Estima1|Caminhos],MelhorCaminho).
 obter_melhor([_|Caminhos],MelhorCaminho) :-
     obter_melhor(Caminhos,MelhorCaminho).
+
+estimaTempoEnc(IdEnc,ProxNodo,TE) :-
+    estima(ProxNodo,Estima),
+    tempoEntregaEncomenda(IdEnc,Estima,TE).
 
 somaPesos([],0).
 somaPesos([(_,P)],P).
