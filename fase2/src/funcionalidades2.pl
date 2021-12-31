@@ -7,30 +7,6 @@
 
 :- style_check(-singleton).
 
-%-------------------------------------------Pesquisa---------------------------------------------
-% Executa um dos algoritmos de pesquisa, dependendo do valor recebido.
-
-% # 1 - DFS
-% # 2 - BFS
-% # 3 - Limitada em Profundidade
-% # 4 - Gulosa
-% # 5 - A*
-
-estrategiaProcura(Nodo,Caminho,Distancia,1) :-
-    resolveDFS(Nodo,Caminho,Distancia).
-
-estrategiaProcura(Nodo,Caminho,Distancia,2) :-
-    resolveBFS(Nodo,Caminho,Distancia).
-
-estrategiaProcura(Nodo,Caminho,Distancia,3) :-
-    resolveLimitada(Nodo,Caminho,Distancia,5).
-
-estrategiaProcura(Nodo,Caminho,Distancia,4) :-
-    resolveGulosa(Nodo,Caminho/Distancia).
-
-estrategiaProcura(Nodo,Caminho,Distancia,5) :-
-    resolveAEstrela(Nodo,Caminho/Distancia).
-
 %----------------------------------------Funcionalidade 1----------------------------------------
 % Gerar os circuitos de entrega, caso existam, que cubram um determinado território. 
 
@@ -55,9 +31,9 @@ circuitosMaiorNumEntregas(L) :-
 % # 4 - Gulosa
 % # 5 - A*
 
-/*
-APARENTEMENTE VÃO SER CONSTRUÍDOS ALGORITMOS PARA CALCULAR O TEMPO QUE DEVERÁ USAR A VELOCIDADE.
-*/
+
+% APARENTEMENTE VÃO SER CONSTRUÍDOS ALGORITMOS PARA CALCULAR O TEMPO QUE DEVERÁ USAR A VELOCIDADE.
+
 produtividade(Nodo,Distancia,Tempo,1) :-
     resolveDFS(Nodo,Caminho,Distancia),
     tempoCircuito(Caminho,Distancia,Tempo).
@@ -81,13 +57,17 @@ produtividade(Nodo,Distancia,Tempo,5) :-
 %----------------------------------------Funcionalidade 4----------------------------------------
 % Escolher o circuito mais rápido (usando o critério da distância).
 
-circuitoMaisRapido(IdEnc,Alg,C) :-
-    encomenda(IdEnc,_,_,_,Territorio),
-    estrategiaProcura(Territorio,C,Distancia,Alg).
-    %circuitoMaisRapidoAux(L,D,C1)
+circuitoMaisRapido(IdEnc,Alg,C,D) :-
+    encomenda(IdEnc,_,_,_,Freg),
+    circuitoMaisRapidoAux(Freg,C,D,Alg).
 
 %----------------------------------------Funcionalidade 5----------------------------------------
 % Escolher o circuito mais ecológico (usando critério de tempo).
+
+%circuitoMaisEficiente(IdEnc,Alg,C) :-
+    %encomenda(IdEnc,_,P,_,Freg),
+    %estrategiaProcura(Freg,Cam,D,Alg),
+    
 
 /*
 SERÁ ALTERADO !!!!!

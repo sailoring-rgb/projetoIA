@@ -187,6 +187,30 @@ aestrela_tempo(V,Caminhos,SolucaoCaminho) :-
 expande_aestrela_tempo(V,Caminho,ExpCaminhos) :-
     findall(NovoCaminho,adjacenteV3(V,Caminho,NovoCaminho),ExpCaminhos).
 
+%-------------------------------------------Pesquisa---------------------------------------------
+% Executa um dos algoritmos de pesquisa, dependendo do valor recebido.
+
+% # 1 - DFS
+% # 2 - BFS
+% # 3 - Limitada em Profundidade
+% # 4 - Gulosa
+% # 5 - A*
+
+estrategiaProcura(Nodo,Caminho,Distancia,1) :-
+    resolveDFS(Nodo,Caminho,Distancia).
+
+estrategiaProcura(Nodo,Caminho,Distancia,2) :-
+    resolveBFS(Nodo,Caminho,Distancia).
+
+estrategiaProcura(Nodo,Caminho,Distancia,3) :-
+    resolveLimitada(Nodo,Caminho,Distancia,5).
+
+estrategiaProcura(Nodo,Caminho,Distancia,4) :-
+    resolveGulosa(Nodo,Caminho/Distancia).
+
+estrategiaProcura(Nodo,Caminho,Distancia,5) :-
+    resolveAEstrela(Nodo,Caminho/Distancia).
+
 %--------------------------------------Auxiliares Para o Circuito--------------------------------------
 
 % Devolve o meio de transporte mais adequado a uma entrega, tendo em conta o peso da(s) encomenda(s)
@@ -287,14 +311,20 @@ maiorNumEntregasCircuito([C|T],Max) :-
 
 %--------------------------------------Auxiliares Funcionalidade 4--------------------------------------
 
+% Devolve o circuito mais rápido, conforme o algoritmo escolhido
+circuitoMaisRapidoAux(Territorio,Caminho,Distancia,4) :- estrategiaProcura(Territorio,Caminho,Distancia,4).
+circuitoMaisRapidoAux(Territorio,Caminho,Distancia,5) :- estrategiaProcura(Territorio,Caminho,Distancia,5).
+circuitoMaisRapidoAux(Territorio,Caminho,Distancia,Alg) :-
+      findall((C,D),estrategiaProcura(Territorio,C,D,Alg),Caminhos),
+      circuitoMaisRapidoAux1(Caminhos,Distancia,Caminho).
+
 % Devolve o circuito mais rápido de acordo com o critério distância 
-circuitoMaisRapidoAux([],0,_).
-circuitoMaisRapidoAux([C],D,C) :- distanciaCircuito(C,D).
-circuitoMaisRapidoAux([C|T],Min,Circuito) :- 
-    distanciaCircuito(C,Dist1),
-    circuitoMaisRapidoAux(T,Dist2,C1),
-    ((Dist1 < Dist2 -> Min = Dist1, Circuito = C);
-     Min = Dist2, Circuito = C1).
+circuitoMaisRapidoAux1([],0,_).
+circuitoMaisRapidoAux1([(C,D)],D,C).
+circuitoMaisRapidoAux1([(C,D)|T],Min,Circuito) :- 
+    circuitoMaisRapidoAux1(T,D2,C1),
+    ((D < D2 -> Min = D, Circuito = C);
+     Min = D2, Circuito = C1).
 
 %--------------------------------------Auxiliares Funcionalidade 5--------------------------------------
 
