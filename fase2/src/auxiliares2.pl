@@ -187,7 +187,7 @@ aestrela_tempo(V,Caminhos,SolucaoCaminho) :-
 expande_aestrela_tempo(V,Caminho,ExpCaminhos) :-
     findall(NovoCaminho,adjacenteV3(V,Caminho,NovoCaminho),ExpCaminhos).
 
-%-------------------------------------------Pesquisa---------------------------------------------
+%-------------------------------------------Pesquisa (Distancia)---------------------------------------------
 % Executa um dos algoritmos de pesquisa, dependendo do valor recebido.
 
 % # 1 - DFS
@@ -211,11 +211,34 @@ estrategiaProcura(Nodo,Caminho,Distancia,4) :-
 estrategiaProcura(Nodo,Caminho,Distancia,5) :-
     resolveAEstrela(Nodo,Caminho/Distancia).
 
+%-------------------------------------------Pesquisa (Tempo)---------------------------------------------
+% Executa um dos algoritmos de pesquisa, dependendo do valor recebido.
+
+% # 1 - DFS
+% # 2 - BFS
+% # 3 - Limitada em Profundidade
+% # 4 - Gulosa
+% # 5 - A*
+
+estrategiaProcuraTempo(IdEnc,Caminho,Tempo,1) :-
+    resolveDFSTempo(IdEnc,Caminho,Tempo).
+
+estrategiaProcuraTempo(IdEnc,Caminho,Tempo,2) :-
+    resolveBFSTempo(IdEnc,Caminho,Tempo).
+
+estrategiaProcuraTempo(IdEnc,Caminho,Tempo,3) :-
+    resolveLimitadaTempo(IdEnc,Caminho,Tempo,5).
+
+estrategiaProcuraTempo(IdEnc,Caminho,Tempo,4) :-
+    resolveGulosaTempo(IdEnc,Caminho/Tempo).
+
+estrategiaProcuraTempo(IdEnc,Caminho,Tempo,5) :-
+    resolveAEstrelaTempo(IdEnc,Caminho/Tempo).
+
 %--------------------------------------Auxiliares Para o Circuito--------------------------------------
 
 % Devolve o meio de transporte mais adequado a uma entrega, tendo em conta o peso da(s) encomenda(s)
 meioDeTransporteUsado(PesoTotal,Transporte) :-
-    %numEntregasCircuito(C,PesoTotal,_),
     ((PesoTotal =< 5 -> Transporte = 'Bicicleta');
      (PesoTotal > 5, PesoTotal =< 20 -> Transporte = 'Mota');
      (PesoTotal > 20, PesoTotal =< 100 -> Transporte = 'Carro')).
@@ -312,8 +335,6 @@ maiorNumEntregasCircuito([C|T],Max) :-
 %--------------------------------------Auxiliares Funcionalidade 4--------------------------------------
 
 % Devolve o circuito mais rápido, conforme o algoritmo escolhido
-circuitoMaisRapidoAux(Territorio,Caminho,Distancia,4) :- estrategiaProcura(Territorio,Caminho,Distancia,4).
-circuitoMaisRapidoAux(Territorio,Caminho,Distancia,5) :- estrategiaProcura(Territorio,Caminho,Distancia,5).
 circuitoMaisRapidoAux(Territorio,Caminho,Distancia,Alg) :-
       findall((C,D),estrategiaProcura(Territorio,C,D,Alg),Caminhos),
       circuitoMaisRapidoAux1(Caminhos,Distancia,Caminho).
@@ -328,13 +349,17 @@ circuitoMaisRapidoAux1([(C,D)|T],Min,Circuito) :-
 
 %--------------------------------------Auxiliares Funcionalidade 5--------------------------------------
 
+% Devolve o circuito mais eficiente, conforme o algoritmo escolhido
+circuitoMaisEficienteAux(IdEnc,Caminho,Tempo,Alg) :-
+      findall((C,T),estrategiaProcuraTempo(IdEnc,C,T,Alg),Caminhos),
+      circuitoMaisEficienteAux1(Caminhos,Tempo,Caminho).
+
 % Devolve o circuito mais eficiente de acordo com o critério tempo 
-circuitoMaisEficienteAux([],0,_).
-circuitoMaisEficienteAux([C],T,C) :- tempoCircuito(C,T).
-circuitoMaisEficienteAux([C|T],Min,Circuito) :-
-    tempoCircuito(C,T1),
-    circuitoMaisEficienteAux(T,T2,C1),
-    ((T1 < T2 -> Min = T1, Circuito = C);
+circuitoMaisEficienteAux1([],0,_).
+circuitoMaisEficienteAux1([(C,T)],T,C).
+circuitoMaisEficienteAux1([(C,T)|Cs],Min,Circuito) :-
+    circuitoMaisEficienteAux1(Cs,T2,C1),
+    ((T < T2 -> Min = T, Circuito = C);
      Min = T2, Circuito = C1).
 
 %---------------------------------------------------Anexos---------------------------------------------------

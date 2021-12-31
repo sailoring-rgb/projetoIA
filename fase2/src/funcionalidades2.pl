@@ -64,21 +64,8 @@ circuitoMaisRapido(IdEnc,Alg,C,D) :-
 %----------------------------------------Funcionalidade 5----------------------------------------
 % Escolher o circuito mais ecológico (usando critério de tempo).
 
-%circuitoMaisEficiente(IdEnc,Alg,C) :-
-    %encomenda(IdEnc,_,P,_,Freg),
-    %estrategiaProcura(Freg,Cam,D,Alg),
-    
-
-/*
-SERÁ ALTERADO !!!!!
-*/
-circuitoMaisEficiente(C) :-
-    allCaminhos('Green Distribuition',L), % se for em geral
-    %todosOsCaminhosTerritorio('Territorio',L) % se for de um determinado território
-    circuitoMaisEficienteAux(L,T,C1),
-    inverso(C1,CAux),
-    apagaCabeca(CAux,CV),
-    append(C1,CV,C).
+circuitoMaisEficiente(IdEnc,Alg,C,T) :-
+    circuitoMaisEficienteAux(IdEnc,C,T,Alg).
 
 %------------------------------------------Estatísticas------------------------------------------
 % Analisar comparativamente as diferentes estratégias de procura.
