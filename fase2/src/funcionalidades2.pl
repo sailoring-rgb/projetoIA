@@ -31,28 +31,30 @@ circuitosMaiorNumEntregas(L) :-
 % # 4 - Gulosa
 % # 5 - A*
 
+produtividade(IdEnc,Distancia,Tempo,1) :-
+    encomenda(IdEnc,_,_,_,Freg),
+    estrategiaProcura(Nodo,Caminho,Distancia,1),
+    estrategiaProcuraTempo(IdEnc,Caminho,Tempo,1).
 
-% APARENTEMENTE VÃO SER CONSTRUÍDOS ALGORITMOS PARA CALCULAR O TEMPO QUE DEVERÁ USAR A VELOCIDADE.
+produtividade(IdEnc,Distancia,Tempo,2) :- 
+    encomenda(IdEnc,_,_,_,Freg),
+    estrategiaProcura(Freg,Caminho,Distancia,2),
+    estrategiaProcuraTempo(IdEnc,Caminho,Tempo,2).
 
-produtividade(Nodo,Distancia,Tempo,1) :-
-    resolveDFS(Nodo,Caminho,Distancia),
-    tempoCircuito(Caminho,Distancia,Tempo).
+produtividade(IdEnc,Distancia,Tempo,3) :- 
+    encomenda(IdEnc,_,_,_,Freg),
+    estrategiaProcura(Freg,Caminho,Distancia,3),
+    estrategiaProcuraTempo(IdEnc,Caminho,Tempo,3).
 
-produtividade(Nodo,Distancia,Tempo,2) :- 
-    resolveBFS(Nodo,Caminho,Distancia),
-    tempoCircuito(Caminho,Distancia,Tempo).
+produtividade(IdEnc,Distancia,Tempo,4) :-
+    encomenda(IdEnc,_,_,_,Freg),
+    estrategiaProcura(Freg,Caminho,Distancia,4),
+    estrategiaProcuraTempo(IdEnc,Caminho,Tempo,4).
 
-produtividade(Nodo,Distancia,Tempo,3) :- 
-    resolveLimitada(Nodo,Caminho,Distancia,5),
-    tempoCircuito(Caminho,Distancia,Tempo).
-
-produtividade(Nodo,Distancia,Tempo,4) :-
-    resolveGulosa(Nodo,Caminho/Distancia),
-    tempoCircuito(Caminho,Distancia,Tempo).
-
-produtividade(Nodo,Distancia,Tempo,5) :-
-    resolveAEstrela(Nodo,Caminho/Distancia),
-    tempoCircuito(Caminho,Distancia,Tempo).
+produtividade(IdEnc,Distancia,Tempo,5) :-
+    encomenda(IdEnc,_,_,_,Freg),
+    estrategiaProcura(Freg,Caminho,Distancia,5),
+    estrategiaProcuraTempo(IdEnc,Caminho,Tempo,5).
 
 %----------------------------------------Funcionalidade 4----------------------------------------
 % Escolher o circuito mais rápido (usando o critério da distância).

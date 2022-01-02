@@ -56,8 +56,8 @@ fase(2) :-
     write('2. Representar os diversos pontos de entrega (freguesias) disponíveis em forma de grafo.'),nl,
     write('3. Identificar quais os circuitos com maior número de entregas (por volume e peso).'),nl,
     write('4. Comparar circuitos de entrega tendo em conta os indicadores de produtividade.'),nl,
-    write('5. Escolher o circuito mais rápido para entregar uma dada encomenda, utilizado um dado algoritmo de pesquisa.'),nl,
-    write('6. Escolher o circuito mais ecológico (usando um critério de tempo).'),nl,
+    write('5. Escolher o circuito mais rápido para entregar uma dada encomenda, utilizado um algoritmo de pesquisa.'),nl,
+    write('6. Escolher o circuito mais ecológico para entregar uma dada encomenda, utilizado um algoritmo de pesquisa.'),nl,
     write('0. Sair'),nl,
     write('-----------------------------------------------------------------------------------------------------------------------'),nl,nl,
     write('Escolha um: '),nl,
@@ -185,7 +185,7 @@ funcionalidade2(3) :-
     write('Circuito(s) com maior número de entregas: '),nl,nl,write(L),!,nl.
 
 funcionalidade2(4) :-
-    write('Indique o território a consultar: '),nl,
+    write('Indique o ID da encomenda a entregar: '),nl,
     read(Input),nl,
     write('Profundidade (DFS):'),nl,produtividade(Input,D1,T1,1),
         write('*** Distância: '),write(D1),write(' km'),!,nl,
@@ -215,8 +215,9 @@ funcionalidade2(5) :-
     write('----------------------------------------'),nl,nl,
     write('Escolha um: '),nl,
     read(Input2),
-    circuitoMaisRapido(Input1,Input2,C),nl,
-    write('Caminho mais rápido (critério distância): '),write(C),!,nl.
+    circuitoMaisRapido(Input1,Input2,C,D),nl,
+    write('Caminho mais rápido: '),write(C),!,nl,
+    write('*** Distância: '),write(D),write(' km'),!,nl,nl.
 
 funcionalidade2(6) :-
     write('Indique o ID da encomenda: '),nl,
@@ -230,5 +231,6 @@ funcionalidade2(6) :-
     write('----------------------------------------'),nl,nl,
     write('Escolha um: '),nl,
     read(Input2),
-    circuitoMaisEficiente(Input1,Input2,C),nl,
-    write('Caminho mais eficiente (critério tempo): '),write(C),!,nl.
+    circuitoMaisEficiente(Input1,Input2,C,T),nl,
+    write('Caminho mais eficiente: '),write(C),!,nl,
+    write('*** Tempo: '),write(T),write(' horas'),!,nl,nl.

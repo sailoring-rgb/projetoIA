@@ -271,12 +271,6 @@ velocidadeEncomenda(IdEnc,Velocidade) :-
     meioDeTransporteUsado(Peso,Transporte),
     velocidadeEntrega(Transporte,Peso,Velocidade).
 
-% Devolve o tempo de um circuito, consoante a distância do circuito e a velocidade a que foi entregue
-%tempoCircuito(C,D,T) :- 
-    %meioDeTransporteUsado(C,PesoTotal,Transporte),
-    %velocidadeEntrega(Transporte,PesoTotal,Velocidade),
-    % T is D/Velocidade.
-
 % Devolve o número total de entregas feitas num circuito, juntamente com o peso total carregado
 numEntregasCircuito([],0,0).
 numEntregasCircuito([Freg],PesoTotal,N) :-
