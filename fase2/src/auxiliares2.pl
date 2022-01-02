@@ -252,14 +252,6 @@ velocidadeEntrega(Transporte,Peso,Velocidade) :-
      (Transporte == 'Mota' -> Velocidade is 35 - Peso * 0.5);
      (Transporte == 'Carro' -> Velocidade is 25 - Peso * 0.1)).
 
-% Devolve a distância de um circuito
-distanciaCircuito([Freg],0).
-distanciaCircuito([Freg,NextFreg],D) :- g(G),adjacente(Freg,NextFreg,D,G). 
-distanciaCircuito([Freg,NextFreg|T],D) :-
-    g(G),adjacente(Freg,NextFreg,Dist,G),
-    distanciaCircuito([NextFreg|T],D1),
-    D is (Dist + D1)*2.
-
 % Devolve o tempo de entrega de uma encomenda, consoante a distância do circuito e a velocidade a que foi entregue
 tempoEntregaEncomenda(IdEnc,D,T) :-
     velocidadeEncomenda(IdEnc,Velocidade),
