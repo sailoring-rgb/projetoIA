@@ -72,14 +72,6 @@ resolveLimitada(Nodo,Caminho,Distancia,Limite) :-
     append(CaminhoIda,[Nodo|CaminhoVolta],Caminho),
     Distancia is Dist*2.
 
-resolveLimitadaTempo(IdEnc,Caminho,Tempo,Limite) :-
-    encomenda(IdEnc,_,_,_,Nodo),
-    profundidadeLimitada(Nodo,[Nodo],CaminhoAux,Dist,Limite),
-    apagaCabeca(CaminhoAux,CaminhoVolta),
-    inverso(CaminhoVolta,CaminhoIda),
-    append(CaminhoIda,[Nodo|CaminhoVolta],Caminho),
-    tempoEntregaEncomenda(IdEnc,Dist,Tempo).
-
 profundidadeLimitada(Nodo,_,[],0,_) :- goal(Nodo).
 profundidadeLimitada(Nodo,Historico,[ProxNodo|Caminho],DistanciaT,Limite) :-
     Limite > 0,g(G),
@@ -88,6 +80,14 @@ profundidadeLimitada(Nodo,Historico,[ProxNodo|Caminho],DistanciaT,Limite) :-
     Limite1 is Limite-1,
     profundidadeLimitada(ProxNodo,[ProxNodo|Historico],Caminho,Distancia2,Limite1),
     DistanciaT is Distancia1 + Distancia2.
+
+resolveLimitadaTempo(IdEnc,Caminho,Tempo,Limite) :-
+    encomenda(IdEnc,_,_,_,Nodo),
+    profundidadeLimitada(Nodo,[Nodo],CaminhoAux,Dist,Limite),
+    apagaCabeca(CaminhoAux,CaminhoVolta),
+    inverso(CaminhoVolta,CaminhoIda),
+    append(CaminhoIda,[Nodo|CaminhoVolta],Caminho),
+    tempoEntregaEncomenda(IdEnc,Dist,Tempo).
 
 %--------------------------------------Pesquisa Gulosa--------------------------------------
 
@@ -312,7 +312,22 @@ todosOsCaminhosAux(Territorio,[P|T],L) :-
     todosOsCaminhosAux(Territorio,T,L1),
     concatena(R,L1,L).
 
-allCaminhosTerritorio(A,B,T,L) :- findall(Caminho,(caminho(A,B,Caminho),membro(T,Caminho)),L).
+% Dado um caminho de ida, devolve o circuito correspondente (ida + volta)
+geraCircuitos([],[]).
+geraCircuitos([C],[L]) :- 
+    inverso(C,CAux),
+    apagaCabeca(CAux,CV),
+    append(C,CV,L).
+geraCircuitos([C|T],L) :- 
+    inverso(C,CAux),
+    apagaCabeca(CAux,CV),
+    append(C,CV,Caminho),
+    geraCircuitos(T,L1),
+    adiciona(Caminho,L1,L).
+
+% Devolve todos os caminhos possíveis entre dois pontos que cubram um determinado território
+allCaminhosTerritorio(A,B,T,L) :- findall(Caminho,(caminho(A,B,Caminho),membro(T,Caminho)),R),
+                                  geraCircuitos(R,L).
 
 %--------------------------------------Auxiliares Funcionalidade 2--------------------------------------
 
