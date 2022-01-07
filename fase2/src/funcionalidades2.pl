@@ -23,14 +23,16 @@ circuitoMaiorNumEntregasPorPesoEVolume(1,Num,C,T) :-
     circuitoMaiorNumEntregasPorVolume(Num,C,T).
     
 circuitoMaiorNumEntregasPorPeso(Peso,C,T) :-
-    allCaminhos('Green Distribuition',R),
+    allCaminhos(R),
     maiorNumEntregasPorPeso(Peso,R,T),
-    circuitoMaiorNumEntregasPorPesoAux(Peso,T,R,C).
+    circuitoMaiorNumEntregasPorPesoAux(Peso,T,R,C1),
+    geraCircuitos(C1,C).
 
 circuitoMaiorNumEntregasPorVolume(Vol,C,T) :-
-    allCaminhos('Green Distribuition',R),
+    allCaminhos(R),
     maiorNumEntregasPorVolume(Vol,R,T),
-    circuitoMaiorNumEntregasPorVolumeAux(Vol,T,R,C).
+    circuitoMaiorNumEntregasPorVolumeAux(Vol,T,R,C1),
+    geraCircuitos(C1,C).
 
 %----------------------------------------Funcionalidade 3----------------------------------------
 % Comparar circuitos de entrega tendo em conta os indicadores de produtividade (distância e tempo).
@@ -83,9 +85,10 @@ circuitoMaisEficiente(IdEnc,Alg,C,T) :-
 % Identificar quais os circuitos com maior número de entregas.
 
 circuitosMaiorNumEntregas(MaxE,L) :- 
-    allCaminhos('Green Distribuition',R),
+    allCaminhos(R),
     maiorNumEntregasCircuito(R,MaxE),
-    circuitosMaiorNumEntregasAux(R,MaxE,L).
+    circuitosMaiorNumEntregasAux(R,MaxE,L1),
+    geraCircuitos(L1,L).
 
 %------------------------------------------Estatísticas------------------------------------------
 % Analisar comparativamente as diferentes estratégias de procura.

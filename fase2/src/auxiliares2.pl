@@ -277,27 +277,6 @@ numEntregasCircuito([Freg|T],PesoTotal,N) :-
     PesoTotal is PesoTotal1 + PesoTotal2,
     N is N1 + N2.
 
-% Devolve todos os caminhos possíveis do sistema
-allCaminhos(A,L) :- solucoes(Caminho,(caminho(A,B,Caminho),A\=B),L).
-
-%--------------------------------------Auxiliares Funcionalidade 1--------------------------------------
-
-% Devolve o caminho acíclico P do nó A ao nó B 
-caminho(A,B,P) :- g(G),caminho1(G,A,B,[B],P).
-
-caminho1(G,A,A,[A|P1],[A|P1]).
-caminho1(G,A,B,Hist,P) :-
-    adjacente(X,B,_,G),
-    nao(membro(X,Hist)), 
-    caminho1(G,A,X,[X|Hist],P).
-
-% Devolve todos os caminhos possíveis para chegar a um território
-todosOsCaminhosAux(Territorio,[P],L) :- allCaminhosTerritorio('Green Distribuition',P,Territorio,L).
-todosOsCaminhosAux(Territorio,[P|T],L) :- 
-    allCaminhosTerritorio('Green Distribuition',P,Territorio,R),
-    todosOsCaminhosAux(Territorio,T,L1),
-    concatena(R,L1,L).
-
 % Dado um caminho de ida, devolve o circuito correspondente (ida + volta)
 geraCircuitos([],[]).
 geraCircuitos([C],[L]) :- 
@@ -311,21 +290,31 @@ geraCircuitos([C|T],L) :-
     geraCircuitos(T,L1),
     adiciona(Caminho,L1,L).
 
+% Devolve todos os caminhos possíveis do sistema
+allCaminhos(L) :- solucoes(Caminho,(profundidade(Nodo,[Nodo],C,_),inverso(C,Caminho)),R), 
+                  apagaCabeca(R,L).
+
+%--------------------------------------Auxiliares Funcionalidade 1--------------------------------------
+
+% Devolve todos os caminhos possíveis para chegar a um território
+todosOsCaminhosAux(Territorio,[P],L) :- allCaminhosTerritorio(P,Territorio,L).
+todosOsCaminhosAux(Territorio,[P|T],L) :- 
+    allCaminhosTerritorio(P,Territorio,R),
+    todosOsCaminhosAux(Territorio,T,L1),
+    concatena(R,L1,L).
+
 % Devolve todos os caminhos possíveis entre dois pontos que cubram um determinado território
-allCaminhosTerritorio(A,B,T,L) :- solucoes(Caminho,(caminho(A,B,Caminho),membro(T,Caminho)),R),
-                                  geraCircuitos(R,L).
+allCaminhosTerritorio(Nodo,T,L) :- solucoes(Caminho,(resolveDFS(Nodo,Caminho,_),membro(T,Caminho)),L).
 
 %--------------------------------------Auxiliares Funcionalidade 2--------------------------------------
 
 % PESO
-% Devolve o circuito com menor entregas feitas com um determinado peso
+% Devolve o circuito com mais entregas feitas com um determinado peso
 circuitoMaiorNumEntregasPorPesoAux(Peso,MaxE,[C],L) :- numeroEntregasPorPesoCircuito(Peso,C,E), (E == MaxE -> adiciona(C,L1,L) ; L = []).
 circuitoMaiorNumEntregasPorPesoAux(Peso,MaxE,[C|T],L) :-
     numeroEntregasPorPesoCircuito(Peso,C,T1),
     circuitoMaiorNumEntregasPorPesoAux(Peso,MaxE,T,L1),
-    (T1 == MaxE -> inverso(C,CAux),
-    apagaCabeca(CAux,CV),
-    append(C,CV,Circuito),adiciona(Circuito,L1,L) ; L = L1).
+    (T1 == MaxE -> adiciona(C,L1,L) ; L = L1).
 
 % Devolve o valor maximo de entregas com um determinado peso feitas num dos circuitos
 maiorNumEntregasPorPeso(Peso,[C],Max) :- numeroEntregasPorPesoCircuito(Peso,C,Max).
@@ -346,14 +335,12 @@ numeroEntregasPorPesoFreguesia(Peso,Freg,T) :- solucoes(IdEnc,encomenda(IdEnc,_,
                                                comprimento(L,T).
 
 % VOLUME
-% Devolve o circuito com menor entregas feitas com um determinado volume
-circuitoMaiorNumEntregasPorVolumeAux(Volume,MaxE,[C],L) :- numeroEntregasPorVolumeCircuito(Vol,C,E), (E == MaxE -> adiciona(C,L1,L) ; L = []). 
+% Devolve o circuito com mais entregas feitas com um determinado volume
+circuitoMaiorNumEntregasPorVolumeAux(Volume,MaxE,[C],L) :- numeroEntregasPorVolumeCircuito(Vol,C,E), (E == MaxE -> adiciona(C,L1,L); L = []). 
 circuitoMaiorNumEntregasPorVolumeAux(Volume,MaxE,[C|T],L) :-
     numeroEntregasPorVolumeCircuito(Vol,C,T1),
     circuitoMaiorNumEntregasPorVolumeAux(Vol,MaxE,T,L1),
-    (T1 == MaxE -> inverso(C,CAux),
-    apagaCabeca(CAux,CV),
-    append(C,CV,Circuito),adiciona(Circuito,L1,L) ; L = L1).
+    (T1 == MaxE -> adiciona(C,L1,L) ; L = L1).
 
 % Devolve o valor maximo de entregas com um determinado volume feitas num dos circuitos
 maiorNumEntregasPorVolume(Vol,[C],Max) :- numeroEntregasPorVolumeCircuito(Vol,C,Max).
@@ -410,9 +397,7 @@ circuitosMaiorNumEntregasAux([C],MaxE,L) :- numEntregasCircuito(C,_,NumE), (NumE
 circuitosMaiorNumEntregasAux([C|T],MaxE,L) :- 
     numEntregasCircuito(C,_,NumE),
     circuitosMaiorNumEntregasAux(T,MaxE,L1),
-    (NumE == MaxE -> inverso(C,CAux),
-    apagaCabeca(CAux,CV),
-    append(C,CV,Circuito),adiciona(Circuito,L1,L) ; L = L1).
+    (NumE == MaxE -> adiciona(C,L1,L) ; L = L1).
 
 % Devolve o valor maximo de entregas feitas num dos circuitos
 maiorNumEntregasCircuito([C],Max) :- numEntregasCircuito(C,_,Max).
