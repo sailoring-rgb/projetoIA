@@ -15,12 +15,17 @@ todosOsCaminhosTerritorio(Territorio,L) :-
     todosOsCaminhosAux(Territorio,Pts,L).
 
 %----------------------------------------Funcionalidade 2----------------------------------------
-% Identificar quais os circuitos com maior número de entregas.
+% Identificar quais os circuitos com maior número de entregas(por volume e peso).
 
-circuitosMaiorNumEntregas(L) :- 
+circuitoMaiorNumEntregasPorPeso(Peso,C,T) :-
     allCaminhos('Green Distribuition',R),
-    maiorNumEntregasCircuito(R,MaxE),
-    circuitosMaiorNumEntregasAux(R,MaxE,L).
+    maiorNumEntregasPorPeso(Peso,R,T),
+    circuitoMaiorNumEntregasPorPesoAux(Peso,T,R,C).
+
+circuitoMaiorNumEntregasPorVolume(Vol,C,T) :-
+    allCaminhos('Green Distribuition',R),
+    maiorNumEntregasPorVolume(Vol,R,T),
+    circuitoMaiorNumEntregasPorVolumeAux(Vol,T,R,C).
 
 %----------------------------------------Funcionalidade 3----------------------------------------
 % Comparar circuitos de entrega tendo em conta os indicadores de produtividade (distância e tempo).
@@ -55,7 +60,7 @@ produtividade(IdEnc,Distancia,Tempo,5) :-
     encomenda(IdEnc,_,_,_,Freg),
     estrategiaProcura(Freg,Caminho,Distancia,5),
     estrategiaProcuraTempo(IdEnc,Caminho,Tempo,5).
-
+    
 %----------------------------------------Funcionalidade 4----------------------------------------
 % Escolher o circuito mais rápido (usando o critério da distância).
 
@@ -68,6 +73,14 @@ circuitoMaisRapido(IdEnc,Alg,C,D) :-
 
 circuitoMaisEficiente(IdEnc,Alg,C,T) :-
     circuitoMaisEficienteAux(IdEnc,C,T,Alg).
+
+%----------------------------------------Funcionalidade Extra----------------------------------------
+% Identificar quais os circuitos com maior número de entregas.
+
+circuitosMaiorNumEntregas(L) :- 
+    allCaminhos('Green Distribuition',R),
+    maiorNumEntregasCircuito(R,MaxE),
+    circuitosMaiorNumEntregasAux(R,MaxE,L).
 
 %------------------------------------------Estatísticas------------------------------------------
 % Analisar comparativamente as diferentes estratégias de procura.
@@ -117,3 +130,4 @@ obterEstatisticas(5) :-
     Mem is M2 - M1,
     write("Memória usada: "),write(Mem),nl,
 	write("Custo: "),write(Distancia).
+
