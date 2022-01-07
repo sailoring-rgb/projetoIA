@@ -242,5 +242,6 @@ funcionalidade2(6) :-
     write('*** Tempo: '),write(T),write(' horas'),!,nl,nl.
 
 funcionalidade2(7) :-
-    circuitosMaiorNumEntregas(L),
+    circuitosMaiorNumEntregas(E,L),
+    write('Número de entregas: '), write(E),!,nl,
     write('Circuito(s) com maior número de entregas: '),nl,nl,write(L),!,nl.
