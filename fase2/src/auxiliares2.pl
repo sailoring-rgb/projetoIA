@@ -336,8 +336,8 @@ numeroEntregasPorPesoFreguesia(Peso,Freg,T) :- solucoes(IdEnc,encomenda(IdEnc,_,
 
 % VOLUME
 % Devolve o circuito com mais entregas feitas com um determinado volume
-circuitoMaiorNumEntregasPorVolumeAux(Volume,MaxE,[C],L) :- numeroEntregasPorVolumeCircuito(Vol,C,E), (E == MaxE -> adiciona(C,L1,L); L = []). 
-circuitoMaiorNumEntregasPorVolumeAux(Volume,MaxE,[C|T],L) :-
+circuitoMaiorNumEntregasPorVolumeAux(Vol,MaxE,[C],L) :- numeroEntregasPorVolumeCircuito(Vol,C,E), (E == MaxE -> adiciona(C,L1,L); L = []). 
+circuitoMaiorNumEntregasPorVolumeAux(Vol,MaxE,[C|T],L) :-
     numeroEntregasPorVolumeCircuito(Vol,C,T1),
     circuitoMaiorNumEntregasPorVolumeAux(Vol,MaxE,T,L1),
     (T1 == MaxE -> adiciona(C,L1,L) ; L = L1).
