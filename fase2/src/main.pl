@@ -240,3 +240,7 @@ funcionalidade2(6) :-
     circuitoMaisEficiente(Input1,Input2,C,T),nl,
     write('Caminho mais eficiente: '),write(C),!,nl,
     write('*** Tempo: '),write(T),write(' horas'),!,nl,nl.
+
+funcionalidade2(7) :-
+    circuitosMaiorNumEntregas(L),
+    write('Circuito(s) com maior número de entregas: '),nl,nl,write(L),!,nl.
