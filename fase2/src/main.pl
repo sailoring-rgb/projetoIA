@@ -173,7 +173,7 @@ funcionalidade1(12) :-
 %----------------------------------------------------------------FASE2----------------------------------------------------------------
 
 funcionalidade2(1) :-
-    write('Indique o território a consultar: '),nl,
+    write('Indique o território a consultar (entre aspas): '),nl,
     read(Input),nl,
     ((pontoEntrega(Input) -> todosOsCaminhosTerritorio(Input,L),write(L),!,nl);
      (nao(pontoEntrega(Input)) -> write('Não existem informações sobre este território.'),!,nl)).
