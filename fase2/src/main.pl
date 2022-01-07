@@ -58,6 +58,7 @@ fase(2) :-
     write('4. Comparar circuitos de entrega tendo em conta os indicadores de produtividade.'),nl,
     write('5. Escolher o circuito mais rápido para entregar uma dada encomenda, utilizado um algoritmo de pesquisa.'),nl,
     write('6. Escolher o circuito mais ecológico para entregar uma dada encomenda, utilizado um algoritmo de pesquisa.'),nl,
+    write('7. Identificar quais os circuitos com maior número de entregas.'),nl,
     write('0. Sair'),nl,
     write('-----------------------------------------------------------------------------------------------------------------------'),nl,nl,
     write('Escolha um: '),nl,
@@ -181,7 +182,12 @@ funcionalidade2(2) :-
     write('Representação dos pontos de entrega em forma de grafo:'),nl,nl,g(G),write(G),!,nl.
 
 funcionalidade2(3) :-
-    circuitosMaiorNumEntregas(L),
+    write('Peso(0) ou Volume(1)?: '),nl,
+    read(Input1),nl,
+    write('Insira o peso/volume: '),nl,
+    read(Input2),nl,
+    circuitoMaiorNumEntregasPorPesoEVolume(Input1,Input2,L,Encs),
+    write('Número de entregas: '), write(Encs),!,nl,
     write('Circuito(s) com maior número de entregas: '),nl,nl,write(L),!,nl.
 
 funcionalidade2(4) :-

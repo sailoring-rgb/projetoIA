@@ -278,8 +278,7 @@ numEntregasCircuito([Freg|T],PesoTotal,N) :-
     N is N1 + N2.
 
 % Devolve todos os caminhos possíveis do sistema
-allCaminhos(A,L) :- solucoes(Caminho,(caminho(A,B,Caminho),A\=B),R),
-                     geraCircuitos(R,L).
+allCaminhos(A,L) :- solucoes(Caminho,(caminho(A,B,Caminho),A\=B),L).
 
 %--------------------------------------Auxiliares Funcionalidade 1--------------------------------------
 

@@ -17,6 +17,11 @@ todosOsCaminhosTerritorio(Territorio,L) :-
 %----------------------------------------Funcionalidade 2----------------------------------------
 % Identificar quais os circuitos com maior número de entregas(por volume e peso).
 
+circuitoMaiorNumEntregasPorPesoEVolume(0,Num,C,T) :-
+    circuitoMaiorNumEntregasPorPeso(Num,C,T).
+circuitoMaiorNumEntregasPorPesoEVolume(1,Num,C,T) :-
+    circuitoMaiorNumEntregasPorVolume(Num,C,T).
+    
 circuitoMaiorNumEntregasPorPeso(Peso,C,T) :-
     allCaminhos('Green Distribuition',R),
     maiorNumEntregasPorPeso(Peso,R,T),
@@ -131,3 +136,4 @@ obterEstatisticas(5) :-
     write("Memória usada: "),write(Mem),nl,
 	write("Custo: "),write(Distancia).
 
+ 
