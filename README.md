@@ -2,6 +2,8 @@
 
 Projeto de Inteligência Artificial 21/22
 
+Classificação do projeto: 17/20
+
 ## Autores:
 
 - Ana Rebelo (@Filipagit)
