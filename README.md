@@ -2,7 +2,8 @@
 
 Projeto de Inteligência Artificial 21/22
 
-Classificação do projeto: 17/20
+Classificação da fase 1: 17/20
+Classificação da fase 2: 16/20
 
 ## Autores:
 
