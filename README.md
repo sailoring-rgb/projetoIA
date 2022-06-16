@@ -7,7 +7,7 @@ Classificação da fase 2: 16/20
 
 ## Autores:
 
-- Ana Rebelo (@Filipagit)
-- Ana Murta (@AnaMurta10)
-- Ana Henriques (@AnaHenriques01)
-- Joana Oliveira (@joanaaVO) 
+- Ana Rebelo
+- Ana Murta
+- Ana Henriques
+- Joana Oliveira
