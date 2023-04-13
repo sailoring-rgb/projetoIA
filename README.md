@@ -1,13 +1,13 @@
 # IA
 
-Projeto de Inteligência Artificial 21/22
+Project accomplished in the scope of <b><i>Artificial Intelligence 21/22</i></b>
 
-Classificação da fase 1: 17/20\
-Classificação da fase 2: 16/20
+- <a href="https://github.com/sailoring-rgb/projetoIA/tree/main/fase1">Fase1</a> Classification: 17/20
+- <a href="https://github.com/sailoring-rgb/projetoIA/tree/main/fase2">Fase2</a> Classification: 16/20
 
-## Autores:
+## Authors
 
-- Ana Rebelo
-- Ana Murta
-- Ana Henriques
-- Joana Oliveira
+- <a href="https://github.com/Filipagit">Ana Rebelo</a>
+- <a href="https://github.com/AnaMurta10">Ana Murta</a>
+- <a href="https://github.com/sailoring-rgb">Ana Henriques</a>
+- <a href="https://github.com/joanaaVO">Joana Oliveira</a>
